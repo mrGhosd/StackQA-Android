@@ -4,12 +4,18 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CheckBox;
+import android.widget.ImageButton;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.android.volley.*;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.net.*;
@@ -59,7 +65,8 @@ public class MainActivity extends ActionBarActivity {
                     public void onResponse(JSONObject response) {
                         try{
                             questions = response;
-                            parseQuestionsData(questions);
+                            JSONArray questionsArr = response.getJSONArray("questions");
+                            parseQuestionsData(questionsArr);
 
                         } catch (Exception e){
                             e.printStackTrace();
@@ -76,7 +83,22 @@ public class MainActivity extends ActionBarActivity {
         queue.add(stringRequest);
     }
 
-    public void parseQuestionsData(JSONObject questions){
+    public void parseQuestionsData(JSONArray questions) throws JSONException{
+        TableLayout tl = (TableLayout) findViewById(R.id.tableView);
+        for(int i = 0; i < questions.length(); i++){
+            JSONObject o = questions.getJSONObject(i);
+            TableRow row= new TableRow(this);
+            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+            row.setLayoutParams(lp);
+            TextView rate = new TextView(this);
+            TextView tv = new TextView(this);
+            String title = (String)o.get("title");
+//            rate.setText((String)o.get("rate"));
+            tv.setText(title);
+//            row.addView(rate);
+            row.addView(tv);
+            tl.addView(row,i);
 
+        }
     }
 }
