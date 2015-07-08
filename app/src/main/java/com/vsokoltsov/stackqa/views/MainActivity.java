@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import com.vsokoltsov.stackqa.controllers.AppController;
 
 import com.android.volley.*;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -89,7 +90,7 @@ public class MainActivity extends ActionBarActivity {
         });
 
         // Adding request to request queue
-        queue.add(movieReq);
+        AppController.getInstance().addToRequestQueue(movieReq);
 
     }
 
