@@ -65,11 +65,13 @@ public class MainActivity extends ActionBarActivity {
                         for (int i = 0; i < questionsArr.length(); i++) {
                             try {
                                 JSONObject obj = questionsArr.getJSONObject(i);
-                                Question movie = new Question();
-                                movie.setTitle(obj.getString("title"));
+                                Question question = new Question();
+                                question.setTitle(obj.getString("title"));
+                                question.setRate(obj.getInt("rate"));
+
 
                                 // adding movie to movies array
-                                questionsList.add(movie);
+                                questionsList.add(question);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();

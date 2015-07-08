@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class Question {
     private String title;
+    private int rate;
 
     public Question(){}
 
@@ -18,4 +19,11 @@ public class Question {
         this.title = name;
     }
 
+    public int getRate() {
+        return rate;
+    }
+
+    public void setRate(int rate) {
+        this.rate = rate;
+    }
 }

@@ -6,12 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.models.Question;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -60,6 +63,7 @@ public class QuestionsListAdapter extends BaseAdapter {
 
         //Перечисляем элементы в layout-е строки списка вопросов
         TextView title = (TextView) convertView.findViewById(R.id.title);
+        TextView rate = (TextView) convertView.findViewById(R.id.rate);
 
         // getting movie data for the row
         Question q = questionsList.get(position);
@@ -69,6 +73,7 @@ public class QuestionsListAdapter extends BaseAdapter {
 
         // title
         title.setText(q.getTitle());
+        rate.setText(String.valueOf(q.getRate()));
 
         // rating
 //        rating.setText("Rating: " + String.valueOf(m.getRating()));
