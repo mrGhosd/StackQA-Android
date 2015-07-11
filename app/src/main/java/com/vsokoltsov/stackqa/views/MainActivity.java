@@ -1,5 +1,6 @@
 package com.vsokoltsov.stackqa.views;
 
+import android.content.Intent;
 import android.nfc.Tag;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import com.android.volley.toolbox.Volley;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.QuestionsListAdapter;
 import com.vsokoltsov.stackqa.models.Question;
+import com.vsokoltsov.stackqa.views.questionDetail;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,6 +33,7 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import android.view.View;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -113,9 +116,6 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -126,51 +126,9 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void loadData(){
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="http://178.62.198.57/api/v1/questions";
-
-// Request a string response from the provided URL.
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try{
-                            questions = response;
-                            JSONArray questionsArr = response.getJSONArray("questions");
-                            parseQuestionsData(questionsArr);
-
-                        } catch (Exception e){
-                            e.printStackTrace();
-                        }
-                        // Display the first 500 characters of the response string.
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-// Add the request to the RequestQueue.
-        queue.add(stringRequest);
-    }
-
-    public void parseQuestionsData(JSONArray questions) throws JSONException{
-//        TableLayout tl = (TableLayout) findViewById(R.id.);
-//        for(int i = 0; i < questions.length(); i++){
-//            JSONObject o = questions.getJSONObject(i);
-//            TableRow row= new TableRow(this);
-//            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-//            row.setLayoutParams(lp);
-//            TextView rate = new TextView(this);
-//            TextView tv = new TextView(this);
-//            String title = (String)o.get("title");
-////            rate.setText((String)o.get("rate"));
-//            tv.setText(title);
-////            row.addView(rate);
-//            row.addView(tv);
-//            tl.addView(row,i);
-//
-//        }
+    public void detailQuestionView(View v){
+        Intent intent = new Intent(MainActivity.this, questionDetail.class);
+        startActivity(intent);
+        finish();
     }
 }
