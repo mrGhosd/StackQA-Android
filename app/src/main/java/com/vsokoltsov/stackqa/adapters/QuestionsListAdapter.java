@@ -65,6 +65,7 @@ public class QuestionsListAdapter extends BaseAdapter {
         TextView title = (TextView) convertView.findViewById(R.id.title);
         TextView rate = (TextView) convertView.findViewById(R.id.rate);
         TextView category = (TextView) convertView.findViewById(R.id.category);
+        TextView createdAt = (TextView) convertView.findViewById(R.id.createdAt);
 
         // getting movie data for the row
         Question q = questionsList.get(position);
@@ -76,6 +77,7 @@ public class QuestionsListAdapter extends BaseAdapter {
         title.setText(q.getTitle());
         rate.setText(String.valueOf(q.getRate()));
         category.setText(q.getCategory().getTitle());
+        createdAt.setText(q.getCreatedAt());
 
         // rating
 //        rating.setText("Rating: " + String.valueOf(m.getRating()));

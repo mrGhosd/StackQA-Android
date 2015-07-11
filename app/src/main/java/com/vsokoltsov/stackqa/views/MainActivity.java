@@ -27,6 +27,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.net.*;
+import java.sql.Date;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,12 +71,14 @@ public class MainActivity extends ActionBarActivity {
                                 question.setTitle(obj.getString("title"));
                                 question.setRate(obj.getInt("rate"));
                                 question.setCategory(obj.getJSONObject("category"));
-
+                                question.setCreatedAt(obj.getString("created_at"));
 
                                 // adding movie to movies array
                                 questionsList.add(question);
 
                             } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (ParseException e) {
                                 e.printStackTrace();
                             }
 

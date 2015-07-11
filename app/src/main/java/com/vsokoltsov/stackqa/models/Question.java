@@ -5,13 +5,18 @@ import org.json.JSONObject;
 /**
  * Created by vsokoltsov on 06.07.15.
  */
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class Question {
     private String title;
     private int rate;
     private Category category;
-
+    private Date createdAt;
     public Question(){}
 
     public String getTitle() {
@@ -36,5 +41,17 @@ public class Question {
 
     public void setCategory(JSONObject category){
         this.category = new Category(category);
+    }
+
+    public String getCreatedAt(){
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd.MM.yyyy");
+        String str = sdf.format(createdAt); // formats to 09/23/2009 13:53:28.23
+        return str;
+    }
+
+    public void setCreatedAt(String createdAt) throws ParseException {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+        Date date = format.parse(createdAt);
+        this.createdAt = date;
     }
 }
