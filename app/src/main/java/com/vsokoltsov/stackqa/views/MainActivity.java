@@ -72,7 +72,9 @@ public class MainActivity extends ActionBarActivity {
                                 question.setRate(obj.getInt("rate"));
                                 question.setCategory(obj.getJSONObject("category"));
                                 question.setCreatedAt(obj.getString("created_at"));
-
+                                question.setAnswersCount(obj.getInt("answers_count"));
+                                question.setCommentsCount(obj.getInt("comments_count"));
+                                question.setViews(obj.getInt("views"));
                                 // adding movie to movies array
                                 questionsList.add(question);
 

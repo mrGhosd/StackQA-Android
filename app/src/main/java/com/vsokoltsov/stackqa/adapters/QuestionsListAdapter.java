@@ -66,7 +66,9 @@ public class QuestionsListAdapter extends BaseAdapter {
         TextView rate = (TextView) convertView.findViewById(R.id.rate);
         TextView category = (TextView) convertView.findViewById(R.id.category);
         TextView createdAt = (TextView) convertView.findViewById(R.id.createdAt);
-
+        TextView answersCount = (TextView) convertView.findViewById(R.id.answersCount);
+        TextView commentsCount = (TextView) convertView.findViewById(R.id.commentsCount);
+        TextView views = (TextView) convertView.findViewById(R.id.viewsCount);
         // getting movie data for the row
         Question q = questionsList.get(position);
 
@@ -78,6 +80,10 @@ public class QuestionsListAdapter extends BaseAdapter {
         rate.setText(String.valueOf(q.getRate()));
         category.setText(q.getCategory().getTitle());
         createdAt.setText(q.getCreatedAt());
+        answersCount.setText(String.valueOf(q.getAnswersCount()));
+        commentsCount.setText(String.valueOf(q.getCommentsCount()));
+        views.setText(String.valueOf(q.getViews()));
+
 
         // rating
 //        rating.setText("Rating: " + String.valueOf(m.getRating()));

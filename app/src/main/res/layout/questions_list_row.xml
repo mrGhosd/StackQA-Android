@@ -17,7 +17,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginBottom="15dp"
         android:layout_alignParentBottom="false"
@@ -87,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="0"
-                android:id="@+id/textView"
+                android:id="@+id/answersCount"
                 android:layout_weight="10"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/imageView" />
@@ -120,7 +120,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="0"
-                android:id="@+id/textView2"
+                android:id="@+id/commentsCount"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/imageView2"
                 android:layout_toEndOf="@+id/imageView2" />
@@ -141,19 +141,19 @@
                 android:id="@+id/imageView3"
                 android:src="@drawable/eye110" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/viewsCount"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="31dp"
+                android:layout_marginStart="31dp"
+                android:layout_alignLeft="@+id/imageView3" />
+
         </RelativeLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="0"
-            android:id="@+id/textView3"
-            android:layout_centerVertical="true"
-            android:layout_alignLeft="@+id/relativeLayout3"
-            android:layout_alignStart="@+id/relativeLayout3"
-            android:layout_marginLeft="31dp"
-            android:layout_marginStart="31dp" />
     </RelativeLayout>
 
 </RelativeLayout>
