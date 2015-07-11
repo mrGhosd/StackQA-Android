@@ -34,4 +34,22 @@
         android:layout_marginLeft="70dp"
         android:layout_marginStart="70dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/category"
+        android:layout_below="@+id/title"
+        android:layout_alignLeft="@+id/title"
+        android:layout_alignStart="@+id/title" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/createdAt"
+        android:layout_alignTop="@+id/category"
+        android:layout_toRightOf="@+id/category"
+        android:layout_toEndOf="@+id/category" />
+
 </RelativeLayout>

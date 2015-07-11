@@ -68,6 +68,7 @@ public class MainActivity extends ActionBarActivity {
                                 Question question = new Question();
                                 question.setTitle(obj.getString("title"));
                                 question.setRate(obj.getInt("rate"));
+                                question.setCategory(obj.getJSONObject("category"));
 
 
                                 // adding movie to movies array
