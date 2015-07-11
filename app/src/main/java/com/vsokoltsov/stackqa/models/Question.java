@@ -17,6 +17,10 @@ public class Question {
     private int rate;
     private Category category;
     private Date createdAt;
+    private int answersCount;
+    private int commentsCount;
+    private int views;
+
     public Question(){}
 
     public String getTitle() {
@@ -53,5 +57,29 @@ public class Question {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
         Date date = format.parse(createdAt);
         this.createdAt = date;
+    }
+
+    public void setAnswersCount(int count){
+        this.answersCount = count;
+    }
+
+    public void setCommentsCount(int count){
+        this.answersCount = count;
+    }
+
+    public void setViews(int views){
+        this.answersCount = views;
+    }
+
+    public int getAnswersCount(){
+        return this.answersCount;
+    }
+
+    public int getCommentsCount(){
+        return this.commentsCount;
+    }
+
+    public int getViews(){
+        return this.views;
     }
 }

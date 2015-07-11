@@ -4,7 +4,7 @@
     android:layout_height="150dp"
     android:id="@+id/questionListRow"
     android:focusable="true"
-    android:minHeight="60dp">
+    android:minHeight="90dp">
 
     <TextView
         android:layout_width="50dp"
@@ -38,7 +38,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="75dp">
+        android:layout_marginLeft="75dp"
+        android:id="@+id/linearLayout">
 
         <TextView
             android:layout_width="wrap_content"
@@ -59,5 +60,100 @@
             android:singleLine="false"
             android:layout_weight="1" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="75dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="20dp">
+
+        <RelativeLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/relativeLayout">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="30dp"
+                android:id="@+id/imageView"
+                android:src="@drawable/answers32"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/textView"
+                android:layout_weight="10"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/imageView" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_row="0"
+            android:layout_column="1"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/relativeLayout"
+            android:layout_toEndOf="@+id/relativeLayout"
+            android:layout_marginLeft="25dp"
+            android:id="@+id/relativeLayout2">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:id="@+id/imageView2"
+                android:src="@drawable/chat32"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/textView2"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/imageView2"
+                android:layout_toEndOf="@+id/imageView2" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/relativeLayout2"
+            android:layout_toEndOf="@+id/relativeLayout2"
+            android:layout_marginLeft="25dp"
+            android:id="@+id/relativeLayout3">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:id="@+id/imageView3"
+                android:src="@drawable/eye110" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="0"
+            android:id="@+id/textView3"
+            android:layout_centerVertical="true"
+            android:layout_alignLeft="@+id/relativeLayout3"
+            android:layout_alignStart="@+id/relativeLayout3"
+            android:layout_marginLeft="31dp"
+            android:layout_marginStart="31dp" />
+    </RelativeLayout>
 
 </RelativeLayout>
