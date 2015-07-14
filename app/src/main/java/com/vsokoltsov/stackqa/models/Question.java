@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class Question {
+    private int id;
     private String title;
     private int rate;
     private Category category;
@@ -21,7 +22,24 @@ public class Question {
     private int commentsCount;
     private int views;
 
-    public Question(){}
+    public Question(JSONObject object){
+        try {
+            setTitle(object.getString("title"));
+            setRate(object.getInt("rate"));
+            setCategory(object.getJSONObject("category"));
+            setCreatedAt(object.getString("created_at"));
+            setAnswersCount(object.getInt("answers_count"));
+            setCommentsCount(object.getInt("comments_count"));
+            setViews(object.getInt("views"));
+        } catch (JSONException e){
+            e.printStackTrace();
+        } catch (ParseException e){
+            e.printStackTrace();
+        }
+    }
+    public Question(String title){
+        setTitle(title);
+    }
 
     public String getTitle() {
         return title;
