@@ -66,10 +66,46 @@ public class QuestionsListFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        questionsList.add(new Question("title 1"));
-        questionsList.add(new Question("title 2"));
-        questionsList.add(new Question("title 3"));
-        setListAdapter(new QuestionsListAdapter(getActivity(), questionsList));
+        adapter = new QuestionsListAdapter(getActivity(), questionsList);
+        setListAdapter(adapter);
+        JsonObjectRequest movieReq = new JsonObjectRequest(url,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("TAG", response.toString());
+                        JSONArray questionsArr = null;
+                        try {
+                            questionsArr = response.getJSONArray("questions");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        // Parsing json
+                        for (int i = 0; i < questionsArr.length(); i++) {
+                            try {
+                                JSONObject obj = questionsArr.getJSONObject(i);
+                                Question question = new Question(obj);
+                                questionsList.add(question);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                        // notifying list adapter about data changes
+                        // so that it renders the list view with updated data
+                        adapter.notifyDataSetChanged();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("TAG", "Error: " + error.getMessage());
+
+            }
+        });
+        AppController.getInstance().addToRequestQueue(movieReq);
+
+
 
     }
 
