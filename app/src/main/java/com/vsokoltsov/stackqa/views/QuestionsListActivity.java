@@ -18,13 +18,6 @@ import java.util.List;
 import android.view.View;
 
 public class QuestionsListActivity extends FragmentActivity implements QuestionsListFragment.Callbacks{
-
-    public JSONObject questions;
-    private static final String url = "http://178.62.198.57/api/v1/questions";
-    private List<Question> questionsList = new ArrayList<Question>();
-    private ListView listView;
-    private QuestionsListAdapter adapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);

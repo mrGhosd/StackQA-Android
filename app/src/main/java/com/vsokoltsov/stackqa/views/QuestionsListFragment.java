@@ -72,9 +72,22 @@ public class QuestionsListFragment extends ListFragment {
     };
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        list = (ListView) getListView();
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         adapter = new QuestionsListAdapter(getActivity(), questionsList);
+
         setListAdapter(adapter);
         JsonObjectRequest movieReq = new JsonObjectRequest(url,
                 new Response.Listener<JSONObject>() {
@@ -109,16 +122,28 @@ public class QuestionsListFragment extends ListFragment {
         });
         AppController.getInstance().addToRequestQueue(movieReq);
     }
-    public void onListItemClick(ListView listView, View view, int position, long id) {
-        super.onListItemClick(listView, view, position, id);
-        listCallbacks.onItemSelected(String.valueOf(questionsList.get(position).getID()));
-    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
 
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        //Do your stuff..
+    }
+
+
+
+    public void setActivateOnItemClick(boolean activateOnItemClick) {
+        // When setting CHOICE_MODE_SINGLE, ListView will automatically
+        // give items the 'activated' state when touched.
+        getListView().setChoiceMode(activateOnItemClick
+                ? ListView.CHOICE_MODE_SINGLE
+                : ListView.CHOICE_MODE_NONE);
     }
 
 }

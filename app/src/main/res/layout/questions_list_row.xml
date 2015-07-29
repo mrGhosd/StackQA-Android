@@ -3,9 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="150dp"
     android:id="@+id/questionListRow"
-    android:focusable="true"
-    android:minHeight="90dp"
-    android:onClick="detailQuestionView">
+    android:focusable="false"
+    android:minHeight="90dp">
 
     <TextView
         android:layout_width="50dp"
@@ -22,7 +21,8 @@
         android:layout_marginLeft="15dp"
         android:layout_marginBottom="15dp"
         android:layout_alignParentBottom="false"
-        android:text="10" />
+        android:text="10"
+        android:focusable="false"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -33,14 +33,16 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="70dp"
-        android:layout_marginStart="70dp" />
+        android:layout_marginStart="70dp"
+        android:focusable="false"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="75dp"
-        android:id="@+id/linearLayout">
+        android:id="@+id/linearLayout"
+        android:focusable="false">
 
         <TextView
             android:layout_width="wrap_content"
@@ -48,7 +50,8 @@
             android:text="New Text"
             android:id="@+id/category"
             android:singleLine="false"
-            android:layout_weight="5" />
+            android:layout_weight="5"
+            android:focusable="false"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -59,7 +62,8 @@
             android:layout_toRightOf="@+id/category"
             android:layout_toEndOf="@+id/category"
             android:singleLine="false"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:focusable="false"/>
     </LinearLayout>
 
     <RelativeLayout
@@ -67,21 +71,24 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="75dp"
         android:layout_marginTop="50dp"
-        android:layout_marginBottom="20dp">
+        android:layout_marginBottom="20dp"
+        android:focusable="false">
 
         <RelativeLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/relativeLayout">
+            android:id="@+id/relativeLayout"
+            android:focusable="false">
 
             <ImageView
                 android:layout_width="32dp"
                 android:layout_height="30dp"
                 android:id="@+id/imageView"
                 android:src="@drawable/answers32"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:focusable="false"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -91,7 +98,8 @@
                 android:id="@+id/answersCount"
                 android:layout_weight="10"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/imageView" />
+                android:layout_toRightOf="@+id/imageView"
+                android:focusable="false"/>
 
         </RelativeLayout>
 
@@ -105,7 +113,8 @@
             android:layout_toRightOf="@+id/relativeLayout"
             android:layout_toEndOf="@+id/relativeLayout"
             android:layout_marginLeft="25dp"
-            android:id="@+id/relativeLayout2">
+            android:id="@+id/relativeLayout2"
+            android:focusable="false">
 
             <ImageView
                 android:layout_width="32dp"
@@ -114,7 +123,8 @@
                 android:src="@drawable/chat32"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:focusable="false"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -124,7 +134,8 @@
                 android:id="@+id/commentsCount"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/imageView2"
-                android:layout_toEndOf="@+id/imageView2" />
+                android:layout_toEndOf="@+id/imageView2"
+                android:focusable="false"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -134,13 +145,14 @@
             android:layout_toRightOf="@+id/relativeLayout2"
             android:layout_toEndOf="@+id/relativeLayout2"
             android:layout_marginLeft="25dp"
-            android:id="@+id/relativeLayout3">
+            android:id="@+id/relativeLayout3"
+            android:focusable="false">
 
             <ImageView
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:id="@+id/imageView3"
-                android:src="@drawable/eye110" />
+                android:src="@drawable/eye110"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -151,7 +163,8 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="31dp"
                 android:layout_marginStart="31dp"
-                android:layout_alignLeft="@+id/imageView3" />
+                android:layout_alignLeft="@+id/imageView3"
+                android:focusable="false"/>
 
         </RelativeLayout>
 
