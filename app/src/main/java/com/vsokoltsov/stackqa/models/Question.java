@@ -1,4 +1,7 @@
 package com.vsokoltsov.stackqa.models;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.vsokoltsov.stackqa.models.Category;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-public class Question {
+public class Question implements Parcelable{
     private int id;
     private String title;
     private int rate;
@@ -22,6 +25,9 @@ public class Question {
     private int commentsCount;
     private int views;
 
+    public Question(){
+
+    }
     public Question(JSONObject object){
         try {
             setTitle(object.getString("title"));
@@ -37,6 +43,11 @@ public class Question {
             e.printStackTrace();
         }
     }
+
+    private Question(Parcel in) {
+        setID(in.readInt());
+    }
+
     public int getID(){ return id; }
 
     public void setID(int id){ this.id = id; }
@@ -103,5 +114,42 @@ public class Question {
 
     public int getViews(){
         return this.views;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Parcelable.Creator<Question> CREATOR = new Parcelable.Creator<Question>() {
+        public Question createFromParcel(Parcel in) {
+            Question question = new Question();
+            question.title = in.readString();
+            question.id = in.readInt();
+            question.rate = in.readInt();
+            question.answersCount = in.readInt();
+            question.commentsCount = in.readInt();
+            question.views = in.readInt();
+            try {
+                question.setCreatedAt(in.readString());
+            } catch (ParseException e){
+                e.printStackTrace();
+            }
+            return question;
+        }
+        public Question[] newArray(int size) {
+            return new Question[size];
+        }
+    };
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeInt(id);
+        dest.writeInt(rate);
+        dest.writeInt(answersCount);
+        dest.writeInt(commentsCount);
+        dest.writeInt(views);
+        dest.writeString(createdAt.toString());
     }
 }

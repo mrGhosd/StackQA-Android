@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.R;
 
 /**
@@ -19,9 +20,10 @@ import com.vsokoltsov.stackqa.R;
  * create an instance of this fragment.
  */
 public class QuestionDetailFragment extends Fragment {
-    public static final String ARG_ITEM_ID = "item_id";
+//    public Question DETAIL_QUESTION;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    public static final Question DETAIL_QUESTION = new Question();
 
 
     public QuestionDetailFragment() {
@@ -31,6 +33,7 @@ public class QuestionDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override

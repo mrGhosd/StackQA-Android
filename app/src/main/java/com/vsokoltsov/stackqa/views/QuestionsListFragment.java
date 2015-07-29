@@ -46,14 +46,14 @@ public class QuestionsListFragment extends ListFragment {
     public QuestionsListAdapter adapter;
     public ListView list;
 
+    private Callbacks listCallbacks = questionsCallbacks;
+
     public interface Callbacks {
         /**
          * Callback for when an item has been selected.
          */
-        public void onItemSelected(String id);
+        public void onItemSelected(Question question);
     }
-
-    private Callbacks listCallbacks = questionsCallbacks;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -63,11 +63,12 @@ public class QuestionsListFragment extends ListFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.activity = activity;
+        listCallbacks = (Callbacks) activity;
     }
 
     private static Callbacks questionsCallbacks = new Callbacks() {
         @Override
-        public void onItemSelected(String id) {
+        public void onItemSelected(Question question) {
         }
     };
 
@@ -78,7 +79,7 @@ public class QuestionsListFragment extends ListFragment {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                listCallbacks.onItemSelected(questionsList.get(position));
             }
         });
     }

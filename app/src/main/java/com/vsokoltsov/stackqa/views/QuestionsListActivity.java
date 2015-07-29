@@ -13,6 +13,7 @@ import com.vsokoltsov.stackqa.models.Question;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import android.view.View;
@@ -51,15 +52,15 @@ public class QuestionsListActivity extends FragmentActivity implements Questions
     }
 
     public void detailQuestionView(View v){
-        Intent intent = new Intent(QuestionsListActivity.this, QuestionDetail.class);
-        startActivity(intent);
-        finish();
+//        Intent intent = new Intent(QuestionsListActivity.this, QuestionDetail.class);
+//        startActivity(intent);
+//        finish();
     }
 
     @Override
-    public void onItemSelected(String id) {
+    public void onItemSelected(Question question) {
         Intent detailIntent = new Intent(this, QuestionDetail.class);
-        detailIntent.putExtra(QuestionDetailFragment.ARG_ITEM_ID, id);
+        detailIntent.putExtra("question", question);
         startActivity(detailIntent);
     }
 }
