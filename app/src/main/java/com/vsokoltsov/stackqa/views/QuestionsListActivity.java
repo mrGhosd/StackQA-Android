@@ -35,63 +35,6 @@ public class QuestionsListActivity extends FragmentActivity implements Questions
 //                    .add(R.id.list, new Questions)
 //                    .commit();
         }
-
-
-//        listView = (ListView) findViewById(R.id.listView);
-//
-//        //Заменяем стандартный адаптер на свой
-//        adapter = new QuestionsListAdapter(this, questionsList);
-//        listView.setAdapter(adapter);
-
-//        JsonObjectRequest movieReq = new JsonObjectRequest(url,
-//                new Response.Listener<JSONObject>() {
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        Log.d("TAG", response.toString());
-//                        JSONArray questionsArr = null;
-//                        try {
-//                            questionsArr = response.getJSONArray("questions");
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                        // Parsing json
-//                        for (int i = 0; i < questionsArr.length(); i++) {
-//                            try {
-//                                JSONObject obj = questionsArr.getJSONObject(i);
-//                                Question question = new Question();
-//                                question.setTitle(obj.getString("title"));
-//                                question.setRate(obj.getInt("rate"));
-//                                question.setCategory(obj.getJSONObject("category"));
-//                                question.setCreatedAt(obj.getString("created_at"));
-//                                question.setAnswersCount(obj.getInt("answers_count"));
-//                                question.setCommentsCount(obj.getInt("comments_count"));
-//                                question.setViews(obj.getInt("views"));
-//                                // adding movie to movies array
-//                                questionsList.add(question);
-//
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            } catch (ParseException e) {
-//                                e.printStackTrace();
-//                            }
-//
-//                        }
-//
-//                        // notifying list adapter about data changes
-//                        // so that it renders the list view with updated data
-//                        adapter.notifyDataSetChanged();
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                VolleyLog.d("TAG", "Error: " + error.getMessage());
-//
-//            }
-//        });
-//
-//        // Adding request to request queue
-//        AppController.getInstance().addToRequestQueue(movieReq);
-
     }
 
 

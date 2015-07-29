@@ -53,6 +53,8 @@ public class QuestionsListFragment extends ListFragment {
         public void onItemSelected(String id);
     }
 
+    private Callbacks listCallbacks = questionsCallbacks;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -62,6 +64,12 @@ public class QuestionsListFragment extends ListFragment {
         super.onAttach(activity);
         this.activity = activity;
     }
+
+    private static Callbacks questionsCallbacks = new Callbacks() {
+        @Override
+        public void onItemSelected(String id) {
+        }
+    };
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -91,75 +99,25 @@ public class QuestionsListFragment extends ListFragment {
                             }
 
                         }
-
-                        // notifying list adapter about data changes
-                        // so that it renders the list view with updated data
                         adapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d("TAG", "Error: " + error.getMessage());
-
             }
         });
         AppController.getInstance().addToRequestQueue(movieReq);
-
-
-
     }
-
+    public void onListItemClick(ListView listView, View view, int position, long id) {
+        super.onListItemClick(listView, view, position, id);
+        listCallbacks.onItemSelected(String.valueOf(questionsList.get(position).getID()));
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
-        //Inflate the layout for this fragment
-        //This layout contains your list view
-//        View view = inflater.inflate(R.layout.fragment_question_list, container, false);
-//
-//        //now you must initialize your list view
-//        list = (ListView) view.findViewById(R.id.list);
-//
-//        adapter = ;
-//        return view;
-//        JsonObjectRequest movieReq = new JsonObjectRequest(url,
-//                new Response.Listener<JSONObject>() {
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        Log.d("TAG", response.toString());
-//                        JSONArray questionsArr = null;
-//                        try {
-//                            questionsArr = response.getJSONArray("questions");
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                        // Parsing json
-//                        for (int i = 0; i < questionsArr.length(); i++) {
-//                            try {
-//                                JSONObject obj = questionsArr.getJSONObject(i);
-//                                Question question = new Question(obj);
-//                                questionsList.add(question);
-//
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//
-//                        }
-//
-//                        // notifying list adapter about data changes
-//                        // so that it renders the list view with updated data
-//                        adapter.notifyDataSetChanged();
-//                        list.setAdapter(adapter);
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                VolleyLog.d("TAG", "Error: " + error.getMessage());
-//
-//            }
-//        });
-//        AppController.getInstance().addToRequestQueue(movieReq);
 
     }
 
