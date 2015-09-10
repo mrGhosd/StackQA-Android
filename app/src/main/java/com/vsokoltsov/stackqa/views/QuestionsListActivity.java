@@ -24,10 +24,6 @@ public class QuestionsListActivity extends FragmentActivity implements Questions
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         if (savedInstanceState == null) {
-//            getSupportFragmentManager().beginTransaction().add(R.id.list, new QuestionsListFragment());
-//            getSupportFragmentManager().beginTransaction()
-//                    .add(R.id.list, new Questions)
-//                    .commit();
         }
     }
 
@@ -52,9 +48,6 @@ public class QuestionsListActivity extends FragmentActivity implements Questions
     }
 
     public void detailQuestionView(View v){
-//        Intent intent = new Intent(QuestionsListActivity.this, QuestionDetail.class);
-//        startActivity(intent);
-//        finish();
     }
 
     @Override
