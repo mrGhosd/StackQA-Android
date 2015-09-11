@@ -7,22 +7,47 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-    <TextView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:ems="10"
-        android:background="@drawable/rounded_textview"
-        android:textColor="#FFFFFF"
-        android:gravity="center"
-        android:id="@+id/questionRate"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginBottom="15dp"
-        android:text="10"
-        android:focusable="false"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:ems="10"
+                android:background="@drawable/rounded_textview"
+                android:textColor="#FFFFFF"
+                android:gravity="center"
+                android:id="@+id/questionRate"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginBottom="15dp"
+                android:text="10"
+                android:focusable="false"/>
+            <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/questionCreatedAt"
+                    android:password="false"
+                    android:layout_gravity="right" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/questionTitle"
+                    />
+            </LinearLayout>
+            </LinearLayout>
+
 
     <TextView
         android:layout_width="match_parent"

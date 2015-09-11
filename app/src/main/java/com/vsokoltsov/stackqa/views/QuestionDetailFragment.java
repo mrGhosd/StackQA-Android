@@ -117,12 +117,18 @@ public class QuestionDetailFragment extends Fragment{
     }
 
     public void successCallback(JSONObject object, String requestID){
-        TextView textView = (TextView) fragmentView.findViewById(R.id.questionText);
-        TextView rateView = (TextView) fragmentView.findViewById(R.id.questionRate);
         try {
-            textView.setText(object.getString("text"));
-            rateView.setText(String.valueOf(object.getInt("rate")));
-        } catch (JSONException e){
+            detailQuestion = new Question(object);
+            TextView textView = (TextView) fragmentView.findViewById(R.id.questionText);
+            TextView rateView = (TextView) fragmentView.findViewById(R.id.questionRate);
+            TextView createdAtView = (TextView) fragmentView.findViewById(R.id.questionCreatedAt);
+            TextView titleView = (TextView) fragmentView.findViewById(R.id.questionTitle);
+
+            titleView.setText(detailQuestion.getTitle());
+            textView.setText(detailQuestion.getText());
+            rateView.setText(String.valueOf(detailQuestion.getRate()));
+            createdAtView.setText(detailQuestion.getCreatedAt());
+        } catch (Exception e){
             e.printStackTrace();
         }
     }
