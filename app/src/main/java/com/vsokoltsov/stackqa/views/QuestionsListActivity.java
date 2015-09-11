@@ -53,7 +53,6 @@ public class QuestionsListActivity extends FragmentActivity implements Questions
     public void onItemSelected(Question question) {
         Intent detailIntent = new Intent(this, QuestionDetail.class);
         detailIntent.putExtra("question", question);
-        detailIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         startActivity(detailIntent);
         overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
     }

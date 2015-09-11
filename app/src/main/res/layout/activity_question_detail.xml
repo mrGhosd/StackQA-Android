@@ -6,7 +6,16 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.vsokoltsov.stackqa.views.QuestionDetail">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/detail_fragment"
+        android:name="com.vsokoltsov.stackqa.views.QuestionDetailFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        tools:context=".views.QuestionDetail"
+        tools:layout="@android:layout/list_content" />
 
 </RelativeLayout>

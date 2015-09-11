@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.vsokoltsov.stackqa.models.Question;
+
 import com.vsokoltsov.stackqa.R;
 
 public class QuestionDetail extends ActionBarActivity {
@@ -22,6 +24,7 @@ public class QuestionDetail extends ActionBarActivity {
             // using a fragment transaction.
             Bundle arguments = new Bundle();
         }
+        Question question = getIntent().getExtras().getParcelable("question");
     }
 
 
