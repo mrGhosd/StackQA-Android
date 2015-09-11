@@ -118,8 +118,10 @@ public class QuestionDetailFragment extends Fragment{
 
     public void successCallback(JSONObject object, String requestID){
         TextView textView = (TextView) fragmentView.findViewById(R.id.questionText);
+        TextView rateView = (TextView) fragmentView.findViewById(R.id.questionRate);
         try {
             textView.setText(object.getString("text"));
+            rateView.setText(String.valueOf(object.getInt("rate")));
         } catch (JSONException e){
             e.printStackTrace();
         }
