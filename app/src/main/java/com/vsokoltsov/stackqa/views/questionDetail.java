@@ -21,6 +21,7 @@ public class QuestionDetail extends ActionBarActivity {
         selectedQuestion = (Question) getIntent().getExtras().getParcelable("question");
         setContentView(R.layout.activity_question_detail);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(selectedQuestion.getTitle());
 
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
