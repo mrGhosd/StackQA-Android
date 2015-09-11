@@ -44,6 +44,7 @@ public class QuestionDetail extends ActionBarActivity {
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
             NavUtils.navigateUpTo(this, new Intent(this, QuestionsListActivity.class));
+            overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
             return true;
         }
         return super.onOptionsItemSelected(item);
