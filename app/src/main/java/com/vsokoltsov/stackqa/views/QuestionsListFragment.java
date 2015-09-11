@@ -21,6 +21,8 @@ import com.vsokoltsov.stackqa.adapters.QuestionsListAdapter;
 import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.models.QuestionsList;
+import com.vsokoltsov.stackqa.models.ServerConnection;
+import com.vsokoltsov.stackqa.models.ServerConnection;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -94,26 +96,7 @@ public class QuestionsListFragment extends ListFragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("TAG", response.toString());
-                        JSONArray questionsArr = null;
-                        try {
-                            questionsArr = response.getJSONArray("questions");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        // Parsing json
-                        for (int i = 0; i < questionsArr.length(); i++) {
-                            try {
-                                JSONObject obj = questionsArr.getJSONObject(i);
-                                Question question = new Question(obj);
-                                questionsList.add(question);
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                        adapter.notifyDataSetChanged();
+                        successCallback(response, "questionsList");
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -145,6 +128,33 @@ public class QuestionsListFragment extends ListFragment {
         getListView().setChoiceMode(activateOnItemClick
                 ? ListView.CHOICE_MODE_SINGLE
                 : ListView.CHOICE_MODE_NONE);
+    }
+
+    public void successCallback(JSONObject object, String requestID){
+        JSONArray questionsArr = null;
+        try {
+            questionsArr = object.getJSONArray("questions");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Parsing json
+        for (int i = 0; i < questionsArr.length(); i++) {
+            try {
+                JSONObject obj = questionsArr.getJSONObject(i);
+                Question question = new Question(obj);
+                questionsList.add(question);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    public void errorCallback(VolleyError error, String requestID){
+
     }
 
 }
