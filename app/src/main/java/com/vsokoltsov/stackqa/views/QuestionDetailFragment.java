@@ -12,9 +12,16 @@ import android.view.ViewGroup;
 import android.content.Intent;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 /**
@@ -30,6 +37,7 @@ public class QuestionDetailFragment extends Fragment{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     public Question detailQuestion;
+    private View fragmentView;
 
 
     public QuestionDetailFragment() {
@@ -50,11 +58,12 @@ public class QuestionDetailFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_question_detail, container, false);
+        fragmentView =  inflater.inflate(R.layout.fragment_question_detail, container, false);
         if(detailQuestion != null){
-            setFragmenApperance(view);
+            loadQuestionData(fragmentView);
+            setFragmenApperance(fragmentView);
         }
-        return view;
+        return fragmentView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -87,8 +96,33 @@ public class QuestionDetailFragment extends Fragment{
     }
 
     private void setFragmenApperance(View view){
-        TextView textView = (TextView) view.findViewById(R.id.questionText);
-        textView.setText(detailQuestion.getTitle());
+
+    }
+
+    public void loadQuestionData(View view){
+        String url = "http://178.62.198.57/api/v1/questions/"+detailQuestion.getID();
+        JsonObjectRequest questionRequest = new JsonObjectRequest(url,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        successCallback(response, "questionDetail");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("TAG", "Error: " + error.getMessage());
+            }
+        });
+        AppController.getInstance().addToRequestQueue(questionRequest);
+    }
+
+    public void successCallback(JSONObject object, String requestID){
+        TextView textView = (TextView) fragmentView.findViewById(R.id.questionText);
+        try {
+            textView.setText(object.getString("text"));
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
     }
 
 }

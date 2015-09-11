@@ -30,6 +30,7 @@ public class Question implements Parcelable{
     }
     public Question(JSONObject object){
         try {
+            setID(object.getInt("id"));
             setTitle(object.getString("title"));
             setRate(object.getInt("rate"));
             setCategory(object.getJSONObject("category"));
