@@ -48,6 +48,9 @@ public class QuestionsListFragment extends ListFragment {
     public QuestionsListAdapter adapter;
     public ListView list;
 
+    private static List<Question> cachedQuestionsList = new ArrayList<Question>();
+
+
     private Callbacks listCallbacks = questionsCallbacks;
 
     public interface Callbacks {
@@ -74,6 +77,14 @@ public class QuestionsListFragment extends ListFragment {
         }
     };
 
+    private static void setCachedQuestionsList(List<Question> list){
+        cachedQuestionsList = list;
+    }
+
+    private static List<Question> getCachedQuestionsList(){
+        return cachedQuestionsList;
+    }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -87,26 +98,33 @@ public class QuestionsListFragment extends ListFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        questionsList = getCachedQuestionsList();
         adapter = new QuestionsListAdapter(getActivity(), questionsList);
-
         setListAdapter(adapter);
-        JsonObjectRequest movieReq = new JsonObjectRequest(url,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        successCallback(response, "questionsList");
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d("TAG", "Error: " + error.getMessage());
-            }
-        });
-        AppController.getInstance().addToRequestQueue(movieReq);
+        if(questionsList.size() <= 0) {
+            JsonObjectRequest movieReq = new JsonObjectRequest(url,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            successCallback(response, "questionsList");
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.d("TAG", "Error: " + error.getMessage());
+                }
+            });
+            AppController.getInstance().addToRequestQueue(movieReq);
+        }
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -150,6 +168,7 @@ public class QuestionsListFragment extends ListFragment {
             }
 
         }
+        setCachedQuestionsList(questionsList);
         adapter.notifyDataSetChanged();
     }
 
