@@ -3,44 +3,58 @@ package com.vsokoltsov.stackqa.views;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.content.Intent;
+import android.widget.TextView;
 
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.R;
+
+import org.w3c.dom.Text;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * {@link QuestionDetailFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link QuestionDetailFragment#newInstance} factory method to
+ * Use the {@link QuestionDetailFragment# newInstance} factory method to
  * create an instance of this fragment.
  */
-public class QuestionDetailFragment extends Fragment {
+public class QuestionDetailFragment extends Fragment{
 //    public Question DETAIL_QUESTION;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    public static final Question DETAIL_QUESTION = new Question();
+    public Question detailQuestion;
 
 
     public QuestionDetailFragment() {
         // Required empty public constructor
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        if(bundle != null){
+            detailQuestion = bundle.getParcelable("question");
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_question_detail, container, false);
+        View view =  inflater.inflate(R.layout.fragment_question_detail, container, false);
+        if(detailQuestion != null){
+            setFragmenApperance(view);
+        }
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -56,6 +70,7 @@ public class QuestionDetailFragment extends Fragment {
         super.onDetach();
     }
 
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -69,6 +84,11 @@ public class QuestionDetailFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
+    }
+
+    private void setFragmenApperance(View view){
+        TextView textView = (TextView) view.findViewById(R.id.questionText);
+        textView.setText(detailQuestion.getTitle());
     }
 
 }

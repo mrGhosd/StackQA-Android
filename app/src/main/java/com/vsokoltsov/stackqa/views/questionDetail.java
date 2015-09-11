@@ -1,21 +1,24 @@
 package com.vsokoltsov.stackqa.views;
 
+import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import com.vsokoltsov.stackqa.views.QuestionDetailFragment;
 import com.vsokoltsov.stackqa.models.Question;
 
 import com.vsokoltsov.stackqa.R;
 
 public class QuestionDetail extends ActionBarActivity {
-
+    public Question selectedQuestion;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        selectedQuestion = (Question) getIntent().getExtras().getParcelable("question");
         setContentView(R.layout.activity_question_detail);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -23,8 +26,15 @@ public class QuestionDetail extends ActionBarActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
+            arguments.putParcelable("question", selectedQuestion);
+            QuestionDetailFragment fragment = new QuestionDetailFragment();
+            fragment.setArguments(arguments);
+            android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.detail_fragment, fragment);
+            fragmentTransaction.commit();
         }
-        Question question = getIntent().getExtras().getParcelable("question");
+
     }
 
 
