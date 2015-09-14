@@ -141,8 +141,7 @@ public class QuestionDetailFragment extends Fragment{
             TextView createdAtView = (TextView) fragmentView.findViewById(R.id.questionCreatedAt);
             TextView titleView = (TextView) fragmentView.findViewById(R.id.questionTitle);
             TextView tagsView = (TextView) fragmentView.findViewById(R.id.questionTags);
-            final ImageView categoryImage = (ImageView) fragmentView.findViewById(R.id.categoryImageView);
-            final TextView categoryTitle = (TextView) fragmentView.findViewById(R.id.categoryTitle);
+
 
             titleView.setText(detailQuestion.getTitle());
             textView.setText(detailQuestion.getText());
@@ -150,18 +149,31 @@ public class QuestionDetailFragment extends Fragment{
             createdAtView.setText(detailQuestion.getCreatedAt());
             tagsView.setText(detailQuestion.getTags());
 
-            String url = AppController.APP_HOST + detailQuestion.getCategory().getImageUrl();
-            ImageRequest ir = new ImageRequest(url, new Response.Listener<Bitmap>() {
-                @Override
-                public void onResponse(Bitmap response) {
-                    categoryImage.setImageBitmap(response);
-                    categoryTitle.setText(detailQuestion.getCategory().getTitle());
-                }
-            }, 0, 0, null, null);
-            AppController.getInstance().addToRequestQueue(ir);
+            setCategoryInfo(fragmentView);
+            setUserInfo(fragmentView);
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public void setCategoryInfo(View fragmentView){
+        final ImageView categoryImage = (ImageView) fragmentView.findViewById(R.id.categoryImageView);
+        final TextView categoryTitle = (TextView) fragmentView.findViewById(R.id.categoryTitle);
+
+        String url = AppController.APP_HOST + detailQuestion.getCategory().getImageUrl();
+        ImageRequest ir = new ImageRequest(url, new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
+                categoryImage.setImageBitmap(response);
+                categoryTitle.setText(detailQuestion.getCategory().getTitle());
+            }
+        }, 0, 0, null, null);
+        AppController.getInstance().addToRequestQueue(ir);
+    }
+
+    public void setUserInfo(View fragmentView){
+        final ImageView userImage = (ImageView) fragmentView.findViewById(R.id.userAvatarView);
+        final TextView userName = (TextView) fragmentView.findViewById(R.id.userName);
     }
 
 }
