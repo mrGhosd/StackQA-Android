@@ -3,6 +3,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.vsokoltsov.stackqa.models.Category;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 /**
@@ -25,6 +27,7 @@ public class Question implements Parcelable{
     private int commentsCount;
     private int views;
     private String text;
+    private String tags;
 
     public Question(){
 
@@ -34,12 +37,14 @@ public class Question implements Parcelable{
             setID(object.getInt("id"));
             setTitle(object.getString("title"));
             if (object.has("text")) setText(object.getString("text"));
+            if (object.has("tag_list")) setTags(object.getString("tag_list"));
             setRate(object.getInt("rate"));
             setCategory(object.getJSONObject("category"));
             setCreatedAt(object.getString("created_at"));
             setAnswersCount(object.getInt("answers_count"));
             setCommentsCount(object.getInt("comments_count"));
             setViews(object.getInt("views"));
+
         } catch (JSONException e){
             e.printStackTrace();
         } catch (ParseException e){
@@ -125,6 +130,14 @@ public class Question implements Parcelable{
 
     public String getText(){
         return this.text;
+    }
+
+    public void setTags(String tags){
+        this.tags = tags;
+    }
+
+    public String getTags(){
+        return this.tags;
     }
 
     @Override
