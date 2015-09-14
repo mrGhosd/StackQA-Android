@@ -174,6 +174,16 @@ public class QuestionDetailFragment extends Fragment{
     public void setUserInfo(View fragmentView){
         final ImageView userImage = (ImageView) fragmentView.findViewById(R.id.userAvatarView);
         final TextView userName = (TextView) fragmentView.findViewById(R.id.userName);
+
+        String url = AppController.APP_HOST + detailQuestion.getUser().getAvatarUrl();
+        ImageRequest ir = new ImageRequest(url, new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
+                userImage.setImageBitmap(response);
+                userName.setText(detailQuestion.getUser().getCorrectNaming());
+            }
+        }, 0, 0, null, null);
+        AppController.getInstance().addToRequestQueue(ir);
     }
 
 }

@@ -78,7 +78,6 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:gravity="right"
                                 android:layout_weight="1.0">
                                 <ImageView
                                     android:layout_marginBottom="10dp"
@@ -91,7 +90,8 @@
                                     android:layout_height="wrap_content"
                                     android:id="@+id/userName"
                                     android:layout_marginTop="15dp"
-                                    android:layout_marginLeft="10dp"/>
+                                    android:layout_marginLeft="10dp"
+                                    android:textSize="12dp" />
                                 </LinearLayout>
                         </LinearLayout>
                 </LinearLayout>

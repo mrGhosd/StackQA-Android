@@ -22,6 +22,7 @@ public class Question implements Parcelable{
     private String title;
     private int rate;
     private Category category;
+    private User user;
     private Date createdAt;
     private int answersCount;
     private int commentsCount;
@@ -37,6 +38,7 @@ public class Question implements Parcelable{
             setID(object.getInt("id"));
             setTitle(object.getString("title"));
             if (object.has("text")) setText(object.getString("text"));
+            if (object.has("user")) setUser(object.getJSONObject("user"));
             if (object.has("tag_list")) setTags(object.getString("tag_list"));
             setRate(object.getInt("rate"));
             setCategory(object.getJSONObject("category"));
@@ -138,6 +140,14 @@ public class Question implements Parcelable{
 
     public String getTags(){
         return this.tags;
+    }
+
+    public void setUser(JSONObject user){
+        this.user = new User(user);
+    }
+
+    public User getUser(){
+        return this.user;
     }
 
     @Override
