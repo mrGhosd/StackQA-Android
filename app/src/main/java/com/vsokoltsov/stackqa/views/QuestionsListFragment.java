@@ -44,7 +44,7 @@ import android.widget.AdapterView;
 public class QuestionsListFragment extends ListFragment {
     private Activity activity;
     private List<Question> questionsList = new ArrayList<Question>();
-    private static final String url = "http://178.62.198.57/api/v1/questions";
+    private static final String url = AppController.APP_HOST + "/api/v1/questions";
     public QuestionsListAdapter adapter;
     public ListView list;
 

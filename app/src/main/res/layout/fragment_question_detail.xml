@@ -27,25 +27,25 @@
                 android:layout_marginBottom="15dp"
                 android:text="10"
                 android:focusable="false"/>
-            <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
-                    android:id="@+id/questionCreatedAt"
-                    android:password="false"
-                    android:layout_gravity="right" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:id="@+id/questionTitle"
-                    />
-            </LinearLayout>
+                <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="10dp"
+                        android:id="@+id/questionCreatedAt"
+                        android:password="false"
+                        android:layout_gravity="right" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:id="@+id/questionTitle"
+                        />
+                </LinearLayout>
             </LinearLayout>
 
 

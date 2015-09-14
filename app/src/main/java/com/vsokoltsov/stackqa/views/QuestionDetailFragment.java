@@ -100,7 +100,7 @@ public class QuestionDetailFragment extends Fragment{
     }
 
     public void loadQuestionData(View view){
-        String url = "http://178.62.198.57/api/v1/questions/"+detailQuestion.getID();
+        String url = AppController.APP_HOST+"/api/v1/questions/"+detailQuestion.getID();
         JsonObjectRequest questionRequest = new JsonObjectRequest(url,
                 new Response.Listener<JSONObject>() {
                     @Override
