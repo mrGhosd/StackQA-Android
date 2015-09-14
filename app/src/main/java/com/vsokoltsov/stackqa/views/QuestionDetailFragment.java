@@ -1,6 +1,9 @@
 package com.vsokoltsov.stackqa.views;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.content.Intent;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -20,9 +24,20 @@ import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.R;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
+
+import java.io.InputStream;
+import java.net.URL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -124,12 +139,15 @@ public class QuestionDetailFragment extends Fragment{
             TextView createdAtView = (TextView) fragmentView.findViewById(R.id.questionCreatedAt);
             TextView titleView = (TextView) fragmentView.findViewById(R.id.questionTitle);
             TextView tagsView = (TextView) fragmentView.findViewById(R.id.questionTags);
+            final ImageView categoryImage = (ImageView) fragmentView.findViewById(R.id.categoryImageView);
 
             titleView.setText(detailQuestion.getTitle());
             textView.setText(detailQuestion.getText());
             rateView.setText(String.valueOf(detailQuestion.getRate()));
             createdAtView.setText(detailQuestion.getCreatedAt());
             tagsView.setText(detailQuestion.getTags());
+
+            Picasso.with(getActivity().getBaseContext()).load(AppController.APP_HOST + detailQuestion.getCategory().getImageUrl()).into(categoryImage);
         } catch (Exception e){
             e.printStackTrace();
         }
