@@ -19,7 +19,9 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.R;
@@ -140,6 +142,7 @@ public class QuestionDetailFragment extends Fragment{
             TextView titleView = (TextView) fragmentView.findViewById(R.id.questionTitle);
             TextView tagsView = (TextView) fragmentView.findViewById(R.id.questionTags);
             final ImageView categoryImage = (ImageView) fragmentView.findViewById(R.id.categoryImageView);
+            final TextView categoryTitle = (TextView) fragmentView.findViewById(R.id.categoryTitle);
 
             titleView.setText(detailQuestion.getTitle());
             textView.setText(detailQuestion.getText());
@@ -147,7 +150,15 @@ public class QuestionDetailFragment extends Fragment{
             createdAtView.setText(detailQuestion.getCreatedAt());
             tagsView.setText(detailQuestion.getTags());
 
-            Picasso.with(getActivity().getBaseContext()).load(AppController.APP_HOST + detailQuestion.getCategory().getImageUrl()).into(categoryImage);
+            String url = AppController.APP_HOST + detailQuestion.getCategory().getImageUrl();
+            ImageRequest ir = new ImageRequest(url, new Response.Listener<Bitmap>() {
+                @Override
+                public void onResponse(Bitmap response) {
+                    categoryImage.setImageBitmap(response);
+                    categoryTitle.setText(detailQuestion.getCategory().getTitle());
+                }
+            }, 0, 0, null, null);
+            AppController.getInstance().addToRequestQueue(ir);
         } catch (Exception e){
             e.printStackTrace();
         }
