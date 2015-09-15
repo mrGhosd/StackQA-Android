@@ -77,8 +77,25 @@ public class QuestionDetailFragment extends Fragment{
         // Inflate the layout for this fragment
         fragmentView =  inflater.inflate(R.layout.fragment_question_detail, container, false);
         if(detailQuestion != null){
-            loadQuestionData(fragmentView);
-            setFragmenApperance(fragmentView);
+            try {
+                TextView textView = (TextView) fragmentView.findViewById(R.id.questionText);
+                TextView rateView = (TextView) fragmentView.findViewById(R.id.questionRate);
+                TextView createdAtView = (TextView) fragmentView.findViewById(R.id.questionCreatedAt);
+                TextView titleView = (TextView) fragmentView.findViewById(R.id.questionTitle);
+                TextView tagsView = (TextView) fragmentView.findViewById(R.id.questionTags);
+
+
+                titleView.setText(detailQuestion.getTitle());
+                textView.setText(detailQuestion.getText());
+                rateView.setText(String.valueOf(detailQuestion.getRate()));
+                createdAtView.setText(detailQuestion.getCreatedAt());
+                tagsView.setText(detailQuestion.getTags());
+
+                setCategoryInfo(fragmentView);
+                setUserInfo(fragmentView);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
         }
         return fragmentView;
     }
@@ -110,50 +127,6 @@ public class QuestionDetailFragment extends Fragment{
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
-    }
-
-    private void setFragmenApperance(View view){
-
-    }
-
-    public void loadQuestionData(View view){
-        String url = AppController.APP_HOST+"/api/v1/questions/"+detailQuestion.getID();
-        JsonObjectRequest questionRequest = new JsonObjectRequest(url,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        successCallback(response, "questionDetail");
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d("TAG", "Error: " + error.getMessage());
-            }
-        });
-        AppController.getInstance().addToRequestQueue(questionRequest);
-    }
-
-    public void successCallback(JSONObject object, String requestID){
-        try {
-            detailQuestion = new Question(object);
-            TextView textView = (TextView) fragmentView.findViewById(R.id.questionText);
-            TextView rateView = (TextView) fragmentView.findViewById(R.id.questionRate);
-            TextView createdAtView = (TextView) fragmentView.findViewById(R.id.questionCreatedAt);
-            TextView titleView = (TextView) fragmentView.findViewById(R.id.questionTitle);
-            TextView tagsView = (TextView) fragmentView.findViewById(R.id.questionTags);
-
-
-            titleView.setText(detailQuestion.getTitle());
-            textView.setText(detailQuestion.getText());
-            rateView.setText(String.valueOf(detailQuestion.getRate()));
-            createdAtView.setText(detailQuestion.getCreatedAt());
-            tagsView.setText(detailQuestion.getTags());
-
-            setCategoryInfo(fragmentView);
-            setUserInfo(fragmentView);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
     }
 
     public void setCategoryInfo(View fragmentView){

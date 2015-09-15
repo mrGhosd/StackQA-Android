@@ -9,10 +9,19 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.views.QuestionDetailFragment;
 import com.vsokoltsov.stackqa.models.Question;
 
 import com.vsokoltsov.stackqa.R;
+
+import org.json.JSONObject;
 
 public class QuestionDetail extends ActionBarActivity {
     public Question selectedQuestion;
@@ -25,21 +34,46 @@ public class QuestionDetail extends ActionBarActivity {
         getSupportActionBar().setTitle(selectedQuestion.getTitle());
 
         if (savedInstanceState == null) {
+            loadQuestionData();
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putParcelable("question", selectedQuestion);
-            QuestionDetailFragment fragment = new QuestionDetailFragment();
-            fragment.setArguments(arguments);
-            android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.add(R.id.detail_fragment, fragment);
-            fragmentTransaction.commit();
+
         }
 
     }
 
+    public void loadQuestionData(){
+        String url = AppController.APP_HOST+"/api/v1/questions/"+selectedQuestion.getID();
+        JsonObjectRequest questionRequest = new JsonObjectRequest(url,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        successCallback(response, "questionDetail");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("TAG", "Error: " + error.getMessage());
+            }
+        });
+        AppController.getInstance().addToRequestQueue(questionRequest);
+    }
 
+    public void successCallback(JSONObject response, String requestTag){
+        Question question = new Question(response);
+        Bundle arguments = new Bundle();
+        arguments.putParcelable("question", question);
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        loadMainQuestionFragment(arguments, fragmentTransaction);
+        fragmentTransaction.commit();
+    }
+
+    public void loadMainQuestionFragment(Bundle arguments, FragmentTransaction fragmentTransaction){
+        QuestionDetailFragment fragment = new QuestionDetailFragment();
+        fragment.setArguments(arguments);
+        fragmentTransaction.add(R.id.detail_fragment, fragment);
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
