@@ -30,7 +30,10 @@ public class Answer implements Parcelable {
             if (object.has("text")) setText(object.getString("text"));
             if (object.has("user")) setUser(object.getJSONObject("user"));
             if (object.has("question_id")) setQuestionID(object.getInt("question_id"));
+            if (object.has("created_at")) setCreatedAt(object.getString("created_at"));
         } catch(JSONException e){
+            e.printStackTrace();
+        } catch(ParseException e){
             e.printStackTrace();
         }
     }

@@ -32,7 +32,11 @@ public class QuestionDetail extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         selectedQuestion = (Question) getIntent().getExtras().getParcelable("question");
-        setContentView(R.layout.activity_question_detail);
+        try {
+            setContentView(R.layout.activity_question_detail);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(selectedQuestion.getTitle());
 

@@ -2,7 +2,7 @@ package com.vsokoltsov.stackqa.views.answers;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,16 +47,6 @@ public class AnswerListFragment extends ListFragment {
     public AnswersListAdapter adapter;
     public ListView list;
 
-
-    private Callbacks listCallbacks = questionsCallbacks;
-
-    public interface Callbacks {
-        /**
-         * Callback for when an item has been selected.
-         */
-        public void onItemSelected(Question question);
-    }
-
     public void setAnswerList(JSONArray answers){
         for(int i = 0; i < answers.length(); i++){
             try {
@@ -82,14 +72,7 @@ public class AnswerListFragment extends ListFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.activity = activity;
-        listCallbacks = (Callbacks) activity;
     }
-
-    private static Callbacks questionsCallbacks = new Callbacks() {
-        @Override
-        public void onItemSelected(Question question) {
-        }
-    };
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
