@@ -90,6 +90,12 @@ public class QuestionDetailFragment extends Fragment{
                 rateView.setText(String.valueOf(detailQuestion.getRate()));
                 createdAtView.setText(detailQuestion.getCreatedAt());
                 tagsView.setText(detailQuestion.getTags());
+                if(detailQuestion.getTags() == ""){
+                    tagsView.setVisibility(View.GONE);
+                } else {
+                    tagsView.setVisibility(View.VISIBLE);
+                    tagsView.setText(detailQuestion.getTags());
+                }
 
                 setCategoryInfo(fragmentView);
                 setUserInfo(fragmentView);

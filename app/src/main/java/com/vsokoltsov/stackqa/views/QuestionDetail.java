@@ -43,7 +43,7 @@ public class QuestionDetail extends ActionBarActivity {
     }
 
     public void loadQuestionData(){
-        String url = AppController.APP_HOST+"/api/v1/questions/"+selectedQuestion.getID();
+        String url = AppController.APP_HOST+"/api/v2/questions/"+selectedQuestion.getID();
         JsonObjectRequest questionRequest = new JsonObjectRequest(url,
                 new Response.Listener<JSONObject>() {
                     @Override
