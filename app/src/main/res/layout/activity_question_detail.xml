@@ -1,18 +1,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent" 
     tools:context="com.vsokoltsov.stackqa.views.QuestionDetail">
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
 
-            xmlns:tools="http://schemas.android.com/tools"
+        <fragment
             android:id="@+id/detail_fragment"
             android:name="com.vsokoltsov.stackqa.views.QuestionDetailFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context=".views.QuestionDetail"
+             />
+
+        <fragment
+            android:name="com.vsokoltsov.stackqa.views.answers.AnswerListFragment"
+            android:id="@+id/answers_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             tools:layout="@android:layout/list_content" />
     </ScrollView>
 

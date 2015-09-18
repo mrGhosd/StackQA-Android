@@ -20,7 +20,10 @@ import com.vsokoltsov.stackqa.views.QuestionDetailFragment;
 import com.vsokoltsov.stackqa.models.Question;
 
 import com.vsokoltsov.stackqa.R;
+import com.vsokoltsov.stackqa.views.answers.AnswerListFragment;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class QuestionDetail extends ActionBarActivity {
@@ -66,6 +69,11 @@ public class QuestionDetail extends ActionBarActivity {
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         loadMainQuestionFragment(arguments, fragmentTransaction);
+        try {
+            loadQuestionAnswersFragment(arguments, fragmentTransaction, response.getJSONArray("answers"));
+        } catch(JSONException e){
+            e.printStackTrace();
+        }
         fragmentTransaction.commit();
     }
 
@@ -73,6 +81,11 @@ public class QuestionDetail extends ActionBarActivity {
         QuestionDetailFragment fragment = new QuestionDetailFragment();
         fragment.setArguments(arguments);
         fragmentTransaction.add(R.id.detail_fragment, fragment);
+    }
+
+    public void loadQuestionAnswersFragment(Bundle arguments, FragmentTransaction fragmentTransaction, JSONArray answers){
+        AnswerListFragment fragment = AnswerListFragment.newInstance(answers);
+        fragmentTransaction.add(R.id.answers_list, fragment);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
