@@ -47,6 +47,7 @@ import java.util.List;
  */
 public class AnswerListFragment extends ListFragment {
     private Activity activity;
+    private QuestionDetail mainActivity;
     private List<Answer> answerList = new ArrayList<Answer>();
     public AnswersListAdapter adapter;
     public ListView list;
@@ -84,9 +85,9 @@ public class AnswerListFragment extends ListFragment {
         super.onViewCreated(view, savedInstanceState);
 //        try{
             list = getListView();
-//            setListViewHeightBasedOnChildren(list);
-            QuestionDetail qView = (QuestionDetail) getActivity();
-            qView.setLayoutHeight(500);
+            setListViewHeightBasedOnChildren(list);
+            this.mainActivity = (QuestionDetail) getActivity();
+            this.mainActivity.setLayoutHeight(3000);
 //            Activity mainAcitivty = qView.getParent();
 //            View relativeLayput = activity.findViewById(R.id.questionViewMainLayout);
 //            int scViewheight = qD.getHeight();

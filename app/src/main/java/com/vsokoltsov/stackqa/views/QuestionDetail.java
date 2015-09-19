@@ -12,7 +12,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroupOverlay;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -31,12 +33,14 @@ import org.json.JSONObject;
 
 public class QuestionDetail extends ActionBarActivity {
     public Question selectedQuestion;
+    private ScrollView layout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         selectedQuestion = (Question) getIntent().getExtras().getParcelable("question");
         try {
             setContentView(R.layout.activity_question_detail);
+            setViewLayout((ScrollView) findViewById(R.id.questionViewMainLayout));
         } catch(Exception e){
             e.printStackTrace();
         }
@@ -53,15 +57,21 @@ public class QuestionDetail extends ActionBarActivity {
     }
 
     public void setLayoutHeight(int height){
-        ViewGroup.LayoutParams params = this.getLayoutHeight();
-        params.height += height;
+        try {
+            ViewGroup.LayoutParams params = this.layout.getLayoutParams();
+            params.height += height;
+            this.layout.setLayoutParams(params);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
-    public ViewGroup.LayoutParams getLayoutHeight(){
-        View layout = findViewById(R.id.questionViewMainLayout);
+    public int getLayoutHeight(){
+        return this.layout.getLayoutParams().height;
+    }
 
-        ViewGroup.LayoutParams params = layout.getLayoutParams();
-        return params;
+    public void setViewLayout(ScrollView layout){
+        this.layout = layout;
     }
 
     public void loadQuestionData(){
