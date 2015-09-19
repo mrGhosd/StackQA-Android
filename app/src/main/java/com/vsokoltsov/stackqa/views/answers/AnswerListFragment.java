@@ -7,11 +7,14 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -25,6 +28,7 @@ import com.vsokoltsov.stackqa.adapters.QuestionsListAdapter;
 import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.models.Answer;
 import com.vsokoltsov.stackqa.models.Question;
+import com.vsokoltsov.stackqa.views.QuestionDetail;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,6 +50,7 @@ public class AnswerListFragment extends ListFragment {
     private List<Answer> answerList = new ArrayList<Answer>();
     public AnswersListAdapter adapter;
     public ListView list;
+    private View fragmentView;
 
     public void setAnswerList(JSONArray answers){
         for(int i = 0; i < answers.length(); i++){
@@ -77,7 +82,17 @@ public class AnswerListFragment extends ListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        list = (ListView) getListView();
+//        try{
+            list = getListView();
+//            setListViewHeightBasedOnChildren(list);
+            QuestionDetail qView = (QuestionDetail) getActivity();
+            qView.setLayoutHeight(500);
+//            Activity mainAcitivty = qView.getParent();
+//            View relativeLayput = activity.findViewById(R.id.questionViewMainLayout);
+//            int scViewheight = qD.getHeight();
+//        } catch (Exception e){
+//            e.printStackTrace();
+//        }
     }
 
     @Override
@@ -85,20 +100,18 @@ public class AnswerListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         adapter = new AnswersListAdapter(getActivity(), answerList);
         setListAdapter(adapter);
-        Bundle bundle = getArguments();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-
+        fragmentView =  inflater.inflate(R.layout.fragment_answer_list, container, false);
+        return fragmentView;
     }
 
     @Override
@@ -114,5 +127,28 @@ public class AnswerListFragment extends ListFragment {
         getListView().setChoiceMode(activateOnItemClick
                 ? ListView.CHOICE_MODE_SINGLE
                 : ListView.CHOICE_MODE_NONE);
+    }
+
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
+
+        int totalHeight = 0;
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getHeight(), View.MeasureSpec.EXACTLY);
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+            totalHeight += listItem.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight()) ;
+        listView.setLayoutParams(params);
+
     }
 }

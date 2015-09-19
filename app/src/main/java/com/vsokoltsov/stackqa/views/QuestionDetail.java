@@ -10,6 +10,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroupOverlay;
+import android.widget.RelativeLayout;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -47,6 +50,18 @@ public class QuestionDetail extends ActionBarActivity {
 
         }
 
+    }
+
+    public void setLayoutHeight(int height){
+        ViewGroup.LayoutParams params = this.getLayoutHeight();
+        params.height += height;
+    }
+
+    public ViewGroup.LayoutParams getLayoutHeight(){
+        View layout = findViewById(R.id.questionViewMainLayout);
+
+        ViewGroup.LayoutParams params = layout.getLayoutParams();
+        return params;
     }
 
     public void loadQuestionData(){
