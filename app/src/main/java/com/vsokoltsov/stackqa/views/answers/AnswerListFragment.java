@@ -1,13 +1,19 @@
 package com.vsokoltsov.stackqa.views.answers;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -87,7 +93,7 @@ public class AnswerListFragment extends ListFragment {
             list = getListView();
             setListViewHeightBasedOnChildren(list);
             this.mainActivity = (QuestionDetail) getActivity();
-            this.mainActivity.setLayoutHeight(3000);
+//            this.mainActivity.setLayoutHeight(3000);
 //            Activity mainAcitivty = qView.getParent();
 //            View relativeLayput = activity.findViewById(R.id.questionViewMainLayout);
 //            int scViewheight = qD.getHeight();
@@ -130,7 +136,7 @@ public class AnswerListFragment extends ListFragment {
                 : ListView.CHOICE_MODE_NONE);
     }
 
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
+    public void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
             // pre-condition
@@ -145,10 +151,17 @@ public class AnswerListFragment extends ListFragment {
                     View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
 
                     View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+            int height = listItem.getMeasuredHeight();
             totalHeight += listItem.getMeasuredHeight();
         }
         ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight()) ;
+        DisplayMetrics dm = Resources.getSystem().getDisplayMetrics();
+        WindowManager manager = (WindowManager) listView.getContext().getSystemService(Context.WINDOW_SERVICE);
+        Display d = manager.getDefaultDisplay();
+        Point size = new Point();
+        d.getSize(size);
+        int height = size.x;
+        params.height = height;
         listView.setLayoutParams(params);
 
     }
