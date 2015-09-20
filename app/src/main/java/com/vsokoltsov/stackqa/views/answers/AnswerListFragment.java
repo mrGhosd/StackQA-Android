@@ -161,7 +161,7 @@ public class AnswerListFragment extends ListFragment {
         Point size = new Point();
         d.getSize(size);
         int height = size.x;
-        params.height = height;
+        params.height = height + totalHeight;
         listView.setLayoutParams(params);
 
     }

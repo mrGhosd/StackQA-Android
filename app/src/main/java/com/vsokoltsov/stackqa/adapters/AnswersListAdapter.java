@@ -2,13 +2,18 @@ package com.vsokoltsov.stackqa.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.toolbox.ImageRequest;
 import com.vsokoltsov.stackqa.R;
+import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.models.Answer;
 import com.vsokoltsov.stackqa.models.Question;
 
@@ -51,17 +56,31 @@ public class AnswersListAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.answer_list_row, null);
 
         //Перечисляем элементы в layout-е строки списка вопросов
-        TextView author = (TextView) convertView.findViewById(R.id.answerAuthor);
+
         TextView text = (TextView) convertView.findViewById(R.id.answerText);
         TextView createdAt = (TextView) convertView.findViewById(R.id.answerCreatedAt);
 
         // getting movie data for the row
         Answer answer = answerList.get(position);
 
-
+        setUserInfo(convertView, answer);
         text.setText(answer.getText());
-        author.setText(answer.getUser().getCorrectNaming());
         createdAt.setText(answer.getCreatedAt());
         return convertView;
+    }
+
+    public void setUserInfo(View fragmentView, final Answer answer){
+        final ImageView userImage = (ImageView) fragmentView.findViewById(R.id.authorAvatar);
+        final TextView author = (TextView) fragmentView.findViewById(R.id.answerAuthor);
+
+        String url = AppController.APP_HOST + answer.getUser().getAvatarUrl();
+        ImageRequest ir = new ImageRequest(url, new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
+                userImage.setImageBitmap(response);
+                author.setText(answer.getUser().getCorrectNaming());
+            }
+        }, 0, 0, null, null);
+        AppController.getInstance().addToRequestQueue(ir);
     }
 }
