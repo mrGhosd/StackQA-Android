@@ -56,10 +56,10 @@ public class AnswersListAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.answer_list_row, null);
 
         //Перечисляем элементы в layout-е строки списка вопросов
-
         TextView text = (TextView) convertView.findViewById(R.id.answerText);
         TextView createdAt = (TextView) convertView.findViewById(R.id.answerCreatedAt);
         TextView commentsCount = (TextView) convertView.findViewById(R.id.answerCommentsCount);
+        TextView rate = (TextView) convertView.findViewById(R.id.answerRateCount);
 
         // getting movie data for the row
         Answer answer = answerList.get(position);
@@ -68,6 +68,7 @@ public class AnswersListAdapter extends BaseAdapter {
         text.setText(answer.getText());
         createdAt.setText(answer.getCreatedAt());
         commentsCount.setText(String.valueOf(answer.getCommentsCount()));
+        rate.setText(String.valueOf(answer.getRate()));
         return convertView;
     }
 

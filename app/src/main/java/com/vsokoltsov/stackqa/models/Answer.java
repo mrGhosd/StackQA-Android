@@ -22,6 +22,7 @@ public class Answer implements Parcelable {
     private User user;
     private Date createdAt;
     private int commentsCount;
+    private int rate;
 
     public Answer(){}
 
@@ -33,6 +34,7 @@ public class Answer implements Parcelable {
             if (object.has("question_id")) setQuestionID(object.getInt("question_id"));
             if (object.has("created_at")) setCreatedAt(object.getString("created_at"));
             if (object.has("comments_count")) setCommentsCount(object.getInt("comments_count"));
+            if (object.has("rate")) setRate(object.getInt("rate"));
         } catch(JSONException e){
             e.printStackTrace();
         } catch(ParseException e){
@@ -78,6 +80,14 @@ public class Answer implements Parcelable {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
         Date date = format.parse(createdAt);
         this.createdAt = date;
+    }
+
+    public void setRate(int rate){
+        this.rate = rate;
+    }
+
+    public int getRate(){
+        return this.rate;
     }
 
     public void setUser(JSONObject user){
