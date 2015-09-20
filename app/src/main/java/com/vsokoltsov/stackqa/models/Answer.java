@@ -21,6 +21,7 @@ public class Answer implements Parcelable {
     private String text;
     private User user;
     private Date createdAt;
+    private int commentsCount;
 
     public Answer(){}
 
@@ -31,6 +32,7 @@ public class Answer implements Parcelable {
             if (object.has("user")) setUser(object.getJSONObject("user"));
             if (object.has("question_id")) setQuestionID(object.getInt("question_id"));
             if (object.has("created_at")) setCreatedAt(object.getString("created_at"));
+            if (object.has("comments_count")) setCommentsCount(object.getInt("comments_count"));
         } catch(JSONException e){
             e.printStackTrace();
         } catch(ParseException e){
@@ -56,6 +58,14 @@ public class Answer implements Parcelable {
 
     public User getUser(){
         return this.user;
+    }
+
+    public void setCommentsCount(int count){
+        this.commentsCount = count;
+    }
+
+    public int getCommentsCount(){
+        return this.commentsCount;
     }
 
     public String getCreatedAt(){

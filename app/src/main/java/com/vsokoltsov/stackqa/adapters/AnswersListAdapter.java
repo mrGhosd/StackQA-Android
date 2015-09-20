@@ -59,6 +59,7 @@ public class AnswersListAdapter extends BaseAdapter {
 
         TextView text = (TextView) convertView.findViewById(R.id.answerText);
         TextView createdAt = (TextView) convertView.findViewById(R.id.answerCreatedAt);
+        TextView commentsCount = (TextView) convertView.findViewById(R.id.answerCommentsCount);
 
         // getting movie data for the row
         Answer answer = answerList.get(position);
@@ -66,6 +67,7 @@ public class AnswersListAdapter extends BaseAdapter {
         setUserInfo(convertView, answer);
         text.setText(answer.getText());
         createdAt.setText(answer.getCreatedAt());
+        commentsCount.setText(String.valueOf(answer.getCommentsCount()));
         return convertView;
     }
 
