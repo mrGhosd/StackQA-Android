@@ -25,6 +25,7 @@ import com.vsokoltsov.stackqa.views.QuestionDetailFragment;
 import com.vsokoltsov.stackqa.models.Question;
 
 import com.vsokoltsov.stackqa.R;
+import com.vsokoltsov.stackqa.views.answers.AnswerForm;
 import com.vsokoltsov.stackqa.views.answers.AnswerListFragment;
 
 import org.json.JSONArray;
@@ -32,13 +33,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class QuestionDetail extends ActionBarActivity {
-    public Question selectedQuestion;
+    public static Question selectedQuestion;
     private ScrollView layout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        selectedQuestion = (Question) getIntent().getExtras().getParcelable("question");
         try {
+            Bundle extras = getIntent().getExtras();
+            if(extras != null) {
+                selectedQuestion = (Question) extras.getParcelable("question");
+            }
             setContentView(R.layout.activity_question_detail);
             setViewLayout((ScrollView) findViewById(R.id.questionViewMainLayout));
         } catch(Exception e){
@@ -48,7 +52,9 @@ public class QuestionDetail extends ActionBarActivity {
         getSupportActionBar().setTitle(selectedQuestion.getTitle());
 
         if (savedInstanceState == null) {
-            loadQuestionData();
+            if(selectedQuestion != null) {
+                loadQuestionData();
+            }
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
 
@@ -125,19 +131,34 @@ public class QuestionDetail extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            // This ID represents the Home or Up button. In the case of this
-            // activity, the Up button is shown. Use NavUtils to allow users
-            // to navigate up one level in the application structure. For
-            // more details, see the Navigation pattern on Android Design:
-            //
-            // http://developer.android.com/design/patterns/navigation.html#up-vs-back
-            //
-            NavUtils.navigateUpTo(this, new Intent(this, QuestionsListActivity.class));
-            overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                NavUtils.navigateUpTo(this, new Intent(this, QuestionsListActivity.class));
+                overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
+                return true;
+            case R.id.add_answer:
+                showAnswerForm();
+                return true;
+            case R.id.add_comment:
+                showCommentForm();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+    }
+
+    private void showAnswerForm(){
+        try {
+            Intent detailIntent = new Intent(this, AnswerForm.class);
+//            detailIntent.putExtra("question", selectedQuestion);
+            startActivity(detailIntent);
+            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void showCommentForm(){
+
     }
 }
