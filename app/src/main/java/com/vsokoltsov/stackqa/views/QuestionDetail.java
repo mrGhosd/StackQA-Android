@@ -7,11 +7,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroupOverlay;
+import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -45,6 +48,9 @@ public class QuestionDetail extends ActionBarActivity {
             }
             setContentView(R.layout.activity_question_detail);
             setViewLayout((ScrollView) findViewById(R.id.questionViewMainLayout));
+            EditText answerText = (EditText) findViewById(R.id.answerUserText);
+            this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            setSuccesButtonHandler(answerText);
         } catch(Exception e){
             e.printStackTrace();
         }
@@ -160,5 +166,16 @@ public class QuestionDetail extends ActionBarActivity {
 
     private void showCommentForm(){
 
+    }
+
+    private void setSuccesButtonHandler(EditText answerText){
+        answerText.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 }
