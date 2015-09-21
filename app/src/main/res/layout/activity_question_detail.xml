@@ -9,7 +9,7 @@
         android:id="@+id/questionViewMainLayout">
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:orientation="vertical">
             <fragment
                 android:id="@+id/detail_fragment"
@@ -23,6 +23,19 @@
                 android:id="@+id/answers_list"
                 android:name="com.vsokoltsov.stackqa.views.answers.AnswerListFragment"
                 tools:context=".vies.QuestionsListActivity" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#FF0000">
+                <EditText
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"/>
+                </LinearLayout>
+
+
             </LinearLayout>
 
     </ScrollView>

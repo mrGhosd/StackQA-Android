@@ -39,6 +39,7 @@ import com.vsokoltsov.stackqa.views.QuestionDetail;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,8 +152,10 @@ public class AnswerListFragment extends ListFragment {
                     View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
 
                     View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+            TextView answerText = (TextView) listItem.findViewById(R.id.answerText);
+            float answerTextHeight = answerText.getTextSize();
             int height = listItem.getMeasuredHeight();
-            totalHeight += listItem.getMeasuredHeight();
+            totalHeight += listItem.getMeasuredHeight() + answerTextHeight + 50;
         }
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         DisplayMetrics dm = Resources.getSystem().getDisplayMetrics();
@@ -161,7 +164,7 @@ public class AnswerListFragment extends ListFragment {
         Point size = new Point();
         d.getSize(size);
         int height = size.x;
-        params.height = height + totalHeight;
+        params.height = totalHeight;
         listView.setLayoutParams(params);
 
     }
