@@ -146,6 +146,10 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
                 }
             });
             AppController.getInstance().addToRequestQueue(movieReq);
+        } else {
+            if(mProgress != null){
+                mProgress.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
