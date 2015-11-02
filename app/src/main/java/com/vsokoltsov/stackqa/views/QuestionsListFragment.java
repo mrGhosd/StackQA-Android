@@ -1,8 +1,11 @@
 package com.vsokoltsov.stackqa.views;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 //import android.support.v4.app.ListFragment;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +44,9 @@ import android.widget.AdapterView;
  * <p/>
  * interface.
  */
-public class QuestionsListFragment extends ListFragment {
+public class QuestionsListFragment extends ListFragment implements SwipeRefreshLayout.OnRefreshListener {
+
+    private SwipeRefreshLayout swipeLayout;
     private Activity activity;
     private List<Question> questionsList = new ArrayList<Question>();
     private static final String url = AppController.APP_HOST + "/api/v1/questions";
@@ -52,6 +57,13 @@ public class QuestionsListFragment extends ListFragment {
 
 
     private Callbacks listCallbacks = questionsCallbacks;
+
+    @Override
+    public void onRefresh() {
+        cachedQuestionsList = new ArrayList<Question>();
+        questionsList = new ArrayList<Question>();
+        this.loadQuestionsList();
+    }
 
     public interface Callbacks {
         /**
@@ -100,6 +112,10 @@ public class QuestionsListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        this.loadQuestionsList();
+    }
+
+    private void loadQuestionsList(){
         questionsList = getCachedQuestionsList();
         adapter = new QuestionsListAdapter(getActivity(), questionsList);
         setListAdapter(adapter);
@@ -120,6 +136,14 @@ public class QuestionsListFragment extends ListFragment {
         }
     }
 
+    public void setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener listener) {
+        swipeLayout.setOnRefreshListener(listener);
+    }
+
+    public boolean isRefreshing() {
+        return swipeLayout.isRefreshing();
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -129,7 +153,11 @@ public class QuestionsListFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        final View listFragmentView = super.onCreateView(inflater, container, savedInstanceState);
+        swipeLayout = new ListFragmentSwipeRefreshLayout(container.getContext());
+        swipeLayout.setOnRefreshListener(this);
+        swipeLayout.addView(listFragmentView);
+        return swipeLayout;
 
     }
 
@@ -170,10 +198,49 @@ public class QuestionsListFragment extends ListFragment {
         }
         setCachedQuestionsList(questionsList);
         adapter.notifyDataSetChanged();
+        swipeLayout.setRefreshing(false);
     }
 
     public void errorCallback(VolleyError error, String requestID){
+        swipeLayout.setRefreshing(false);
+    }
 
+
+    private class ListFragmentSwipeRefreshLayout extends SwipeRefreshLayout {
+
+        public ListFragmentSwipeRefreshLayout(Context context) {
+            super(context);
+        }
+
+        /**
+         * As mentioned above, we need to override this method to properly signal when a
+         * 'swipe-to-refresh' is possible.
+         *
+         * @return true if the {@link android.widget.ListView} is visible and can scroll up.
+         */
+        @Override
+        public boolean canChildScrollUp() {
+            final ListView listView = getListView();
+            if (listView.getVisibility() == View.VISIBLE) {
+                return canListViewScrollUp(listView);
+            } else {
+                return false;
+            }
+        }
+
+    }
+
+    private boolean canListViewScrollUp(ListView listView) {
+        if (android.os.Build.VERSION.SDK_INT >= 14) {
+            // For ICS and above we can call canScrollVertically() to determine this
+            return ViewCompat.canScrollVertically(listView, -1);
+        } else {
+            // Pre-ICS we need to manually check the first visible item and the child view's top
+            // value
+            return listView.getChildCount() > 0 &&
+                    (listView.getFirstVisiblePosition() > 0
+                            || listView.getChildAt(0).getTop() < listView.getPaddingTop());
+        }
     }
 
 }

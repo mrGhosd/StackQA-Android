@@ -26,7 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import android.view.View;
 
-public class QuestionsListActivity extends ActionBarActivity implements QuestionsListFragment.Callbacks, NavigationFragment.NavigationDrawerCallbacks{
+public class QuestionsListActivity extends ActionBarActivity implements QuestionsListFragment.Callbacks,
+        NavigationFragment.NavigationDrawerCallbacks {
     private NavigationFragment mNavigationDrawerFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState){
