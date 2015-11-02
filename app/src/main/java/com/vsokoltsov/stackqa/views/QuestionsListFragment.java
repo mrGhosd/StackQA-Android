@@ -1,6 +1,7 @@
 package com.vsokoltsov.stackqa.views;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 //import android.support.v4.app.ListFragment;
@@ -14,11 +15,13 @@ import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.support.v4.app.ListFragment;
 
 import com.android.volley.*;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.QuestionsListAdapter;
 import com.vsokoltsov.stackqa.controllers.AppController;
@@ -36,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import android.widget.AdapterView;
 
+
 /**
  * A fragment representing a list of Items.
  * <p/>
@@ -47,7 +51,10 @@ import android.widget.AdapterView;
 public class QuestionsListFragment extends ListFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private SwipeRefreshLayout swipeLayout;
+    private CircularProgressView progressView;
+    private ProgressBar mProgress;
     private Activity activity;
+    private View listFragmentView;
     private List<Question> questionsList = new ArrayList<Question>();
     private static final String url = AppController.APP_HOST + "/api/v1/questions";
     public QuestionsListAdapter adapter;
@@ -57,6 +64,9 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
 
 
     private Callbacks listCallbacks = questionsCallbacks;
+
+    public QuestionsListFragment() {
+    }
 
     @Override
     public void onRefresh() {
@@ -101,6 +111,7 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         list = (ListView) getListView();
+        mProgress = (ProgressBar) view.findViewById(R.id.progress_bar);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -112,7 +123,6 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        this.loadQuestionsList();
     }
 
     private void loadQuestionsList(){
@@ -120,6 +130,9 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
         adapter = new QuestionsListAdapter(getActivity(), questionsList);
         setListAdapter(adapter);
         if(questionsList.size() <= 0) {
+            if(mProgress != null){
+                mProgress.setVisibility(View.VISIBLE);
+            }
             JsonObjectRequest movieReq = new JsonObjectRequest(url,
                     new Response.Listener<JSONObject>() {
                         @Override
@@ -147,16 +160,19 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View listFragmentView = super.onCreateView(inflater, container, savedInstanceState);
+        listFragmentView = super.onCreateView(inflater, container, savedInstanceState);
+        View rootView = inflater.inflate(R.layout.fragment_question_list,
+                container, false);
+        mProgress = (ProgressBar) getActivity().findViewById(R.id.progress_bar);
         swipeLayout = new ListFragmentSwipeRefreshLayout(container.getContext());
         swipeLayout.setOnRefreshListener(this);
         swipeLayout.addView(listFragmentView);
+        this.loadQuestionsList();
         return swipeLayout;
 
     }
@@ -199,6 +215,10 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
         setCachedQuestionsList(questionsList);
         adapter.notifyDataSetChanged();
         swipeLayout.setRefreshing(false);
+        mProgress = (ProgressBar) getActivity().findViewById(R.id.progress_bar);
+        if(mProgress != null){
+            mProgress.setVisibility(View.INVISIBLE);
+        }
     }
 
     public void errorCallback(VolleyError error, String requestID){
@@ -242,5 +262,4 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
                             || listView.getChildAt(0).getTop() < listView.getPaddingTop());
         }
     }
-
 }
