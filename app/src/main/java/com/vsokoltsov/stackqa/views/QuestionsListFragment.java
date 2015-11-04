@@ -1,22 +1,15 @@
 package com.vsokoltsov.stackqa.views;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
-//import android.support.v4.app.ListFragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.support.v4.app.ListFragment;
 
 import com.android.volley.*;
@@ -26,15 +19,13 @@ import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.QuestionsListAdapter;
 import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.models.Question;
-import com.vsokoltsov.stackqa.models.QuestionsList;
-import com.vsokoltsov.stackqa.models.ServerConnection;
-import com.vsokoltsov.stackqa.models.ServerConnection;
+import com.vsokoltsov.stackqa.network.ApiRequest;
+import com.vsokoltsov.stackqa.network.RequestCallbacks;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import android.widget.AdapterView;
@@ -48,7 +39,7 @@ import android.widget.AdapterView;
  * <p/>
  * interface.
  */
-public class QuestionsListFragment extends ListFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class QuestionsListFragment extends ListFragment implements SwipeRefreshLayout.OnRefreshListener, RequestCallbacks {
 
     private SwipeRefreshLayout swipeLayout;
     private CircularProgressView progressView;
@@ -65,6 +56,14 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
 
     private Callbacks listCallbacks = questionsCallbacks;
 
+    private static void setCachedQuestionsList(List<Question> list){
+        cachedQuestionsList = list;
+    }
+
+    private static List<Question> getCachedQuestionsList(){
+        return cachedQuestionsList;
+    }
+
     public QuestionsListFragment() {
     }
 
@@ -73,6 +72,42 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
         cachedQuestionsList = new ArrayList<Question>();
         questionsList = new ArrayList<Question>();
         this.loadQuestionsList();
+    }
+
+    @Override
+    public void successCallback(String requestName, JSONObject object) {
+        JSONArray questionsArr = null;
+        try {
+            questionsArr = object.getJSONArray("questions");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Parsing json
+        for (int i = 0; i < questionsArr.length(); i++) {
+            try {
+                JSONObject obj = questionsArr.getJSONObject(i);
+                Question question = new Question(obj);
+                questionsList.add(question);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+        setCachedQuestionsList(questionsList);
+        adapter.notifyDataSetChanged();
+        swipeLayout.setRefreshing(false);
+        mProgress = (ProgressBar) getActivity().findViewById(R.id.progress_bar);
+        if(mProgress != null){
+            mProgress.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
+    @Override
+    public void failureCallback(String requestName, VolleyError error) {
+
     }
 
     public interface Callbacks {
@@ -98,14 +133,6 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
         public void onItemSelected(Question question) {
         }
     };
-
-    private static void setCachedQuestionsList(List<Question> list){
-        cachedQuestionsList = list;
-    }
-
-    private static List<Question> getCachedQuestionsList(){
-        return cachedQuestionsList;
-    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -133,19 +160,20 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
             if(mProgress != null){
                 mProgress.setVisibility(View.VISIBLE);
             }
-            JsonObjectRequest movieReq = new JsonObjectRequest(url,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            successCallback(response, "questionsList");
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    VolleyLog.d("TAG", "Error: " + error.getMessage());
-                }
-            });
-            AppController.getInstance().addToRequestQueue(movieReq);
+            ApiRequest.getInstance(this).get(url, "questionsList", null);
+//            JsonObjectRequest movieReq = new JsonObjectRequest(url,
+//                    new Response.Listener<JSONObject>() {
+//                        @Override
+//                        public void onResponse(JSONObject response) {
+//                            successCallback(response, "questionsList");
+//                        }
+//                    }, new Response.ErrorListener() {
+//                @Override
+//                public void onErrorResponse(VolleyError error) {
+//                    VolleyLog.d("TAG", "Error: " + error.getMessage());
+//                }
+//            });
+//            AppController.getInstance().addToRequestQueue(movieReq);
         } else {
             if(mProgress != null){
                 mProgress.setVisibility(View.INVISIBLE);
@@ -194,35 +222,6 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
         getListView().setChoiceMode(activateOnItemClick
                 ? ListView.CHOICE_MODE_SINGLE
                 : ListView.CHOICE_MODE_NONE);
-    }
-
-    public void successCallback(JSONObject object, String requestID){
-        JSONArray questionsArr = null;
-        try {
-            questionsArr = object.getJSONArray("questions");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        // Parsing json
-        for (int i = 0; i < questionsArr.length(); i++) {
-            try {
-                JSONObject obj = questionsArr.getJSONObject(i);
-                Question question = new Question(obj);
-                questionsList.add(question);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-        setCachedQuestionsList(questionsList);
-        adapter.notifyDataSetChanged();
-        swipeLayout.setRefreshing(false);
-        mProgress = (ProgressBar) getActivity().findViewById(R.id.progress_bar);
-        if(mProgress != null){
-            mProgress.setVisibility(View.INVISIBLE);
-        }
     }
 
     public void errorCallback(VolleyError error, String requestID){
