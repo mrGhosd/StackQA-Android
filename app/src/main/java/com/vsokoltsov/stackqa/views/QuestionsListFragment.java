@@ -18,6 +18,7 @@ import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.QuestionsListAdapter;
 import com.vsokoltsov.stackqa.controllers.AppController;
+import com.vsokoltsov.stackqa.messages.SuccessRequestMessage;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.network.ApiRequest;
 import com.vsokoltsov.stackqa.network.RequestCallbacks;
@@ -29,6 +30,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import android.widget.AdapterView;
+
+import de.greenrobot.event.EventBus;
 
 
 /**
@@ -264,5 +267,22 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
                     (listView.getFirstVisiblePosition() > 0
                             || listView.getChildAt(0).getTop() < listView.getPaddingTop());
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    // This method will be called when a MessageEvent is posted
+    public void onEvent(SuccessRequestMessage event){
+
     }
 }

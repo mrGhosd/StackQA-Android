@@ -8,9 +8,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.vsokoltsov.stackqa.controllers.AppController;
+import com.vsokoltsov.stackqa.messages.SuccessRequestMessage;
 import com.vsokoltsov.stackqa.models.Question;
 
 import org.json.JSONObject;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by vsokoltsov on 05.11.15.
@@ -40,7 +43,7 @@ public class ApiRequest {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
-                        callbacks.successCallback(requestName, response);
+                        EventBus.getDefault().post(new SuccessRequestMessage(requestName, response));
 //                        successCallback(requestName, response);
                     } catch (Exception e){
                         e.printStackTrace();

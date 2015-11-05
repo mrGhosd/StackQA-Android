@@ -186,4 +186,8 @@ public class Question implements Parcelable{
         dest.writeInt(views);
         dest.writeString(createdAt.toString());
     }
+
+    public static void getCollection(){
+
+    }
 }
