@@ -18,6 +18,7 @@ import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.QuestionsListAdapter;
 import com.vsokoltsov.stackqa.controllers.AppController;
+import com.vsokoltsov.stackqa.messages.QuestionMessage;
 import com.vsokoltsov.stackqa.messages.SuccessRequestMessage;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.network.ApiRequest;
@@ -79,32 +80,6 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
 
     @Override
     public void successCallback(String requestName, JSONObject object) {
-        JSONArray questionsArr = null;
-        try {
-            questionsArr = object.getJSONArray("questions");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        // Parsing json
-        for (int i = 0; i < questionsArr.length(); i++) {
-            try {
-                JSONObject obj = questionsArr.getJSONObject(i);
-                Question question = new Question(obj);
-                questionsList.add(question);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-        setCachedQuestionsList(questionsList);
-        adapter.notifyDataSetChanged();
-        swipeLayout.setRefreshing(false);
-        mProgress = (ProgressBar) getActivity().findViewById(R.id.progress_bar);
-        if(mProgress != null){
-            mProgress.setVisibility(View.INVISIBLE);
-        }
 
     }
 
@@ -163,20 +138,7 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
             if(mProgress != null){
                 mProgress.setVisibility(View.VISIBLE);
             }
-            ApiRequest.getInstance(this).get(url, "questionsList", null);
-//            JsonObjectRequest movieReq = new JsonObjectRequest(url,
-//                    new Response.Listener<JSONObject>() {
-//                        @Override
-//                        public void onResponse(JSONObject response) {
-//                            successCallback(response, "questionsList");
-//                        }
-//                    }, new Response.ErrorListener() {
-//                @Override
-//                public void onErrorResponse(VolleyError error) {
-//                    VolleyLog.d("TAG", "Error: " + error.getMessage());
-//                }
-//            });
-//            AppController.getInstance().addToRequestQueue(movieReq);
+            Question.getCollection();
         } else {
             if(mProgress != null){
                 mProgress.setVisibility(View.INVISIBLE);
@@ -282,7 +244,41 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
     }
 
     // This method will be called when a MessageEvent is posted
-    public void onEvent(SuccessRequestMessage event){
+    public void onEvent(QuestionMessage event){
+        switch (event.operationName){
+            case "list":
+                parseQuestionsList(event.response);
+                break;
+        }
+    }
+
+    private void parseQuestionsList(JSONObject object){
+        JSONArray questionsArr = null;
+        try {
+            questionsArr = object.getJSONArray("questions");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Parsing json
+        for (int i = 0; i < questionsArr.length(); i++) {
+            try {
+                JSONObject obj = questionsArr.getJSONObject(i);
+                Question question = new Question(obj);
+                questionsList.add(question);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+        setCachedQuestionsList(questionsList);
+        adapter.notifyDataSetChanged();
+        swipeLayout.setRefreshing(false);
+        mProgress = (ProgressBar) getActivity().findViewById(R.id.progress_bar);
+        if(mProgress != null){
+            mProgress.setVisibility(View.INVISIBLE);
+        }
 
     }
 }

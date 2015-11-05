@@ -13,6 +13,9 @@ import com.vsokoltsov.stackqa.models.Question;
 
 import org.json.JSONObject;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import de.greenrobot.event.EventBus;
 
 /**
@@ -24,6 +27,7 @@ public class ApiRequest {
     public static ApiRequest getInstance() {
         return ourInstance;
     }
+    private final String PACKAGE_PATH = "com.vsokoltsov.stackqa.";
 
     public static ApiRequest getInstance(RequestCallbacks callbacks) {
         ApiRequest.callbacks = callbacks;
@@ -33,18 +37,17 @@ public class ApiRequest {
     private ApiRequest() {
     }
 
-    public void get(String url, String requestName, JSONObject parameters){
-        sendRequest(Request.Method.GET, url, requestName, parameters);
+    public void get(String url, String requestName, String operationID, JSONObject parameters){
+        sendRequest(Request.Method.GET, url, requestName, operationID, parameters);
     }
 
-    private void sendRequest(int requestType, String url, final String requestName, JSONObject parameters) {
+    private void sendRequest(int requestType, String url, final String requestName, final String operationID, JSONObject parameters) {
         JsonObjectRequest objectRequest = new JsonObjectRequest(requestType, url, parameters,
             new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
-                        EventBus.getDefault().post(new SuccessRequestMessage(requestName, response));
-//                        successCallback(requestName, response);
+                        EventBus.getDefault().post(instanceOfClass(requestName, operationID, response));
                     } catch (Exception e){
                         e.printStackTrace();
                     }
@@ -57,5 +60,17 @@ public class ApiRequest {
                 }
             });
         AppController.getInstance().addToRequestQueue(objectRequest);
+    }
+
+    private Object instanceOfClass(String className, String operationType, JSONObject response)
+            throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException,
+            InvocationTargetException, InstantiationException {
+        Class<?> clazz = Class.forName(fullPackageName(className));
+        Constructor<?> ctor = clazz.getConstructor(String.class, JSONObject.class);
+        return ctor.newInstance(new Object[] { operationType, response });
+    }
+
+    private String fullPackageName(String name){
+        return PACKAGE_PATH + name;
     }
 }

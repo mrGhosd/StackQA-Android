@@ -2,7 +2,9 @@ package com.vsokoltsov.stackqa.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.models.Category;
+import com.vsokoltsov.stackqa.network.ApiRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -188,6 +190,7 @@ public class Question implements Parcelable{
     }
 
     public static void getCollection(){
-
+        String url = AppController.APP_HOST + "/api/v1/questions";
+        ApiRequest.getInstance().get(url, "messages.QuestionMessage", "list", null);
     }
 }

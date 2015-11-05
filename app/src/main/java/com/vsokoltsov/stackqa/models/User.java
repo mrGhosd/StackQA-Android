@@ -1,7 +1,11 @@
 package com.vsokoltsov.stackqa.models;
 
+import android.widget.Toast;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by vsokoltsov on 14.09.15.
@@ -58,5 +62,4 @@ public class User {
             return this.email;
         }
     }
-
 }
