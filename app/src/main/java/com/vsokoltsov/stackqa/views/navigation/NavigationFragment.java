@@ -146,7 +146,7 @@ public class NavigationFragment extends Fragment {
             return true;
         }
 
-        if (item.getItemId() == R.id.action_example) {
+        if (item.getItemId() == R.id.sign_in) {
             return true;
         }
 

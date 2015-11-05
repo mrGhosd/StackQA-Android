@@ -128,6 +128,7 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        this.loadQuestionsList();
     }
 
     private void loadQuestionsList(){
@@ -169,7 +170,6 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
         swipeLayout = new ListFragmentSwipeRefreshLayout(container.getContext());
         swipeLayout.setOnRefreshListener(this);
         swipeLayout.addView(listFragmentView);
-        this.loadQuestionsList();
         return swipeLayout;
 
     }

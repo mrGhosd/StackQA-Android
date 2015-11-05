@@ -61,7 +61,6 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.menu_main, menu);
             restoreActionBar();
             return true;
         }
@@ -73,10 +72,10 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.sign_up) {
             return true;
         }
-        if(id == R.id.action_example){
+        if(id == R.id.sign_in){
             return true;
         }
 
