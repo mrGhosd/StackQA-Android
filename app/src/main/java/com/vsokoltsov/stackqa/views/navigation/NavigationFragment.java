@@ -1,5 +1,6 @@
 package com.vsokoltsov.stackqa.views.navigation;
 
+import android.support.v4.app.ListFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
@@ -24,15 +25,24 @@ import android.widget.Toast;
 
 
 import com.vsokoltsov.stackqa.R;
+import com.vsokoltsov.stackqa.adapters.NavigationListAdapter;
+import com.vsokoltsov.stackqa.adapters.QuestionsListAdapter;
+import com.vsokoltsov.stackqa.models.NavigationItem;
+import com.vsokoltsov.stackqa.models.Question;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  * create an instance of this fragment.
  */
-public class NavigationFragment extends Fragment {
+public class NavigationFragment extends ListFragment {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
     private View mFragmentContainerView;
     private NavigationDrawerCallbacks mCallbacks;
+    public NavigationListAdapter adapter;
+    private List<NavigationItem> navigationItems = new ArrayList<NavigationItem>();
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
@@ -76,15 +86,22 @@ public class NavigationFragment extends Fragment {
 
             }
         });
-        mDrawerListView.setAdapter(new ArrayAdapter<String>(
-                getActionBar().getThemedContext(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
-                new String[]{
-                        getString(R.string.section1),
-                        getString(R.string.section2),
-                        getString(R.string.section3),
-                }));
+        adapter = new NavigationListAdapter(getActivity(), navigationItems);
+        setListAdapter(adapter);
+        navigationItems.add(new NavigationItem(R.drawable.auth, "Sign in"));
+        navigationItems.add(new NavigationItem(R.drawable.registr, "Sign up"));
+        navigationItems.add(new NavigationItem(R.drawable.question, "Questions"));
+        navigationItems.add(new NavigationItem(R.drawable.category, "Categories"));
+        adapter.notifyDataSetChanged();
+//        mDrawerListView.setAdapter(new ArrayAdapter<String>(
+//                getActionBar().getThemedContext(),
+//                android.R.layout.simple_list_item_activated_1,
+//                android.R.id.text1,
+//                new String[]{
+//                        getString(R.string.section1),
+//                        getString(R.string.section2),
+//                        getString(R.string.section3),
+//                }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
     }
