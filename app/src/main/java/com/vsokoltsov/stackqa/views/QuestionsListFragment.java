@@ -83,6 +83,7 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
 
     }
 
+
     @Override
     public void failureCallback(String requestName, VolleyError error) {
 
@@ -141,8 +142,8 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
             }
             Question.getCollection();
         } else {
-            if(mProgress != null){
-                mProgress.setVisibility(View.INVISIBLE);
+            if(getProgressBar() != null){
+                getProgressBar().setVisibility(View.INVISIBLE);
             }
         }
     }
@@ -280,5 +281,9 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
             mProgress.setVisibility(View.INVISIBLE);
         }
 
+    }
+
+    private ProgressBar getProgressBar(){
+        return (ProgressBar) getActivity().findViewById(R.id.progress_bar);
     }
 }
