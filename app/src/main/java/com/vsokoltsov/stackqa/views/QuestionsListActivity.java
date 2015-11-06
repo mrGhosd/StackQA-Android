@@ -42,10 +42,13 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
                     R.id.navigation_drawer,
                     (DrawerLayout) findViewById(R.id.drawer_layout));
             android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            QuestionsListFragment fragment = new QuestionsListFragment();
-            fragmentTransaction.add(R.id.container, fragment);
-            fragmentTransaction.commit();
+            Fragment frg = fragmentManager.findFragmentById(R.id.container);
+            if(frg == null) {
+                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                QuestionsListFragment fragment = new QuestionsListFragment();
+                fragmentTransaction.add(R.id.container, fragment);
+                fragmentTransaction.commit();
+            }
         } catch(Exception e){
             e.printStackTrace();
         }
