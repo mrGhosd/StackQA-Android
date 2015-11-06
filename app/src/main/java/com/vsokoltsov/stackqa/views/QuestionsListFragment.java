@@ -8,6 +8,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.support.v4.app.ListFragment;
@@ -133,17 +134,20 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
     }
 
     private void loadQuestionsList(){
+        mProgress = getProgressBar();
+        if(mProgress != null){
+            mProgress.setVisibility(View.VISIBLE);
+        }
         questionsList = getCachedQuestionsList();
         adapter = new QuestionsListAdapter(getActivity(), questionsList);
         setListAdapter(adapter);
+        mProgress = getProgressBar();
+        LinearLayout laout = (LinearLayout) getActivity().findViewById(R.id.progress_bar_wrapper);
         if(questionsList.size() <= 0) {
-            if(mProgress != null){
-                mProgress.setVisibility(View.VISIBLE);
-            }
             Question.getCollection();
         } else {
-            if(getProgressBar() != null){
-                getProgressBar().setVisibility(View.INVISIBLE);
+            if(mProgress != null){
+                mProgress.setVisibility(View.GONE);
             }
         }
     }
@@ -159,6 +163,7 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mProgress = getProgressBar();
     }
 
     @Override
@@ -276,9 +281,9 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
         setCachedQuestionsList(questionsList);
         adapter.notifyDataSetChanged();
         swipeLayout.setRefreshing(false);
-        mProgress = (ProgressBar) getActivity().findViewById(R.id.progress_bar);
+        mProgress = getProgressBar();
         if(mProgress != null){
-            mProgress.setVisibility(View.INVISIBLE);
+            mProgress.setVisibility(View.GONE);
         }
 
     }
