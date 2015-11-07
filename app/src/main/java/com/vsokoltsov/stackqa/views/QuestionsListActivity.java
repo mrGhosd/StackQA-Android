@@ -12,18 +12,22 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.vsokoltsov.stackqa.R;
+import com.vsokoltsov.stackqa.adapters.QuestionsListAdapter;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.views.navigation.NavigationFragment;
 
 import android.view.View;
+import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionsListActivity extends ActionBarActivity implements QuestionsListFragment.Callbacks,
@@ -31,6 +35,7 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
     private NavigationFragment mNavigationDrawerFragment;
     private SearchView mSearchView;
     private TextView mStatusView;
+    private ArrayList<Question> defaultQuestionsList;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         try {
@@ -94,9 +99,13 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
                     info = (SearchableInfo) searchables.get(i);
                 }
             }
-//
-// mSearchView.setSearchableInfo(info);
         }
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        QuestionsListFragment frg = (QuestionsListFragment) fragmentManager.findFragmentById(R.id.container);
+        final ListView questionsList = frg.getList();
+        questionsList.setTextFilterEnabled(true);
+        final QuestionsListAdapter adapter = frg.getAdapter();
+        ArrayList<Question> defaultQuestionsList = frg.getQuestionsFromList();
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -105,7 +114,8 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                return false;
+                adapter.getFilter().filter(newText);
+                return true;
             }
         });
     }

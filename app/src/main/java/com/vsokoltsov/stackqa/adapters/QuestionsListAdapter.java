@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -17,20 +19,28 @@ import com.vsokoltsov.stackqa.models.Question;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by vsokoltsov on 06.07.15.
  */
-public class QuestionsListAdapter extends BaseAdapter {
+public class QuestionsListAdapter extends BaseAdapter implements Filterable {
     private Activity activity;
     private LayoutInflater inflater;
     private List<Question> questionsList;
+    private QuestionFilter questionFilter;
+    private List<Question> cachedList;
 //    ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
     public QuestionsListAdapter(Activity activity, List<Question> questionsList) {
         this.activity = activity;
         this.questionsList = questionsList;
+        this.cachedList = questionsList;
+    }
+
+    public List<Question> getQuestionsList(){
+        return questionsList;
     }
 
     @Override
@@ -77,5 +87,53 @@ public class QuestionsListAdapter extends BaseAdapter {
         commentsCount.setText(String.valueOf(q.getCommentsCount()));
         views.setText(String.valueOf(q.getViews()));
         return convertView;
+    }
+
+    @Override
+    public Filter getFilter() {
+        if (questionFilter == null) {
+            questionFilter = new QuestionFilter();
+        }
+
+        return questionFilter;
+    }
+
+
+    private class QuestionFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults filterResults = new FilterResults();
+            if (constraint!=null && constraint.length()>0) {
+                ArrayList<Question> tempList = new ArrayList<Question>();
+
+                // search content in friend list
+                for (Question question : questionsList) {
+                    if (question.getTitle().toLowerCase().contains(constraint.toString().toLowerCase())) {
+                        tempList.add(question);
+                    }
+                }
+
+                filterResults.count = tempList.size();
+                filterResults.values = tempList;
+            } else {
+                filterResults.count = cachedList.size();
+                filterResults.values = cachedList;
+            }
+
+            return filterResults;
+        }
+
+        /**
+         * Notify about filtered list to ui
+         * @param constraint text
+         * @param results filtered result
+         */
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            questionsList = (ArrayList<Question>) results.values;
+            notifyDataSetChanged();
+        }
     }
 }

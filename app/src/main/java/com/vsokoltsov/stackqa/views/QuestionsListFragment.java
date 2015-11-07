@@ -75,6 +75,18 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
     public QuestionsListFragment() {
     }
 
+    public ListView getList() {
+        return this.list;
+    }
+
+    public QuestionsListAdapter getAdapter(){
+        return this.adapter;
+    }
+
+    public ArrayList<Question> getQuestionsFromList(){
+        return (ArrayList<Question>) this.questionsList;
+    }
+
     @Override
     public void onRefresh() {
         cachedQuestionsList = new ArrayList<Question>();
