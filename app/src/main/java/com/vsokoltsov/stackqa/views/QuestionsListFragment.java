@@ -56,7 +56,7 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
     private View listFragmentView;
     private List<Question> questionsList = new ArrayList<Question>();
     private static final String url = AppController.APP_HOST + "/api/v1/questions";
-    public QuestionsListAdapter adapter;
+    public static QuestionsListAdapter adapter;
     public ListView list;
 
     private static List<Question> cachedQuestionsList = new ArrayList<Question>();
@@ -81,6 +81,10 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
 
     public QuestionsListAdapter getAdapter(){
         return this.adapter;
+    }
+
+    public void setAdapter(QuestionsListAdapter adapter){
+       this.adapter = adapter;
     }
 
     public ArrayList<Question> getQuestionsFromList(){
@@ -154,10 +158,9 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
             mProgress.setVisibility(View.VISIBLE);
         }
         questionsList = getCachedQuestionsList();
-        adapter = new QuestionsListAdapter(getActivity(), questionsList);
+        if(getAdapter() == null) setAdapter(new QuestionsListAdapter(getActivity(), questionsList));
         setListAdapter(adapter);
         mProgress = getProgressBar();
-        LinearLayout laout = (LinearLayout) getActivity().findViewById(R.id.progress_bar_wrapper);
         if(questionsList.size() <= 0) {
             Question.getCollection();
         } else {
