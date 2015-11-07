@@ -1,7 +1,9 @@
 package com.vsokoltsov.stackqa.views;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -19,6 +21,7 @@ import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.QuestionsListAdapter;
 import com.vsokoltsov.stackqa.controllers.AppController;
+import com.vsokoltsov.stackqa.messages.FailureRequestMessage;
 import com.vsokoltsov.stackqa.messages.QuestionMessage;
 import com.vsokoltsov.stackqa.messages.SuccessRequestMessage;
 import com.vsokoltsov.stackqa.models.Question;
@@ -250,12 +253,46 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
     }
 
     // This method will be called when a MessageEvent is posted
-    public void onEvent(QuestionMessage event){
+    public void onEvent(SuccessRequestMessage event){
         switch (event.operationName){
             case "list":
                 parseQuestionsList(event.response);
                 break;
         }
+    }
+
+    public void onEvent(FailureRequestMessage event){
+        switch (event.operationName){
+            case "list":
+                handleQuestionListError(event.error);
+                break;
+        }
+    }
+
+    private void handleQuestionListError(VolleyError error){
+        mProgress = getProgressBar();
+        if(mProgress != null){
+            mProgress.setVisibility(View.INVISIBLE);
+        }
+        swipeLayout.setRefreshing(false);
+        String message = null;
+        switch(error.networkResponse.statusCode){
+            default:
+                message = "Server does not response. Try request later.";
+                break;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(message).setTitle("Error")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // FIRE ZE MISSILES!
+                        dialog.cancel();
+                    }
+                });
+
+        // Create the AlertDialog object and return it
+        builder.create();
+        builder.show();
     }
 
     private void parseQuestionsList(JSONObject object){

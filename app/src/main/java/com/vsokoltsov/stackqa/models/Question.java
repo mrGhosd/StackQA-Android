@@ -2,9 +2,12 @@ package com.vsokoltsov.stackqa.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.android.volley.VolleyError;
 import com.vsokoltsov.stackqa.controllers.AppController;
+import com.vsokoltsov.stackqa.messages.QuestionMessage;
 import com.vsokoltsov.stackqa.models.Category;
 import com.vsokoltsov.stackqa.network.ApiRequest;
+import com.vsokoltsov.stackqa.network.RequestCallbacks;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,7 +22,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-public class Question implements Parcelable{
+import de.greenrobot.event.EventBus;
+
+public class Question implements Parcelable, RequestCallbacks{
     private int id;
     private String title;
     private int rate;
@@ -192,5 +197,15 @@ public class Question implements Parcelable{
     public static void getCollection(){
         String url = AppController.APP_HOST + "/api/v1/questions";
         ApiRequest.getInstance().get(url, "messages.QuestionMessage", "list", null);
+    }
+
+    @Override
+    public void successCallback(String requestName, JSONObject object) {
+        EventBus.getDefault().post(new QuestionMessage(requestName, object));
+    }
+
+    @Override
+    public void failureCallback(String requestName, VolleyError error) {
+        EventBus.getDefault().post(new QuestionMessage(requestName, error));
     }
 }

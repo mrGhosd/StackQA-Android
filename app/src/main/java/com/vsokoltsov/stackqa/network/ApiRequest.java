@@ -8,6 +8,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.vsokoltsov.stackqa.controllers.AppController;
+import com.vsokoltsov.stackqa.messages.BaseMessage;
+import com.vsokoltsov.stackqa.messages.FailureRequestMessage;
 import com.vsokoltsov.stackqa.messages.SuccessRequestMessage;
 import com.vsokoltsov.stackqa.models.Question;
 
@@ -47,7 +49,7 @@ public class ApiRequest {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
-                        EventBus.getDefault().post(instanceOfClass(requestName, operationID, response));
+                        EventBus.getDefault().post(new SuccessRequestMessage(operationID, response));
                     } catch (Exception e){
                         e.printStackTrace();
                     }
@@ -56,7 +58,7 @@ public class ApiRequest {
             new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    callbacks.failureCallback(requestName, error);
+                    EventBus.getDefault().post(new FailureRequestMessage(operationID, error));
                 }
             });
         AppController.getInstance().addToRequestQueue(objectRequest);
