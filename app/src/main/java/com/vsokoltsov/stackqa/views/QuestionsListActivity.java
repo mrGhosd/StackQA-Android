@@ -1,34 +1,36 @@
 package com.vsokoltsov.stackqa.views;
 
 import android.app.ActivityOptions;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ListView;
 
 import com.vsokoltsov.stackqa.R;
-import com.vsokoltsov.stackqa.adapters.QuestionsListAdapter;
 import com.vsokoltsov.stackqa.models.Question;
-import com.vsokoltsov.stackqa.models.QuestionsList;
 import com.vsokoltsov.stackqa.views.navigation.NavigationFragment;
 
-import org.json.JSONObject;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import android.view.View;
+import android.widget.SearchView;
+import android.widget.TextView;
+
+import java.util.List;
 
 public class QuestionsListActivity extends ActionBarActivity implements QuestionsListFragment.Callbacks,
         NavigationFragment.NavigationDrawerCallbacks {
     private NavigationFragment mNavigationDrawerFragment;
+    private SearchView mSearchView;
+    private TextView mStatusView;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         try {
@@ -49,6 +51,7 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
                 fragmentTransaction.add(R.id.container, fragment);
                 fragmentTransaction.commit();
             }
+            mStatusView = (TextView) findViewById(R.id.status_text);
         } catch(Exception e){
             e.printStackTrace();
         }
@@ -59,15 +62,61 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
-            restoreActionBar();
-            return true;
+        super.onCreateOptionsMenu(menu);
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_achieve, menu);
+        MenuItem searchItem = menu.findItem(R.id.search_quesitions);
+        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        setupSearchView(searchItem);
+        return true;
+    }
+
+
+
+
+    private void setupSearchView(MenuItem searchItem) {
+
+        if (isAlwaysExpanded()) {
+            mSearchView.setIconifiedByDefault(false);
+        } else {
+            searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
+                    | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
         }
-        return super.onCreateOptionsMenu(menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        if (searchManager != null) {
+            List searchables = searchManager.getSearchablesInGlobalSearch();
+
+            SearchableInfo info = searchManager.getSearchableInfo(getComponentName());
+            for (int i = 0; i < searchables.size(); i++) {
+                if (searchables.get(i) != null) {
+                    info = (SearchableInfo) searchables.get(i);
+                }
+            }
+//
+// mSearchView.setSearchableInfo(info);
+        }
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+    }
+
+    public boolean onClose() {
+        mStatusView.setText("Closed!");
+        return false;
+    }
+
+    protected boolean isAlwaysExpanded() {
+        return false;
     }
 
     @Override
@@ -75,12 +124,12 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.sign_up) {
-            return true;
-        }
-        if(id == R.id.sign_in){
-            return true;
-        }
+//        if (id == R.id.sign_up) {
+//            return true;
+//        }
+//        if(id == R.id.sign_in){
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }

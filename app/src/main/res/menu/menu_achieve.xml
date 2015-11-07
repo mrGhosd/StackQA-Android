@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/search_quesitions"
+        app:actionViewClass="android.widget.SearchView"
+        android:icon="@drawable/searchi"
+        android:showAsAction="collapseActionView|ifRoom"
+        android:title="Search it!">
+    </item>
+</menu>

@@ -155,9 +155,9 @@ public class NavigationFragment extends ListFragment {
             return true;
         }
 
-        if (item.getItemId() == R.id.sign_in) {
-            return true;
-        }
+//        if (item.getItemId() == R.id.sign_in) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }

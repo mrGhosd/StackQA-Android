@@ -4,6 +4,11 @@
     android:layout_height="match_parent"
     android:id="@+id/drawer_layout"
     tools:context="com.vsokoltsov.stackqa.views.QuestionsListActivity">
+    <TextView
+        android:id="@+id/status_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"/>
 
     <FrameLayout android:id="@+id/container"
             android:layout_width="match_parent"
