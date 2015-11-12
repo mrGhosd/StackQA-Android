@@ -56,7 +56,7 @@ public class NavigationFragment extends ListFragment {
         }
 
         // Select either the default item (0) or the last selected item.
-        selectItem(mCurrentSelectedPosition);
+//        selectItem(mCurrentSelectedPosition);
     }
 
     @Override
@@ -72,12 +72,6 @@ public class NavigationFragment extends ListFragment {
         // Inflate the layout for this fragment
         mDrawerListView = (ListView) inflater.inflate(
                 R.layout.fragment_navigation, container, false);
-        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        });
         adapter = new NavigationListAdapter(getActivity(), navigationItems);
         setListAdapter(adapter);
         navigationItems.add(new NavigationItem(R.drawable.auth, "Sign in"));
@@ -85,17 +79,10 @@ public class NavigationFragment extends ListFragment {
         navigationItems.add(new NavigationItem(R.drawable.question, "Questions"));
         navigationItems.add(new NavigationItem(R.drawable.category, "Categories"));
         adapter.notifyDataSetChanged();
-//        mDrawerListView.setAdapter(new ArrayAdapter<String>(
-//                getActionBar().getThemedContext(),
-//                android.R.layout.simple_list_item_activated_1,
-//                android.R.id.text1,
-//                new String[]{
-//                        getString(R.string.section1),
-//                        getString(R.string.section2),
-//                        getString(R.string.section3),
-//                }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
+
+
     }
 
 
@@ -147,6 +134,12 @@ public class NavigationFragment extends ListFragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
 //        public void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        /** Invokes the implementation of the method onListFragmentItemClick in the hosting activity */
+        selectItem(position);
     }
 
     @Override

@@ -1,18 +1,15 @@
 package com.vsokoltsov.stackqa.views;
-
-import android.app.ActivityOptions;
+import android.app.Activity;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,6 +17,7 @@ import android.view.MenuItem;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.QuestionsListAdapter;
 import com.vsokoltsov.stackqa.models.Question;
+import com.vsokoltsov.stackqa.views.auth.AuthorizationActivity;
 import com.vsokoltsov.stackqa.views.navigation.NavigationFragment;
 
 import android.view.View;
@@ -36,30 +34,27 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
     private SearchView mSearchView;
     private TextView mStatusView;
     private ArrayList<Question> defaultQuestionsList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
-        try {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.main);
-            mNavigationDrawerFragment = (NavigationFragment)
-                    getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
+        mNavigationDrawerFragment = (NavigationFragment)
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-            // Set up the drawer.
-            mNavigationDrawerFragment.setUp(
-                    R.id.navigation_drawer,
-                    (DrawerLayout) findViewById(R.id.drawer_layout));
-            android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-            Fragment frg = fragmentManager.findFragmentById(R.id.container);
-            if(frg == null) {
-                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                QuestionsListFragment fragment = new QuestionsListFragment();
-                fragmentTransaction.add(R.id.container, fragment);
-                fragmentTransaction.commit();
-            }
-            mStatusView = (TextView) findViewById(R.id.status_text);
-        } catch(Exception e){
-            e.printStackTrace();
+        // Set up the drawer.
+        mNavigationDrawerFragment.setUp(
+                R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment frg = fragmentManager.findFragmentById(R.id.container);
+        if(frg == null) {
+            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            QuestionsListFragment fragment = new QuestionsListFragment();
+            fragmentTransaction.add(R.id.container, fragment);
+            fragmentTransaction.commit();
         }
+        mStatusView = (TextView) findViewById(R.id.status_text);
         if (savedInstanceState == null) {
         }
     }
@@ -158,6 +153,14 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
+        Activity view;
+        switch(position){
+            case 0:
+                Intent detailIntent = new Intent(this, AuthorizationActivity.class);
+                startActivity(detailIntent);
+                overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                break;
+        }
 
     }
 
@@ -181,4 +184,7 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle("Questions");
     }
+
+
+
 }

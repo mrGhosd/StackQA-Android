@@ -39,6 +39,10 @@
             android:name=".views.answers.AnswerForm"
             android:label="@string/title_activity_answer_form" >
         </activity>
+        <activity
+            android:name=".views.auth.AuthorizationActivity"
+            android:label="Sign in" >
+        </activity>
     </application>
 
 </manifest>

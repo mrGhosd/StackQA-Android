@@ -16,7 +16,7 @@ public class AppController extends Application{
     public static final String TAG = AppController.class.getSimpleName();
 
 //    public static final String APP_HOST = "http://178.62.198.57";
-    public static final String APP_HOST = "http://bb901c7a.ngrok.io";
+    public static final String APP_HOST = "http://e4545ae6.ngrok.io";
 
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
