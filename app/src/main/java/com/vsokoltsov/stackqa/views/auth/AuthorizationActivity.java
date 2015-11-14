@@ -13,6 +13,7 @@ import android.view.Menu;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.views.QuestionDetail;
+import com.vsokoltsov.stackqa.views.QuestionsListActivity;
 import com.vsokoltsov.stackqa.views.navigation.NavigationFragment;
 
 public class AuthorizationActivity extends ActionBarActivity
@@ -36,9 +37,9 @@ public class AuthorizationActivity extends ActionBarActivity
             mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
             mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
 
-            mTabHost.addTab( mTabHost.newTabSpec("tab1").setIndicator("Tab 1", null), SignInFragment.class, null);
-            mTabHost.addTab( mTabHost.newTabSpec("tab2").setIndicator("Tab 2", null), SignInFragment.class, null);
-            mTabHost.addTab( mTabHost.newTabSpec("tab3").setIndicator("Tab 3", null), SignInFragment.class, null);
+            mTabHost.addTab( mTabHost.newTabSpec("tab1").setIndicator("Sign in", null), SignInFragment.class, null);
+            mTabHost.addTab( mTabHost.newTabSpec("tab2").setIndicator("Sign up", null), SignUpFragment.class, null);
+            mTabHost.addTab( mTabHost.newTabSpec("tab3").setIndicator("Restore password", null), RestorePasswordFragment.class, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -49,10 +50,10 @@ public class AuthorizationActivity extends ActionBarActivity
         // update the main content by replacing fragments
         Activity view;
         switch(position){
-            case 0:
-//                Intent detailIntent = new Intent(this, AuthorizationActivity.class);
-//                startActivity(detailIntent);
-//                overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+            case 2:
+                Intent detailIntent = new Intent(this, QuestionsListActivity.class);
+                startActivity(detailIntent);
+                overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
                 break;
         }
 
