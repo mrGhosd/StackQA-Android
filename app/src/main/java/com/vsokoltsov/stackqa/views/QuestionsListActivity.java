@@ -157,7 +157,14 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
         switch(position){
             case 0:
                 Intent detailIntent = new Intent(this, AuthorizationActivity.class);
+                detailIntent.putExtra("action", "sign_in");
                 startActivity(detailIntent);
+                overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                break;
+            case 1:
+                Intent regIntent = new Intent(this, AuthorizationActivity.class);
+                regIntent.putExtra("action", "sign_up");
+                startActivity(regIntent);
                 overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
                 break;
         }
