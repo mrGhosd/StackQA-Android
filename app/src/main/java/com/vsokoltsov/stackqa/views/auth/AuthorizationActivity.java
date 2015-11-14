@@ -1,82 +1,61 @@
 package com.vsokoltsov.stackqa.views.auth;
 
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.FragmentTabHost;
 import android.view.Menu;
 
 import com.vsokoltsov.stackqa.R;
+import com.vsokoltsov.stackqa.models.Question;
+import com.vsokoltsov.stackqa.views.QuestionDetail;
+import com.vsokoltsov.stackqa.views.navigation.NavigationFragment;
 
-/**
- * Created by vsokoltsov on 13.11.15.
- */
-public class AuthorizationActivity extends ActionBarActivity {
+public class AuthorizationActivity extends ActionBarActivity
+        implements NavigationFragment.NavigationDrawerCallbacks{
+    private FragmentTabHost mTabHost;
+    private NavigationFragment mNavigationDrawerFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.authorization);
         try {
-            setContentView(R.layout.authorization);
-            android.support.v7.app.ActionBar actionbar = getSupportActionBar();
-            //Tell the ActionBar we want to use Tabs.
-            actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-            //initiating both tabs and set text to it.
-            ActionBar.Tab signInTab = actionbar.newTab().setText("Sign in");
-            ActionBar.Tab signUpTab = actionbar.newTab().setText("Sign up");
-
-            //create the two fragments we want to use for display content
-            android.support.v4.app.Fragment signInFragment = (android.support.v4.app.Fragment) new SignInFragment();
-            android.support.v4.app.Fragment signUpFragment = (android.support.v4.app.Fragment) new SignUpFragment();
-
-            //set the Tab listener. Now we can listen for clicks.
-            signInTab.setTabListener((ActionBar.TabListener) new AuthTabListener(signInFragment));
-            signUpTab.setTabListener((ActionBar.TabListener) new AuthTabListener(signUpFragment));
-
-            //add the two tabs to the actionbar
-            actionbar.addTab(signInTab);
-            actionbar.addTab(signUpTab);
-//            FragmentTabHost tabs = (FragmentTabHost) findViewById(R.id.tabHost);
-//            tabs.setup(this, getSupportFragmentManager(), R.id.realTabContent);
-
-            // Calculator
-//            tabs.addTab(tabs.newTabSpec("sign_in").setIndicator("Sign in"),
-//                    SignInFragment.class, null);
-//            tabs.addTab(tabs.newTabSpec("sign_up").setIndicator("Sign up"),
-//                    SignUpFragment.class, null);
-//            tabs.addTab(tabs.newTabSpec("restore_password").setIndicator("Restore password"),
-//                    RestorePasswordFragment.class, null);
-//            TabHost.TabSpec calculatorTab = tabs.newTabSpec("Sign in");
-//            Intent intent = new Intent().setClass(this, SignInFragment.class);
-//            calculatorTab.setIndicator("Sign in");
-//            calculatorTab.setContent;
-//            tabs.addTab(calculatorTab);
-////
-////
-//            TabHost.TabSpec signUpTab = tabs.newTabSpec("Sign up");
-//            Intent signUpIntent = new Intent().setClass(this, SignUpFragment.class);
-//            signUpTab.setIndicator("Sign up");
-//            signUpTab.setContent(signUpIntent);
-//            tabs.addTab(signUpTab);
-////
-//            TabHost.TabSpec restorePasswordTab = tabs.newTabSpec("Restore password");
-//            Intent restorePasswordIntent = new Intent().setClass(this, RestorePasswordFragment.class);
-//            restorePasswordTab.setIndicator("Restore Password");
-//            restorePasswordTab.setContent(restorePasswordIntent);
-//            tabs.addTab(restorePasswordTab);
-
-            // Home
-//            TabHost.TabSpec homeTab = tabs.newTabSpec("home");
-//            homeTab.setIndicator("Home");
-//            tabs.addTab(homeTab);
+            DrawerLayout l = (DrawerLayout) findViewById(R.id.drawer_auth);
+            android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+            NavigationFragment nf = (NavigationFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+            mNavigationDrawerFragment = (NavigationFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 //
-//            // Home
-//            TabHost.TabSpec faqTab = tabs.newTabSpec("faq");
-//            faqTab.setIndicator("Faq");
-//            tabs.addTab(faqTab);
+//            // Set up the drawer.
+            mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_auth));
+
+            mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
+            mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
+
+            mTabHost.addTab( mTabHost.newTabSpec("tab1").setIndicator("Tab 1", null), SignInFragment.class, null);
+            mTabHost.addTab( mTabHost.newTabSpec("tab2").setIndicator("Tab 2", null), SignInFragment.class, null);
+            mTabHost.addTab( mTabHost.newTabSpec("tab3").setIndicator("Tab 3", null), SignInFragment.class, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onNavigationDrawerItemSelected(int position) {
+        // update the main content by replacing fragments
+        Activity view;
+        switch(position){
+            case 0:
+//                Intent detailIntent = new Intent(this, AuthorizationActivity.class);
+//                startActivity(detailIntent);
+//                overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                break;
+        }
+
     }
 
 
