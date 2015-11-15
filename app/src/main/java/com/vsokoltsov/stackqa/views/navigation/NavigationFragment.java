@@ -1,5 +1,6 @@
 package com.vsokoltsov.stackqa.views.navigation;
 
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.ListFragment;
 import android.support.v7.app.ActionBarActivity;
@@ -21,6 +22,8 @@ import android.widget.ListView;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.NavigationListAdapter;
 import com.vsokoltsov.stackqa.models.NavigationItem;
+import com.vsokoltsov.stackqa.views.QuestionsListActivity;
+import com.vsokoltsov.stackqa.views.auth.AuthorizationActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +113,26 @@ public class NavigationFragment extends ListFragment {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
         if (mCallbacks != null) {
-            mCallbacks.onNavigationDrawerItemSelected(position);
+//            mCallbacks.onNavigationDrawerItemSelected(position);
+            switch(position){
+                case 0:
+                    Intent detailIntent = new Intent(getActivity(), AuthorizationActivity.class);
+                    detailIntent.putExtra("action", "sign_in");
+                    startActivity(detailIntent);
+                    getActivity().overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                    break;
+                case 1:
+                    Intent regIntent = new Intent(getActivity(), AuthorizationActivity.class);
+                    regIntent.putExtra("action", "sign_up");
+                    startActivity(regIntent);
+                    getActivity().overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                    break;
+                case 2:
+                    Intent questionsIntent = new Intent(getActivity(), QuestionsListActivity.class);
+                    startActivity(questionsIntent);
+                    getActivity().overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                    break;
+            }
         }
     }
     /**
