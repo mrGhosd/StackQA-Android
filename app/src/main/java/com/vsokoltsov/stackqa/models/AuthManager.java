@@ -2,6 +2,7 @@ package com.vsokoltsov.stackqa.models;
 
 import com.android.volley.VolleyError;
 import com.vsokoltsov.stackqa.controllers.AppController;
+import com.vsokoltsov.stackqa.messages.UserMessage;
 import com.vsokoltsov.stackqa.network.ApiRequest;
 import com.vsokoltsov.stackqa.network.RequestCallbacks;
 
@@ -40,24 +41,36 @@ public class AuthManager implements RequestCallbacks {
         params.put("grant_type", "password");
         params.put("email", email);
         params.put("password", password);
-        ApiRequest.getInstance().post(url, null, "sign_in", params);
+        ApiRequest.getInstance(this).post(url, null, "sign_in", params);
     }
 
     public void currentUserRequest() throws JSONException {
         String url = AppController.APP_HOST + "/api/v1/profiles/me";
-        JSONObject params = new JSONObject();
-        params.put("access_token", this.getToken());
-        ApiRequest.getInstance(this).get(url, null, "current_user", params);
+        ApiRequest.getInstance(this).get(url, null, "current_user", null);
     }
 
 
     @Override
-    public void successCallback(String requestName, JSONObject object) {
-        
+    public void successCallback(String requestName, JSONObject object) throws JSONException {
+        switch (requestName) {
+            case "sign_in":
+                setToken(object.getString("access_token"));
+                currentUserRequest();
+                break;
+            case "current_user":
+                parseCurrentUser(object);
+                EventBus.getDefault().post(new UserMessage("currentUserSignedIn", this.getCurrentUser()));
+                break;
+        }
     }
 
     @Override
     public void failureCallback(String requestName, VolleyError error) {
 
     }
+
+    private void parseCurrentUser(JSONObject response) {
+        setCurrentUser(new User(response));
+    }
+
 }

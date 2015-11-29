@@ -14,10 +14,14 @@ import android.widget.TabHost;
 import android.widget.TabWidget;
 
 import com.vsokoltsov.stackqa.R;
+import com.vsokoltsov.stackqa.messages.SuccessRequestMessage;
+import com.vsokoltsov.stackqa.messages.UserMessage;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.views.QuestionDetail;
 import com.vsokoltsov.stackqa.views.QuestionsListActivity;
 import com.vsokoltsov.stackqa.views.navigation.NavigationFragment;
+
+import de.greenrobot.event.EventBus;
 
 public class AuthorizationActivity extends ActionBarActivity
         implements NavigationFragment.NavigationDrawerCallbacks{
@@ -94,7 +98,6 @@ public class AuthorizationActivity extends ActionBarActivity
                 overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
                 break;
         }
-
     }
 
 
@@ -102,5 +105,22 @@ public class AuthorizationActivity extends ActionBarActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         return true;
+    }
+
+
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    // This method will be called when a MessageEvent is posted
+    public void onEvent(UserMessage event){
+        this.onNavigationDrawerItemSelected(2);
     }
 }

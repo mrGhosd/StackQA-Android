@@ -11,6 +11,7 @@ import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.messages.BaseMessage;
 import com.vsokoltsov.stackqa.messages.FailureRequestMessage;
 import com.vsokoltsov.stackqa.messages.SuccessRequestMessage;
+import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.Question;
 
 import org.json.JSONObject;
@@ -48,6 +49,10 @@ public class ApiRequest {
     }
 
     private void sendRequest(int requestType, String url, final String requestName, final String operationID, JSONObject parameters) {
+        AuthManager manager = AuthManager.getInstance();
+        if (manager.getToken() != null) {
+            url += "?access_token=" + manager.getToken();
+        }
         JsonObjectRequest objectRequest = new JsonObjectRequest(requestType, url, parameters,
             new Response.Listener<JSONObject>() {
                 @Override
