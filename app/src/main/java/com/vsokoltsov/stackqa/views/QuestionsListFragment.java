@@ -162,7 +162,8 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
         setListAdapter(adapter);
         mProgress = getProgressBar();
         if(questionsList.size() <= 0) {
-            Question.getCollection();
+            Question q = new Question();
+            q.getCollection();
         } else {
             if(mProgress != null){
                 mProgress.setVisibility(View.GONE);
@@ -268,20 +269,21 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
     }
 
     // This method will be called when a MessageEvent is posted
-    public void onEvent(SuccessRequestMessage event){
-        switch (event.operationName){
-            case "list":
-                parseQuestionsList(event.response);
-                break;
+    public void onEvent(QuestionMessage event){
+        if (event.response instanceof JSONObject) {
+            switch (event.operationName){
+                case "list":
+                    parseQuestionsList(event.response);
+                    break;
+            }
+        } else {
+            switch (event.operationName){
+                case "list":
+                    handleQuestionListError(event.error);
+                    break;
+            }
         }
-    }
 
-    public void onEvent(FailureRequestMessage event){
-        switch (event.operationName){
-            case "list":
-                handleQuestionListError(event.error);
-                break;
-        }
     }
 
     private void handleQuestionListError(VolleyError error){

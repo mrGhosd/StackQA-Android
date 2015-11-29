@@ -194,9 +194,9 @@ public class Question implements Parcelable, RequestCallbacks{
         dest.writeString(createdAt.toString());
     }
 
-    public static void getCollection(){
+    public void getCollection(){
         String url = AppController.APP_HOST + "/api/v1/questions";
-        ApiRequest.getInstance().get(url, "messages.QuestionMessage", "list", null);
+        ApiRequest.getInstance(this).get(url, "messages.QuestionMessage", "list", null);
     }
 
     @Override

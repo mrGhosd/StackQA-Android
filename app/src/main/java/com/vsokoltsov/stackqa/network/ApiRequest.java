@@ -43,13 +43,18 @@ public class ApiRequest {
         sendRequest(Request.Method.GET, url, requestName, operationID, parameters);
     }
 
+    public void post(String url, String requestName, String operationID, JSONObject parameters){
+        sendRequest(Request.Method.POST, url, requestName, operationID, parameters);
+    }
+
     private void sendRequest(int requestType, String url, final String requestName, final String operationID, JSONObject parameters) {
         JsonObjectRequest objectRequest = new JsonObjectRequest(requestType, url, parameters,
             new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
-                        EventBus.getDefault().post(new SuccessRequestMessage(operationID, response));
+//                        EventBus.getDefault().post(new SuccessRequestMessage(operationID, response));
+                        callbacks.successCallback(operationID, response);
                     } catch (Exception e){
                         e.printStackTrace();
                     }
@@ -58,7 +63,8 @@ public class ApiRequest {
             new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    EventBus.getDefault().post(new FailureRequestMessage(operationID, error));
+                    callbacks.failureCallback(operationID, error);
+//                    EventBus.getDefault().post(new FailureRequestMessage(operationID, error));
                 }
             });
         AppController.getInstance().addToRequestQueue(objectRequest);
