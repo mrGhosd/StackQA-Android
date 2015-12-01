@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -36,9 +37,11 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
     private TextView mStatusView;
     private ArrayList<Question> defaultQuestionsList;
     private AuthManager manager = AuthManager.getInstance();
+    private SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
+        pref = (SharedPreferences) getSharedPreferences("stackqa", Context.MODE_PRIVATE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         mNavigationDrawerFragment = (NavigationFragment)
@@ -59,6 +62,9 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
         mStatusView = (TextView) findViewById(R.id.status_text);
         if (savedInstanceState == null) {
         }
+
+        String email = pref.getString("stackqaemail", null);
+        String password = pref.getString("stackqapassword", null);
     }
 
 

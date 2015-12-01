@@ -50,6 +50,7 @@ public class AuthorizationActivity extends ActionBarActivity
             mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
             mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
 
+
             mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
 
                 @Override

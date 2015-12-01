@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.vsokoltsov.stackqa" >
+    package="com.vsokoltsov.stackqa">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:name=".controllers.AppController"
@@ -10,6 +11,14 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
+        <receiver
+            android:name=".receiver.AppStartReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <activity android:name=".SearchableActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -22,9 +31,8 @@
             android:name=".views.QuestionsListActivity"
             android:label="@string/app_name" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
         <activity
@@ -43,6 +51,7 @@
             android:name=".views.auth.AuthorizationActivity"
             android:label="Sign in" >
         </activity>
+        <service android:enabled="true" android:name=".receiver.StartedService" />
     </application>
 
 </manifest>

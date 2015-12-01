@@ -1,6 +1,8 @@
 package com.vsokoltsov.stackqa.views.auth;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -26,6 +28,7 @@ import de.greenrobot.event.EventBus;
  */
 public class SignInFragment extends Fragment {
     private View fragmentView;
+    private SharedPreferences.Editor editor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,7 @@ public class SignInFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        editor = (SharedPreferences.Editor) getActivity().getSharedPreferences("stackqa", Context.MODE_PRIVATE).edit();
         fragmentView =  inflater.inflate(R.layout.sign_in, container, false);
         Button signInButton = (Button) fragmentView.findViewById(R.id.signInButton);
         signInButton.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +70,9 @@ public class SignInFragment extends Fragment {
 
         String emailString = email.getText().toString();
         String passwordString = password.getText().toString();
+        editor.putString("stackqaemail", emailString);
+        editor.putString("stackqapassword", passwordString);
+        editor.commit();
         try {
             AuthManager.getInstance().signIn(emailString, passwordString);
         } catch (JSONException e){
@@ -108,6 +115,8 @@ public class SignInFragment extends Fragment {
             String token = (String) response.get("access_token");
             AuthManager.getInstance().setToken(token);
             AuthManager.getInstance().currentUserRequest();
+            editor.putString("access_token", (String) response.get("access_token"));
+            editor.commit();
         } catch (JSONException e){
             e.printStackTrace();
         }

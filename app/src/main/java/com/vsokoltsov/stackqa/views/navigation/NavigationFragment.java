@@ -134,25 +134,7 @@ public class NavigationFragment extends ListFragment {
         }
         if (mCallbacks != null) {
 //            mCallbacks.onNavigationDrawerItemSelected(position);
-            switch(position){
-                case 0:
-                    Intent detailIntent = new Intent(getActivity(), AuthorizationActivity.class);
-                    detailIntent.putExtra("action", "sign_in");
-                    startActivity(detailIntent);
-                    getActivity().overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-                    break;
-                case 1:
-                    Intent regIntent = new Intent(getActivity(), AuthorizationActivity.class);
-                    regIntent.putExtra("action", "sign_up");
-                    startActivity(regIntent);
-                    getActivity().overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-                    break;
-                case 2:
-                    Intent questionsIntent = new Intent(getActivity(), QuestionsListActivity.class);
-                    startActivity(questionsIntent);
-                    getActivity().overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-                    break;
-            }
+            navigationItemActions(position);
         }
     }
     /**
@@ -271,5 +253,42 @@ public class NavigationFragment extends ListFragment {
         });
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+    }
+
+
+    //NAvigation item actions
+    private void navigationItemActions(int position) {
+        if (authManager.getCurrentUser() != null) {
+
+        }
+        else {
+            actionsForUnsignedUser(position);
+        }
+    }
+
+    private void actionsForSignedInUser(int position) {
+
+    }
+
+    private void actionsForUnsignedUser(int position) {
+        switch(position){
+            case 0:
+                Intent detailIntent = new Intent(getActivity(), AuthorizationActivity.class);
+                detailIntent.putExtra("action", "sign_in");
+                startActivity(detailIntent);
+                getActivity().overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                break;
+            case 1:
+                Intent regIntent = new Intent(getActivity(), AuthorizationActivity.class);
+                regIntent.putExtra("action", "sign_up");
+                startActivity(regIntent);
+                getActivity().overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                break;
+            case 2:
+                Intent questionsIntent = new Intent(getActivity(), QuestionsListActivity.class);
+                startActivity(questionsIntent);
+                getActivity().overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                break;
+        }
     }
 }
