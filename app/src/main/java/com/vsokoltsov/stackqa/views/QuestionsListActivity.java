@@ -16,6 +16,7 @@ import android.view.MenuItem;
 
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.QuestionsListAdapter;
+import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.views.auth.AuthorizationActivity;
 import com.vsokoltsov.stackqa.views.navigation.NavigationFragment;
@@ -34,6 +35,7 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
     private SearchView mSearchView;
     private TextView mStatusView;
     private ArrayList<Question> defaultQuestionsList;
+    private AuthManager manager = AuthManager.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState){

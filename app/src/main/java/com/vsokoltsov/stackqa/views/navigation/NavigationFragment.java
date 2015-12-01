@@ -1,6 +1,7 @@
 package com.vsokoltsov.stackqa.views.navigation;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.ListFragment;
 import android.support.v7.app.ActionBarActivity;
@@ -19,8 +20,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 
+import com.android.volley.Response;
+import com.android.volley.toolbox.ImageRequest;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.NavigationListAdapter;
+import com.vsokoltsov.stackqa.controllers.AppController;
+import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.NavigationItem;
 import com.vsokoltsov.stackqa.views.QuestionsListActivity;
 import com.vsokoltsov.stackqa.views.auth.AuthorizationActivity;
@@ -42,6 +47,7 @@ public class NavigationFragment extends ListFragment {
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
+    private AuthManager authManager = AuthManager.getInstance();
 
     public NavigationFragment() {
         // Required empty public constructor
@@ -77,8 +83,22 @@ public class NavigationFragment extends ListFragment {
                 R.layout.fragment_navigation, container, false);
         adapter = new NavigationListAdapter(getActivity(), navigationItems);
         setListAdapter(adapter);
-        navigationItems.add(new NavigationItem(R.drawable.auth, "Sign in"));
-        navigationItems.add(new NavigationItem(R.drawable.registr, "Sign up"));
+        if (authManager.getCurrentUser() != null) {
+            String url = AppController.APP_HOST + authManager.getCurrentUser().getAvatarUrl();
+            ImageRequest ir = new ImageRequest(url, new Response.Listener<Bitmap>() {
+                @Override
+                public void onResponse(Bitmap response) {
+//                    text.setText(navigation.getUser().getCorrectNaming());
+//                    image.setImageBitmap(response);
+                }
+            }, 0, 0, null, null);
+            AppController.getInstance().addToRequestQueue(ir);
+            navigationItems.add(new NavigationItem(authManager.getCurrentUser()));
+        }
+        else {
+            navigationItems.add(new NavigationItem(R.drawable.auth, "Sign in"));
+            navigationItems.add(new NavigationItem(R.drawable.registr, "Sign up"));
+        }
         navigationItems.add(new NavigationItem(R.drawable.question, "Questions"));
         navigationItems.add(new NavigationItem(R.drawable.category, "Categories"));
         adapter.notifyDataSetChanged();
