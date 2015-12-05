@@ -1,13 +1,19 @@
 package com.vsokoltsov.stackqa.controllers;
 
+import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.util.*;
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Handler;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
 
 /**
  * Created by vsokoltsov on 09.07.15.
@@ -16,17 +22,37 @@ public class AppController extends Application{
     public static final String TAG = AppController.class.getSimpleName();
 
 //    public static final String APP_HOST = "http://178.62.198.57";
-    public static final String APP_HOST = "http://13d5e818.ngrok.io";
+    public static final String APP_HOST = "http://fce43cde.ngrok.io";
 
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
 
     private static AppController mInstance;
+    private SharedPreferences pref;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+        pref = (SharedPreferences) getSharedPreferences("stackqa", Context.MODE_PRIVATE);
+
+        Handler handler = new Handler();
+        Runnable task = new Runnable() {
+            public void run() {
+                String email = pref.getString("stackqaemail", null);
+                String password = pref.getString("stackqapassword", null);
+                if(email != null && password != null) {
+                    try {
+                        AuthManager.getInstance().signIn(email, password);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+
+        handler.postDelayed(task, 3000);
+
     }
 
     public static synchronized AppController getInstance() {

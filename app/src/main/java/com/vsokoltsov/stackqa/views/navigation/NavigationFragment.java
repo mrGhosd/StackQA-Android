@@ -25,6 +25,8 @@ import com.android.volley.toolbox.ImageRequest;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.NavigationListAdapter;
 import com.vsokoltsov.stackqa.controllers.AppController;
+import com.vsokoltsov.stackqa.messages.SuccessRequestMessage;
+import com.vsokoltsov.stackqa.messages.UserMessage;
 import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.NavigationItem;
 import com.vsokoltsov.stackqa.views.QuestionsListActivity;
@@ -32,6 +34,8 @@ import com.vsokoltsov.stackqa.views.auth.AuthorizationActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 /*
  * create an instance of this fragment.
@@ -81,26 +85,7 @@ public class NavigationFragment extends ListFragment {
         // Inflate the layout for this fragment
         mDrawerListView = (ListView) inflater.inflate(
                 R.layout.fragment_navigation, container, false);
-        adapter = new NavigationListAdapter(getActivity(), navigationItems);
-        setListAdapter(adapter);
-        if (authManager.getCurrentUser() != null) {
-            String url = AppController.APP_HOST + authManager.getCurrentUser().getAvatarUrl();
-            ImageRequest ir = new ImageRequest(url, new Response.Listener<Bitmap>() {
-                @Override
-                public void onResponse(Bitmap response) {
-//                    text.setText(navigation.getUser().getCorrectNaming());
-//                    image.setImageBitmap(response);
-                }
-            }, 0, 0, null, null);
-            AppController.getInstance().addToRequestQueue(ir);
-            navigationItems.add(new NavigationItem(authManager.getCurrentUser()));
-        }
-        else {
-            navigationItems.add(new NavigationItem(R.drawable.auth, "Sign in"));
-            navigationItems.add(new NavigationItem(R.drawable.registr, "Sign up"));
-        }
-        navigationItems.add(new NavigationItem(R.drawable.question, "Questions"));
-        navigationItems.add(new NavigationItem(R.drawable.category, "Categories"));
+        setupElementsList();
         adapter.notifyDataSetChanged();
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
@@ -290,5 +275,22 @@ public class NavigationFragment extends ListFragment {
                 getActivity().overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
                 break;
         }
+    }
+
+
+
+    public void setupElementsList(){
+        if(navigationItems != null) navigationItems = new ArrayList<NavigationItem>();
+        if (authManager.getCurrentUser() != null) {
+            navigationItems.add(new NavigationItem(authManager.getCurrentUser()));
+        }
+        else {
+            navigationItems.add(new NavigationItem(R.drawable.auth, "Sign in"));
+            navigationItems.add(new NavigationItem(R.drawable.registr, "Sign up"));
+        }
+        navigationItems.add(new NavigationItem(R.drawable.question, "Questions"));
+        navigationItems.add(new NavigationItem(R.drawable.category, "Categories"));
+        adapter = new NavigationListAdapter(getActivity(), navigationItems);
+        setListAdapter(adapter);
     }
 }

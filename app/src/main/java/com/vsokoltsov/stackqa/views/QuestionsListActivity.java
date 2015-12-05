@@ -17,6 +17,7 @@ import android.view.MenuItem;
 
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.QuestionsListAdapter;
+import com.vsokoltsov.stackqa.messages.UserMessage;
 import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.views.auth.AuthorizationActivity;
@@ -29,6 +30,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 public class QuestionsListActivity extends ActionBarActivity implements QuestionsListFragment.Callbacks,
         NavigationFragment.NavigationDrawerCallbacks {
@@ -200,6 +203,24 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
         actionBar.setTitle("Questions");
     }
 
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
 
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    // This method will be called when a MessageEvent is posted
+    public void onEvent(UserMessage event){
+        switch (event.operationName){
+            case "currentUserSignedIn":
+                mNavigationDrawerFragment.setupElementsList();
+                break;
+        }
+    }
 
 }

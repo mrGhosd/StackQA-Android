@@ -13,9 +13,13 @@
         android:theme="@style/AppTheme" >
 
         <receiver
-            android:name=".receiver.AppStartReceiver">
+            android:name=".receiver.AppStartReceiver"
+            android:enabled="true"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE"/>
+                <category android:name="android.intent.category.HOME"/>
             </intent-filter>
         </receiver>
 
@@ -51,7 +55,7 @@
             android:name=".views.auth.AuthorizationActivity"
             android:label="Sign in" >
         </activity>
-        <service android:enabled="true" android:name=".receiver.StartedService" />
+        <service android:enabled="true" android:name=".StartedService" />
     </application>
 
 </manifest>

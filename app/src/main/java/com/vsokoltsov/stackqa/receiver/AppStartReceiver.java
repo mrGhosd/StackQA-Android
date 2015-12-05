@@ -11,6 +11,7 @@ public class AppStartReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         // do startup tasks or start your luncher activity
+        android.os.Debug.waitForDebugger();
         Intent newIntent = new Intent(context, StartedService.class);
         context.startService(newIntent);
     }
