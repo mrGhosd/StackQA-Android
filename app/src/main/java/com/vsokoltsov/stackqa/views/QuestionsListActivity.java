@@ -41,6 +41,7 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
     private ArrayList<Question> defaultQuestionsList;
     private AuthManager manager = AuthManager.getInstance();
     private SharedPreferences pref;
+    private Menu mainMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -74,12 +75,13 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-
+        mainMenu = menu;
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_achieve, menu);
-        MenuItem searchItem = menu.findItem(R.id.search_quesitions);
+        inflater.inflate(R.menu.menu_achieve, mainMenu);
+        MenuItem searchItem = mainMenu.findItem(R.id.search_quesitions);
         mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         setupSearchView(searchItem);
+        showCreateQuestionIcon();
         return true;
     }
 
@@ -138,15 +140,6 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-//        if (id == R.id.sign_up) {
-//            return true;
-//        }
-//        if(id == R.id.sign_in){
-//            return true;
-//        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -218,8 +211,21 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
     public void onEvent(UserMessage event){
         switch (event.operationName){
             case "currentUserSignedIn":
+                showCreateQuestionIcon();
                 mNavigationDrawerFragment.setupElementsList();
                 break;
+        }
+    }
+
+    private void showCreateQuestionIcon() {
+        MenuItem addItem = mainMenu.findItem(R.id.add_question);
+        if(manager.getCurrentUser() == null) {
+            addItem.setVisible(false);
+        }
+        else {
+            addItem.setVisible(true);
+            addItem .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
+                    | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
         }
     }
 
