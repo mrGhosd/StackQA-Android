@@ -2,6 +2,7 @@ package com.vsokoltsov.stackqa.network;
 
 import android.content.Context;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -72,6 +73,8 @@ public class ApiRequest {
 //                    EventBus.getDefault().post(new FailureRequestMessage(operationID, error));
                 }
             });
+        objectRequest.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 0,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         AppController.getInstance().addToRequestQueue(objectRequest);
     }
 

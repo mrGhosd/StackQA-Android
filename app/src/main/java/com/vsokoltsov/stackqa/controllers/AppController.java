@@ -22,7 +22,7 @@ public class AppController extends Application{
     public static final String TAG = AppController.class.getSimpleName();
 
 //    public static final String APP_HOST = "http://178.62.198.57";
-    public static final String APP_HOST = "http://3648ca5d.ngrok.io";
+    public static final String APP_HOST = "http://06f7ba3a.ngrok.io";
 
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
@@ -34,25 +34,6 @@ public class AppController extends Application{
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-        pref = (SharedPreferences) getSharedPreferences("stackqa", Context.MODE_PRIVATE);
-
-        Handler handler = new Handler();
-        Runnable task = new Runnable() {
-            public void run() {
-                String email = pref.getString("stackqaemail", null);
-                String password = pref.getString("stackqapassword", null);
-                if(email != null && password != null) {
-                    try {
-                        AuthManager.getInstance().signIn(email, password);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-
-        handler.postDelayed(task, 3000);
-
     }
 
     public static synchronized AppController getInstance() {

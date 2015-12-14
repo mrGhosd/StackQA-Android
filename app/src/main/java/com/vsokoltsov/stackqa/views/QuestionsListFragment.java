@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -24,9 +25,11 @@ import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.messages.FailureRequestMessage;
 import com.vsokoltsov.stackqa.messages.QuestionMessage;
 import com.vsokoltsov.stackqa.messages.SuccessRequestMessage;
+import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.network.ApiRequest;
 import com.vsokoltsov.stackqa.network.RequestCallbacks;
+import com.vsokoltsov.stackqa.receiver.StartedService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,6 +60,7 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
     private List<Question> questionsList = new ArrayList<Question>();
     private static final String url = AppController.APP_HOST + "/api/v1/questions";
     public static QuestionsListAdapter adapter;
+    private AuthManager manager = AuthManager.getInstance();
     public ListView list;
 
     private static List<Question> cachedQuestionsList = new ArrayList<Question>();
@@ -332,6 +336,9 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
             }
 
         }
+        if (manager.getCurrentUser() == null) {
+            startSignUpService();
+        }
         setCachedQuestionsList(questionsList);
         adapter.notifyDataSetChanged();
         swipeLayout.setRefreshing(false);
@@ -340,6 +347,12 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
             mProgress.setVisibility(View.GONE);
         }
 
+    }
+
+    public void startSignUpService() {
+        Intent service= new Intent(getActivity().getBaseContext(), StartedService.class);
+        // potentially add data to the intent
+        getActivity().getBaseContext().startService(service);
     }
 
     private ProgressBar getProgressBar(){

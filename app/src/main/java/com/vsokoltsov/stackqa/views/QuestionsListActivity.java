@@ -20,6 +20,7 @@ import com.vsokoltsov.stackqa.adapters.QuestionsListAdapter;
 import com.vsokoltsov.stackqa.messages.UserMessage;
 import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.Question;
+import com.vsokoltsov.stackqa.receiver.StartedService;
 import com.vsokoltsov.stackqa.views.auth.AuthorizationActivity;
 import com.vsokoltsov.stackqa.views.navigation.NavigationFragment;
 
@@ -42,9 +43,11 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
     private AuthManager manager = AuthManager.getInstance();
     private SharedPreferences pref;
     private Menu mainMenu;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
+        this.context = getBaseContext();
         pref = (SharedPreferences) getSharedPreferences("stackqa", Context.MODE_PRIVATE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
@@ -66,9 +69,6 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
         mStatusView = (TextView) findViewById(R.id.status_text);
         if (savedInstanceState == null) {
         }
-
-        String email = pref.getString("stackqaemail", null);
-        String password = pref.getString("stackqapassword", null);
     }
 
 
@@ -228,5 +228,4 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
                     | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
         }
     }
-
 }
