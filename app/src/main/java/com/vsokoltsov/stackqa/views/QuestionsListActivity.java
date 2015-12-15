@@ -36,6 +36,7 @@ import de.greenrobot.event.EventBus;
 
 public class QuestionsListActivity extends ActionBarActivity implements QuestionsListFragment.Callbacks,
         NavigationFragment.NavigationDrawerCallbacks {
+    private DrawerLayout drawerLayout;
     private NavigationFragment mNavigationDrawerFragment;
     private SearchView mSearchView;
     private TextView mStatusView;
@@ -50,15 +51,17 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
         this.context = getBaseContext();
         pref = (SharedPreferences) getSharedPreferences("stackqa", Context.MODE_PRIVATE);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        mNavigationDrawerFragment = (NavigationFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
+        try {
+            setContentView(R.layout.main);
+        }
+        catch (Exception e) {
+          e.printStackTrace();
+        }
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mNavigationDrawerFragment = (NavigationFragment) fragmentManager.findFragmentById(R.id.navigation_drawer);
+        mNavigationDrawerFragment.setUp(R.id.navigation_drawer, drawerLayout);
+
         Fragment frg = fragmentManager.findFragmentById(R.id.container);
         if(frg == null) {
             android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -71,6 +74,10 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
         }
     }
 
+
+    protected void initUIComponents() {
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

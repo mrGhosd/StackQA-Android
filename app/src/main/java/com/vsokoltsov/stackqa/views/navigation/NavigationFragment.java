@@ -3,6 +3,7 @@ package com.vsokoltsov.stackqa.views.navigation;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
@@ -17,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -41,7 +43,7 @@ import de.greenrobot.event.EventBus;
 /*
  * create an instance of this fragment.
  */
-public class NavigationFragment extends ListFragment {
+public class NavigationFragment extends Fragment {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
     private View mFragmentContainerView;
@@ -84,14 +86,15 @@ public class NavigationFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mDrawerListView = (ListView) inflater.inflate(
+        FrameLayout rootView = (FrameLayout) inflater.inflate(
                 R.layout.fragment_navigation, container, false);
+        mDrawerListView = (ListView) rootView.findViewById(R.id.navigation_list);
+//        mDrawerListView = (ListView) inflater.inflate(
+//                R.layout.fragment_navigation, container, false);
         setupElementsList();
         adapter.notifyDataSetChanged();
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
-        return mDrawerListView;
-
-
+        return rootView;
     }
 
 
@@ -146,11 +149,11 @@ public class NavigationFragment extends ListFragment {
 //        public void onFragmentInteraction(Uri uri);
     }
 
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        /** Invokes the implementation of the method onListFragmentItemClick in the hosting activity */
-        selectItem(position);
-    }
+//    @Override
+//    public void onListItemClick(ListView l, View v, int position, long id) {
+//        /** Invokes the implementation of the method onListFragmentItemClick in the hosting activity */
+//        selectItem(position);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -292,6 +295,6 @@ public class NavigationFragment extends ListFragment {
         navigationItems.add(new NavigationItem(R.drawable.question, "Questions"));
         navigationItems.add(new NavigationItem(R.drawable.category, "Categories"));
         adapter = new NavigationListAdapter(getActivity(), navigationItems);
-        setListAdapter(adapter);
+        mDrawerListView.setAdapter(adapter);
     }
 }
