@@ -20,9 +20,14 @@
         android:layout_gravity="bottom">
         <Button
             android:id="@+id/sign_out_button"
-            android:layout_width="100dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="Sign out"
-            android:background="#cccc"/>
+            android:background="@android:color/transparent"
+            android:drawableLeft="@drawable/logout"
+            android:textSize="15dp"
+            android:paddingLeft="20dp"
+            android:drawablePadding="15dp"
+            android:gravity="left|clip_horizontal|center" />
     </RelativeLayout>
 </FrameLayout>

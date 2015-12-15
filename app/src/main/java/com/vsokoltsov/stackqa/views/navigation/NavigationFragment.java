@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -89,6 +90,7 @@ public class NavigationFragment extends Fragment {
         FrameLayout rootView = (FrameLayout) inflater.inflate(
                 R.layout.fragment_navigation, container, false);
         mDrawerListView = (ListView) rootView.findViewById(R.id.navigation_list);
+        Button signOutButton = (Button) rootView.findViewById(R.id.sign_out_button);
 //        mDrawerListView = (ListView) inflater.inflate(
 //                R.layout.fragment_navigation, container, false);
         setupElementsList();
