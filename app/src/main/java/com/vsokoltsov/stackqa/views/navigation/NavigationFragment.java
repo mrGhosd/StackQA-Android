@@ -58,6 +58,7 @@ public class NavigationFragment extends Fragment {
     private boolean mUserLearnedDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
     private AuthManager authManager = AuthManager.getInstance();
+    private FrameLayout rootView;
 
     public NavigationFragment() {
         // Required empty public constructor
@@ -89,20 +90,12 @@ public class NavigationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        FrameLayout rootView = (FrameLayout) inflater.inflate(
-                R.layout.fragment_navigation, container, false);
+        rootView = (FrameLayout) inflater.inflate(R.layout.fragment_navigation, container, false);
         mDrawerListView = (ListView) rootView.findViewById(R.id.navigation_list);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 navigationItemActions(position);
-            }
-        });
-        Button signOutButton = (Button) rootView.findViewById(R.id.sign_out_button);
-        signOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               signOut();
             }
         });
 //        mDrawerListView = (ListView) inflater.inflate(
@@ -310,8 +303,25 @@ public class NavigationFragment extends Fragment {
         }
         navigationItems.add(new NavigationItem(R.drawable.question, "Questions"));
         navigationItems.add(new NavigationItem(R.drawable.category, "Categories"));
+        setSignOutButton();
         adapter = new NavigationListAdapter(getActivity(), navigationItems);
         mDrawerListView.setAdapter(adapter);
+    }
+
+    public void setSignOutButton() {
+        Button signOutButton = (Button) rootView.findViewById(R.id.sign_out_button);
+        if (authManager.getCurrentUser() != null) {
+            signOutButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    signOut();
+                }
+            });
+            signOutButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            signOutButton.setVisibility(View.INVISIBLE);
+        }
     }
 
     public void signOut() {
