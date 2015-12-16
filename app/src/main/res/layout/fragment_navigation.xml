@@ -28,6 +28,6 @@
             android:textSize="15dp"
             android:paddingLeft="20dp"
             android:drawablePadding="15dp"
-            android:gravity="left|clip_horizontal|center" />
+            android:gravity="left|clip_horizontal|center"/>
     </RelativeLayout>
 </FrameLayout>

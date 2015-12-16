@@ -18,6 +18,11 @@ public class UserMessage extends BaseMessage {
         this.response = response;
     }
 
+    public UserMessage(String name) {
+        this.operationName = name;
+        this.response = null;
+    }
+
     public UserMessage(String name, VolleyError error){
         this.operationName = name;
         this.error = error;

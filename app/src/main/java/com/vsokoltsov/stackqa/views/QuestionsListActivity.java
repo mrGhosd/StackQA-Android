@@ -219,7 +219,9 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
         switch (event.operationName){
             case "currentUserSignedIn":
                 showCreateQuestionIcon();
-                mNavigationDrawerFragment.setupElementsList();
+                break;
+            case "signOut":
+                showCreateQuestionIcon();
                 break;
         }
     }

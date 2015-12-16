@@ -49,6 +49,10 @@ public class AuthManager implements RequestCallbacks {
         ApiRequest.getInstance(this).get(url, null, "current_user", null);
     }
 
+    public void signOut() {
+        EventBus.getDefault().post(new UserMessage("signOut"));
+    }
+
 
     @Override
     public void successCallback(String requestName, JSONObject object) throws JSONException {

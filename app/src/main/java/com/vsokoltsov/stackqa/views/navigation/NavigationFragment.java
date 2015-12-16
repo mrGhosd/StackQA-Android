@@ -1,5 +1,6 @@
 package com.vsokoltsov.stackqa.views.navigation;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
@@ -13,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -90,7 +92,19 @@ public class NavigationFragment extends Fragment {
         FrameLayout rootView = (FrameLayout) inflater.inflate(
                 R.layout.fragment_navigation, container, false);
         mDrawerListView = (ListView) rootView.findViewById(R.id.navigation_list);
+        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                navigationItemActions(position);
+            }
+        });
         Button signOutButton = (Button) rootView.findViewById(R.id.sign_out_button);
+        signOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               signOut();
+            }
+        });
 //        mDrawerListView = (ListView) inflater.inflate(
 //                R.layout.fragment_navigation, container, false);
         setupElementsList();
@@ -298,5 +312,39 @@ public class NavigationFragment extends Fragment {
         navigationItems.add(new NavigationItem(R.drawable.category, "Categories"));
         adapter = new NavigationListAdapter(getActivity(), navigationItems);
         mDrawerListView.setAdapter(adapter);
+    }
+
+    public void signOut() {
+        authManager.setCurrentUser(null);
+        SharedPreferences.Editor editor = (SharedPreferences.Editor)
+                getActivity().getSharedPreferences("stackqa", Context.MODE_PRIVATE).edit();
+        editor.putString("stackqaemail", null);
+        editor.putString("stackqapassword", null);
+        editor.commit();
+        authManager.signOut();
+    }
+
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    // This method will be called when a MessageEvent is posted
+    public void onEvent(UserMessage event){
+        switch (event.operationName){
+            case "currentUserSignedIn":
+                setupElementsList();
+                break;
+            case "signOut":
+                mDrawerLayout.closeDrawer(Gravity.LEFT);
+                setupElementsList();
+                break;
+        }
     }
 }
