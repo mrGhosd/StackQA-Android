@@ -56,7 +56,10 @@ public class User {
     }
 
     public String getCorrectNaming(){
-        if(!this.surname.isEmpty() && !this.name.isEmpty()){
+        boolean surnameIsEmpty = this.surname.isEmpty() || this.surname == "null";
+        boolean nameIsEmpty = this.name.isEmpty() || this.name == "null";
+
+        if(!surnameIsEmpty && !nameIsEmpty){
             return this.surname + " " + this.name;
         } else {
             return this.email;

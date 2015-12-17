@@ -17,6 +17,7 @@ import de.greenrobot.event.EventBus;
 public class AuthManager implements RequestCallbacks {
     private User currentUser;
     private String token;
+    private JSONObject jsonUser;
 
     private static AuthManager ourInstance = new AuthManager();
     public static AuthManager getInstance() {
@@ -44,6 +45,18 @@ public class AuthManager implements RequestCallbacks {
         ApiRequest.getInstance(this).post(url, null, "sign_in", params);
     }
 
+    public void signUp(String email, String password, String passwordConfirmation) throws JSONException {
+        String url = AppController.APP_HOST+"/api/v1/users";
+        jsonUser = new JSONObject();
+        JSONObject user = new JSONObject();
+        jsonUser .put("email", email);
+        jsonUser .put("password", password);
+        jsonUser .put("password_confirmation", passwordConfirmation);
+
+        user.put("user", jsonUser );
+        ApiRequest.getInstance(this).post(url, null, "sign_up", user);
+    }
+
     public void currentUserRequest() throws JSONException {
         String url = AppController.APP_HOST + "/api/v1/profiles/me";
         ApiRequest.getInstance(this).get(url, null, "current_user", null);
@@ -65,12 +78,21 @@ public class AuthManager implements RequestCallbacks {
                 parseCurrentUser(object);
                 EventBus.getDefault().post(new UserMessage("currentUserSignedIn", this.getCurrentUser()));
                 break;
+            case "sign_up":
+                parseSignedUpUser(object);
+                break;
         }
     }
 
     @Override
     public void failureCallback(String requestName, VolleyError error) {
 
+    }
+
+    public void parseSignedUpUser(JSONObject object) throws JSONException {
+        String email = jsonUser.getString("email");
+        String password = jsonUser.getString("password");
+        signIn(email, password);
     }
 
     private void parseCurrentUser(JSONObject response) {
