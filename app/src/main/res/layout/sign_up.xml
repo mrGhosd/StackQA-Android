@@ -4,6 +4,10 @@
     android:layout_height="match_parent"
     tools:context="com.vsokoltsov.stackqa.views.auth.SignUpFragment"
     android:focusableInTouchMode="false">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
     <EditText
         android:layout_width="fill_parent"
@@ -17,6 +21,15 @@
         android:layout_marginRight="20dp"
         android:hint="Email"/>
 
+        <TextView
+            android:id="@+id/emailErrors"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textColor="#FF0000"
+            android:visibility="gone"/>
+
     <EditText
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -24,10 +37,18 @@
         android:ems="10"
         android:id="@+id/passwordField"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="125dp"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
         android:hint="Password" />
+
+        <TextView
+            android:id="@+id/passwordErrors"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textColor="#FF0000"
+            android:visibility="gone"/>
 
     <EditText
         android:layout_width="fill_parent"
@@ -35,10 +56,18 @@
         android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/passwordConfirmationField"
-        android:layout_marginTop="175dp"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
         android:hint="Confirm Password" />
+
+        <TextView
+            android:id="@+id/passwordConfirmationErrors"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textColor="#FF0000"
+            android:visibility="gone"/>
 
     <Button
         android:layout_width="match_parent"
@@ -48,7 +77,7 @@
         android:layout_gravity="top|center"
         android:layout_marginBottom="60dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="215dp" />
+        android:layout_marginRight="20dp" />
+    </LinearLayout>
 
 </FrameLayout>

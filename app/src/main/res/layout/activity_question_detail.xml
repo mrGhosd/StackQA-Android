@@ -28,7 +28,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="#808080">
+                android:background="#808080"
+                android:gravity="bottom">
                 <EditText
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"

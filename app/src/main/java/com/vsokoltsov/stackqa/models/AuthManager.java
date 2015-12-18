@@ -1,5 +1,8 @@
 package com.vsokoltsov.stackqa.models;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import com.android.volley.VolleyError;
 import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.messages.FailureRequestMessage;
@@ -19,6 +22,10 @@ public class AuthManager implements RequestCallbacks {
     private User currentUser;
     private String token;
     private JSONObject jsonUser;
+    private SharedPreferences.Editor editor =
+            AppController.getInstance().getSharedPreferences("stackqa", Context.MODE_PRIVATE).edit();
+    private String userEmail = "";
+    private String userPassword = "";
 
     private static AuthManager ourInstance = new AuthManager();
     public static AuthManager getInstance() {
@@ -40,9 +47,11 @@ public class AuthManager implements RequestCallbacks {
     public void signIn(String email, String password) throws JSONException {
         String url = AppController.APP_HOST+"/oauth/token";
         JSONObject params = new JSONObject();
+        userEmail = email;
+        userPassword = password;
         params.put("grant_type", "password");
-        params.put("email", email);
-        params.put("password", password);
+        params.put("email", userEmail);
+        params.put("password", userPassword);
         ApiRequest.getInstance(this).post(url, null, "sign_in", params);
     }
 
@@ -50,9 +59,9 @@ public class AuthManager implements RequestCallbacks {
         String url = AppController.APP_HOST+"/api/v1/users";
         jsonUser = new JSONObject();
         JSONObject user = new JSONObject();
-        jsonUser .put("email", email);
-        jsonUser .put("password", password);
-        jsonUser .put("password_confirmation", passwordConfirmation);
+        jsonUser.put("email", email);
+        jsonUser.put("password", password);
+        jsonUser.put("password_confirmation", passwordConfirmation);
 
         user.put("user", jsonUser );
         ApiRequest.getInstance(this).post(url, null, "sign_up", user);
@@ -89,10 +98,10 @@ public class AuthManager implements RequestCallbacks {
     public void failureCallback(String requestName, VolleyError error) {
         switch (requestName) {
             case "sign_in":
-                parseSignInError(error);
+                EventBus.getDefault().post(new FailureRequestMessage("sign_in", error));
                 break;
             case "sign_up":
-
+                EventBus.getDefault().post(new FailureRequestMessage("sign_up", error));
                 break;
         }
     }
@@ -103,11 +112,10 @@ public class AuthManager implements RequestCallbacks {
         signIn(email, password);
     }
 
-    public void parseSignInError(VolleyError error) {
-        EventBus.getDefault().post(new FailureRequestMessage("sign_in", error));
-    }
-
     private void parseCurrentUser(JSONObject response) {
+        editor.putString("stackqaemail", userEmail);
+        editor.putString("stackqapassword", userPassword);
+        editor.commit();
         setCurrentUser(new User(response));
     }
 

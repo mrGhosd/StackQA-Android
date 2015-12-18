@@ -28,6 +28,8 @@ public class AuthorizationActivity extends ActionBarActivity
     private FragmentTabHost mTabHost;
     private NavigationFragment mNavigationDrawerFragment;
     private String action;
+    private String userEmail;
+    private String userPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -123,5 +125,21 @@ public class AuthorizationActivity extends ActionBarActivity
     // This method will be called when a MessageEvent is posted
     public void onEvent(UserMessage event){
         this.onNavigationDrawerItemSelected(2);
+    }
+
+    public String getUserPassword() {
+        return userPassword;
+    }
+
+    public void setUserPassword(String password) {
+        this.userPassword = password;
+    }
+
+    public void setUserEmail(String email) {
+        this.userEmail = email;
+    }
+
+    public String getUserEmail() {
+        return this.userEmail;
     }
 }

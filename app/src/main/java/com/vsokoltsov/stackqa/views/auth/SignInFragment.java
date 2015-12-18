@@ -29,7 +29,6 @@ import de.greenrobot.event.EventBus;
  */
 public class SignInFragment extends Fragment {
     private View fragmentView;
-    private SharedPreferences.Editor editor;
     private TextView errorAuth;
 
     @Override
@@ -41,7 +40,6 @@ public class SignInFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        editor = (SharedPreferences.Editor) getActivity().getSharedPreferences("stackqa", Context.MODE_PRIVATE).edit();
         fragmentView =  inflater.inflate(R.layout.sign_in, container, false);
         errorAuth = (TextView) fragmentView.findViewById(R.id.authError);
         Button signInButton = (Button) fragmentView.findViewById(R.id.signInButton);
@@ -75,9 +73,6 @@ public class SignInFragment extends Fragment {
         String emailString = email.getText().toString();
         String passwordString = password.getText().toString();
         if (!emailString.isEmpty() && !passwordString.isEmpty()) {
-            editor.putString("stackqaemail", emailString);
-            editor.putString("stackqapassword", passwordString);
-            editor.commit();
             try {
                 AuthManager.getInstance().signIn(emailString, passwordString);
             } catch (JSONException e) {
@@ -97,58 +92,6 @@ public class SignInFragment extends Fragment {
             errorAuth.setText(answer);
             errorAuth.setVisibility(View.VISIBLE);
         }
-    }
-
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
-    // This method will be called when a MessageEvent is posted
-    public void onEvent(SuccessRequestMessage event){
-        switch (event.operationName){
-            case "sign_in":
-                this.parseSuccessCallbacks(event.response);
-                break;
-            case "current_user":
-                this.parseCurrentUserRequest(event.response);
-                break;
-        }
-    }
-
-    public void onEvent(FailureRequestMessage event){
-        switch (event.operationName){
-            case "sign_in":
-                parseFailureRequest(event.error);
-                break;
-        }
-    }
-
-    public void parseSuccessCallbacks(JSONObject response){
-        try {
-            String token = (String) response.get("access_token");
-            AuthManager.getInstance().setToken(token);
-            AuthManager.getInstance().currentUserRequest();
-            editor.putString("access_token", (String) response.get("access_token"));
-            editor.commit();
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
-    }
-
-    public void parseFailureRequest(VolleyError error) {
-        errorAuth.setText("User with this credentials doesn't exists");
-        errorAuth.setVisibility(View.VISIBLE);
-    }
-
-    public void parseCurrentUserRequest(JSONObject response){
-        User user = new User(response);
     }
 }
 
