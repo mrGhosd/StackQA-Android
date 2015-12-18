@@ -51,26 +51,23 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
         this.context = getBaseContext();
         pref = (SharedPreferences) getSharedPreferences("stackqa", Context.MODE_PRIVATE);
         super.onCreate(savedInstanceState);
-        try {
-            setContentView(R.layout.main);
-        }
-        catch (Exception e) {
-          e.printStackTrace();
-        }
-        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        setContentView(R.layout.main);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mNavigationDrawerFragment = (NavigationFragment) fragmentManager.findFragmentById(R.id.navigation_drawer);
-        mNavigationDrawerFragment.setUp(R.id.navigation_drawer, drawerLayout);
+        if (drawerLayout != null) {
+            android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+            mNavigationDrawerFragment = (NavigationFragment) fragmentManager.findFragmentById(R.id.navigation_drawer);
+            mNavigationDrawerFragment.setUp(R.id.navigation_drawer, drawerLayout);
 
-        Fragment frg = fragmentManager.findFragmentById(R.id.container);
-        if(frg == null) {
-            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            QuestionsListFragment fragment = new QuestionsListFragment();
-            fragmentTransaction.add(R.id.container, fragment);
-            fragmentTransaction.commit();
-        }
-        mStatusView = (TextView) findViewById(R.id.status_text);
-        if (savedInstanceState == null) {
+            Fragment frg = fragmentManager.findFragmentById(R.id.container);
+            if (frg == null) {
+                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                QuestionsListFragment fragment = new QuestionsListFragment();
+                fragmentTransaction.add(R.id.container, fragment);
+                fragmentTransaction.commit();
+            }
+            mStatusView = (TextView) findViewById(R.id.status_text);
+            if (savedInstanceState == null) {
+            }
         }
     }
 
@@ -96,43 +93,44 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
 
 
     private void setupSearchView(MenuItem searchItem) {
+        if (drawerLayout != null) {
+            if (isAlwaysExpanded()) {
+                mSearchView.setIconifiedByDefault(false);
+            } else {
+                searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
+                        | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+            }
 
-        if (isAlwaysExpanded()) {
-            mSearchView.setIconifiedByDefault(false);
-        } else {
-            searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
-                    | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-        }
+            SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            if (searchManager != null) {
+                List searchables = searchManager.getSearchablesInGlobalSearch();
 
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        if (searchManager != null) {
-            List searchables = searchManager.getSearchablesInGlobalSearch();
-
-            SearchableInfo info = searchManager.getSearchableInfo(getComponentName());
-            for (int i = 0; i < searchables.size(); i++) {
-                if (searchables.get(i) != null) {
-                    info = (SearchableInfo) searchables.get(i);
+                SearchableInfo info = searchManager.getSearchableInfo(getComponentName());
+                for (int i = 0; i < searchables.size(); i++) {
+                    if (searchables.get(i) != null) {
+                        info = (SearchableInfo) searchables.get(i);
+                    }
                 }
             }
-        }
-        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-        QuestionsListFragment frg = (QuestionsListFragment) fragmentManager.findFragmentById(R.id.container);
-        final ListView questionsList = frg.getList();
-        questionsList.setTextFilterEnabled(true);
-        final QuestionsListAdapter adapter = frg.getAdapter();
-        ArrayList<Question> defaultQuestionsList = frg.getQuestionsFromList();
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
+            android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+            QuestionsListFragment frg = (QuestionsListFragment) fragmentManager.findFragmentById(R.id.container);
+            final ListView questionsList = frg.getList();
+            questionsList.setTextFilterEnabled(true);
+            final QuestionsListAdapter adapter = frg.getAdapter();
+            ArrayList<Question> defaultQuestionsList = frg.getQuestionsFromList();
+            mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                adapter.getFilter().filter(newText);
-                return true;
-            }
-        });
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    adapter.getFilter().filter(newText);
+                    return true;
+                }
+            });
+        }
     }
 
     public boolean onClose() {
@@ -155,31 +153,34 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
 
     @Override
     public void onItemSelected(Question question) {
-        Intent detailIntent = new Intent(this, QuestionDetail.class);
-        detailIntent.putExtra("question", question);
-        startActivity(detailIntent);
-        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+        if (drawerLayout != null) {
+            Intent detailIntent = new Intent(this, QuestionDetail.class);
+            detailIntent.putExtra("question", question);
+            startActivity(detailIntent);
+            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+        }
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        Activity view;
-        switch(position){
-            case 0:
-                Intent detailIntent = new Intent(this, AuthorizationActivity.class);
-                detailIntent.putExtra("action", "sign_in");
-                startActivity(detailIntent);
-                overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-                break;
-            case 1:
-                Intent regIntent = new Intent(this, AuthorizationActivity.class);
-                regIntent.putExtra("action", "sign_up");
-                startActivity(regIntent);
-                overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-                break;
+        if (drawerLayout != null) {
+            Activity view;
+            switch (position) {
+                case 0:
+                    Intent detailIntent = new Intent(this, AuthorizationActivity.class);
+                    detailIntent.putExtra("action", "sign_in");
+                    startActivity(detailIntent);
+                    overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                    break;
+                case 1:
+                    Intent regIntent = new Intent(this, AuthorizationActivity.class);
+                    regIntent.putExtra("action", "sign_up");
+                    startActivity(regIntent);
+                    overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                    break;
+            }
         }
-
     }
 
     public void onSectionAttached(int number) {
