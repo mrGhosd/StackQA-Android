@@ -2,6 +2,7 @@ package com.vsokoltsov.stackqa.models;
 
 import com.android.volley.VolleyError;
 import com.vsokoltsov.stackqa.controllers.AppController;
+import com.vsokoltsov.stackqa.messages.FailureRequestMessage;
 import com.vsokoltsov.stackqa.messages.UserMessage;
 import com.vsokoltsov.stackqa.network.ApiRequest;
 import com.vsokoltsov.stackqa.network.RequestCallbacks;
@@ -86,13 +87,24 @@ public class AuthManager implements RequestCallbacks {
 
     @Override
     public void failureCallback(String requestName, VolleyError error) {
+        switch (requestName) {
+            case "sign_in":
+                parseSignInError(error);
+                break;
+            case "sign_up":
 
+                break;
+        }
     }
 
     public void parseSignedUpUser(JSONObject object) throws JSONException {
         String email = jsonUser.getString("email");
         String password = jsonUser.getString("password");
         signIn(email, password);
+    }
+
+    public void parseSignInError(VolleyError error) {
+        EventBus.getDefault().post(new FailureRequestMessage("sign_in", error));
     }
 
     private void parseCurrentUser(JSONObject response) {

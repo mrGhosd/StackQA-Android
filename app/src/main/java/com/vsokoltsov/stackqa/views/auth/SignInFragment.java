@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.messages.FailureRequestMessage;
 import com.vsokoltsov.stackqa.messages.SuccessRequestMessage;
@@ -29,6 +30,7 @@ import de.greenrobot.event.EventBus;
 public class SignInFragment extends Fragment {
     private View fragmentView;
     private SharedPreferences.Editor editor;
+    private TextView errorAuth;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class SignInFragment extends Fragment {
         // Inflate the layout for this fragment
         editor = (SharedPreferences.Editor) getActivity().getSharedPreferences("stackqa", Context.MODE_PRIVATE).edit();
         fragmentView =  inflater.inflate(R.layout.sign_in, container, false);
+        errorAuth = (TextView) fragmentView.findViewById(R.id.authError);
         Button signInButton = (Button) fragmentView.findViewById(R.id.signInButton);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,18 +68,34 @@ public class SignInFragment extends Fragment {
     }
 
     public void signIn(View v) {
-        EditText email = (EditText) getView().findViewById(R.id.emailField);
-        EditText password = (EditText) getView().findViewById(R.id.passwordField);
+        errorAuth.setVisibility(View.GONE);
+        EditText email = (EditText) fragmentView.findViewById(R.id.emailField);
+        EditText password = (EditText) fragmentView.findViewById(R.id.passwordField);
 
         String emailString = email.getText().toString();
         String passwordString = password.getText().toString();
-        editor.putString("stackqaemail", emailString);
-        editor.putString("stackqapassword", passwordString);
-        editor.commit();
-        try {
-            AuthManager.getInstance().signIn(emailString, passwordString);
-        } catch (JSONException e){
-            e.printStackTrace();
+        if (!emailString.isEmpty() && !passwordString.isEmpty()) {
+            editor.putString("stackqaemail", emailString);
+            editor.putString("stackqapassword", passwordString);
+            editor.commit();
+            try {
+                AuthManager.getInstance().signIn(emailString, passwordString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            String emailError = "";
+            String passwordError = "";
+            if (emailString.isEmpty()) {
+                emailError = "Email field is empty";
+            }
+            if(passwordString.isEmpty()) {
+                passwordError = "Password field is empty";
+            }
+            String answer = emailError + "\n" + passwordError;
+            errorAuth.setText(answer);
+            errorAuth.setVisibility(View.VISIBLE);
         }
     }
 
@@ -106,6 +125,7 @@ public class SignInFragment extends Fragment {
     public void onEvent(FailureRequestMessage event){
         switch (event.operationName){
             case "sign_in":
+                parseFailureRequest(event.error);
                 break;
         }
     }
@@ -120,6 +140,11 @@ public class SignInFragment extends Fragment {
         } catch (JSONException e){
             e.printStackTrace();
         }
+    }
+
+    public void parseFailureRequest(VolleyError error) {
+        errorAuth.setText("User with this credentials doesn't exists");
+        errorAuth.setVisibility(View.VISIBLE);
     }
 
     public void parseCurrentUserRequest(JSONObject response){
