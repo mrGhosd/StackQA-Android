@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="user_profile_avatar_in_navigation_menu">50dp</dimen>
+    <dimen name="user_profile_avatar_top_margin">25dp</dimen>
+</resources>

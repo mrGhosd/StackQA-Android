@@ -73,12 +73,14 @@ public class NavigationListAdapter extends BaseAdapter {
             ImageRequest ir = new ImageRequest(url, new Response.Listener<Bitmap>() {
                 @Override
                 public void onResponse(Bitmap response) {
+                    int avatarSize = (int) activity.getResources().getDimension(R.dimen.user_profile_avatar_in_navigation_menu);
+                    int avatarMargin = (int) activity.getResources().getDimension(R.dimen.user_profile_avatar_top_margin);
                     text.setText(navigation.getUser().getCorrectNaming());
                     text.setTextSize(16);
-                    setMarginsForTextField(text, 60);
+                    setMarginsForTextField(text, avatarMargin);
                     image.setImageBitmap(getRoundedShape(response));
-                    image.getLayoutParams().height = 100;
-                    image.getLayoutParams().width = 100;
+                    image.getLayoutParams().height = avatarSize;
+                    image.getLayoutParams().width = avatarSize;
                 }
             }, 0, 0, null, null);
             AppController.getInstance().addToRequestQueue(ir);
