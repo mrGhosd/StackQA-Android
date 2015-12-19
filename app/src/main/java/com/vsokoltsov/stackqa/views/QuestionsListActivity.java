@@ -54,26 +54,39 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
         setContentView(R.layout.main);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawerLayout != null) {
-            android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-            mNavigationDrawerFragment = (NavigationFragment) fragmentManager.findFragmentById(R.id.navigation_drawer);
-            mNavigationDrawerFragment.setUp(R.id.navigation_drawer, drawerLayout);
-
-            Fragment frg = fragmentManager.findFragmentById(R.id.container);
-            if (frg == null) {
-                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                QuestionsListFragment fragment = new QuestionsListFragment();
-                fragmentTransaction.add(R.id.container, fragment);
-                fragmentTransaction.commit();
-            }
-            mStatusView = (TextView) findViewById(R.id.status_text);
-            if (savedInstanceState == null) {
-            }
+            initBaseConfigForPhone();
+        }
+        else {
+            initBaseConfigForTablet();
         }
     }
 
+    private void initBaseConfigForPhone() {
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        mNavigationDrawerFragment = (NavigationFragment) fragmentManager.findFragmentById(R.id.navigation_drawer);
+        mNavigationDrawerFragment.setUp(R.id.navigation_drawer, drawerLayout);
 
-    protected void initUIComponents() {
+        Fragment frg = fragmentManager.findFragmentById(R.id.container);
+        if (frg == null) {
+            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            QuestionsListFragment fragment = new QuestionsListFragment();
+            fragmentTransaction.add(R.id.container, fragment);
+            fragmentTransaction.commit();
+        }
+        mStatusView = (TextView) findViewById(R.id.status_text);
+    }
 
+    private void initBaseConfigForTablet() {
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        mNavigationDrawerFragment = (NavigationFragment) fragmentManager.findFragmentById(R.id.navigation_drawer);
+        mNavigationDrawerFragment.setDrawerLayout(null);
+        Fragment frg = fragmentManager.findFragmentById(R.id.container);
+        if (frg == null) {
+            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            QuestionsListFragment fragment = new QuestionsListFragment();
+            fragmentTransaction.add(R.id.container, fragment);
+            fragmentTransaction.commit();
+        }
     }
 
     @Override

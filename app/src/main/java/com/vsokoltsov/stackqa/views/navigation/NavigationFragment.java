@@ -35,8 +35,12 @@ import com.vsokoltsov.stackqa.messages.SuccessRequestMessage;
 import com.vsokoltsov.stackqa.messages.UserMessage;
 import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.NavigationItem;
+import com.vsokoltsov.stackqa.views.QuestionDetailFragment;
 import com.vsokoltsov.stackqa.views.QuestionsListActivity;
+import com.vsokoltsov.stackqa.views.QuestionsListFragment;
 import com.vsokoltsov.stackqa.views.auth.AuthorizationActivity;
+import com.vsokoltsov.stackqa.views.auth.AuthorizationBaseFragment;
+import com.vsokoltsov.stackqa.views.auth.SignInFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +66,10 @@ public class NavigationFragment extends Fragment {
 
     public NavigationFragment() {
         // Required empty public constructor
+    }
+
+    public void setDrawerLayout(DrawerLayout layout) {
+        this.mDrawerLayout = layout;
     }
 
     @Override
@@ -256,12 +264,47 @@ public class NavigationFragment extends Fragment {
 
     //NAvigation item actions
     private void navigationItemActions(int position) {
-        if (authManager.getCurrentUser() != null) {
+        if (mDrawerLayout != null) {
+            if (authManager.getCurrentUser() != null) {
 
+            } else {
+                actionsForUnsignedUser(position);
+            }
         }
         else {
-            actionsForUnsignedUser(position);
+            if (authManager.getCurrentUser() != null) {
+
+            }
+            else {
+                actionsforUnsignedUserWithTablet(position);
+            }
         }
+    }
+
+    private void actionsforUnsignedUserWithTablet(int position) {
+        Bundle arguments = new Bundle();
+        android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        switch(position){
+            case 0:
+                arguments.putString("action", "sign_in");
+                AuthorizationBaseFragment signInView= new AuthorizationBaseFragment();
+                signInView.setArguments(arguments);
+                fragmentTransaction.replace(R.id.container, signInView);
+                break;
+            case 1:
+                arguments.putString("action", "sign_up");
+                AuthorizationBaseFragment signUpView= new AuthorizationBaseFragment();
+                signUpView.setArguments(arguments);
+                fragmentTransaction.replace(R.id.container, signUpView);
+                break;
+            case 2:
+                QuestionsListFragment questionList = new QuestionsListFragment();
+                fragmentTransaction.replace(R.id.container, questionList);
+                break;
+        }
+
+        fragmentTransaction.commit();
     }
 
     private void actionsForSignedInUser(int position) {
