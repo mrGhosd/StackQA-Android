@@ -38,11 +38,6 @@
                     android:id="@+id/answerUserText"
                     />
                 </LinearLayout>
-
-
             </LinearLayout>
-
     </ScrollView>
-
-
 </RelativeLayout>
