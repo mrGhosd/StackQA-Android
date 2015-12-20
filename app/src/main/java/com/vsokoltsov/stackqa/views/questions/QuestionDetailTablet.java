@@ -1,33 +1,28 @@
-package com.vsokoltsov.stackqa.views;
+package com.vsokoltsov.stackqa.views.questions;
 
-import android.graphics.Color;
-import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
+import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroupOverlay;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.vsokoltsov.stackqa.controllers.AppController;
-import com.vsokoltsov.stackqa.views.QuestionDetailFragment;
-import com.vsokoltsov.stackqa.models.Question;
-
 import com.vsokoltsov.stackqa.R;
+import com.vsokoltsov.stackqa.controllers.AppController;
+import com.vsokoltsov.stackqa.models.Question;
+import com.vsokoltsov.stackqa.views.QuestionDetailFragment;
+import com.vsokoltsov.stackqa.views.QuestionsListActivity;
 import com.vsokoltsov.stackqa.views.answers.AnswerForm;
 import com.vsokoltsov.stackqa.views.answers.AnswerListFragment;
 
@@ -35,47 +30,40 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class QuestionDetail extends ActionBarActivity {
+/**
+ * Created by vsokoltsov on 20.12.15.
+ */
+public class QuestionDetailTablet extends ActionBarActivity {
     public static Question selectedQuestion;
     private ScrollView layout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_question_detail);
-        boolean isTablet = getResources().getBoolean(R.bool.isTablet);
-        Bundle extras = getIntent().getExtras();
-        if(extras != null) {
-            selectedQuestion = (Question) extras.getParcelable("question");
-        }
-        if (isTablet) {
-
-        }
-        else {
-            baseConfigForPhone(savedInstanceState);
-        }
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(selectedQuestion.getTitle());
-
-    }
-
-    private void baseConfigForPhone(Bundle savedInstanceState) {
-        try {
-            setViewLayout((ScrollView) findViewById(R.id.questionViewMainLayout));
-            EditText answerText = (EditText) findViewById(R.id.answerUserText);
-            this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-            setSuccesButtonHandler(answerText);
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-
-        if (savedInstanceState == null) {
-            if(selectedQuestion != null) {
-                loadQuestionData();
+//        try {
+            Bundle extras = getIntent().getExtras();
+            if(extras != null) {
+                selectedQuestion = (Question) extras.getParcelable("question");
             }
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
+            setContentView(R.layout.activity_question_detail);
+//            setViewLayout((ScrollView) findViewById(R.id.questionViewMainLayout));
+//            EditText answerText = (EditText) findViewById(R.id.answerUserText);
+//            this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+//            setSuccesButtonHandler(answerText);
+//        } catch(Exception e){
+//            e.printStackTrace();
+//        }
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setTitle(selectedQuestion.getTitle());
+//
+//        if (savedInstanceState == null) {
+//            if(selectedQuestion != null) {
+//                loadQuestionData();
+//            }
+//            // Create the detail fragment and add it to the activity
+//            // using a fragment transaction.
+//
+//        }
 
-        }
     }
 
     public void setLayoutHeight(int height){

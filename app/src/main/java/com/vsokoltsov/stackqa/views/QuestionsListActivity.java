@@ -23,6 +23,7 @@ import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.receiver.StartedService;
 import com.vsokoltsov.stackqa.views.auth.AuthorizationActivity;
 import com.vsokoltsov.stackqa.views.navigation.NavigationFragment;
+import com.vsokoltsov.stackqa.views.questions.QuestionDetailTablet;
 
 import android.view.View;
 import android.widget.ListView;
@@ -166,12 +167,10 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
 
     @Override
     public void onItemSelected(Question question) {
-        if (drawerLayout != null) {
-            Intent detailIntent = new Intent(this, QuestionDetail.class);
-            detailIntent.putExtra("question", question);
-            startActivity(detailIntent);
-            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-        }
+        Intent detailIntent = new Intent(this, QuestionDetail.class);
+        detailIntent.putExtra("question", question);
+        startActivity(detailIntent);
+        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
     }
 
     @Override
