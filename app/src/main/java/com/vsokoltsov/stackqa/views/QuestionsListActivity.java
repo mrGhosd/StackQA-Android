@@ -41,10 +41,11 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
     private NavigationFragment mNavigationDrawerFragment;
     private SearchView mSearchView;
     private TextView mStatusView;
-    private ArrayList<Question> defaultQuestionsList;
+    private ArrayList<Question> questionsList;
     private AuthManager manager = AuthManager.getInstance();
     private SharedPreferences pref;
     private Menu mainMenu;
+    private QuestionsListFragment questionListFragment;
     private Context context;
 
     @Override
@@ -70,8 +71,8 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
         Fragment frg = fragmentManager.findFragmentById(R.id.container);
         if (frg == null) {
             android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            QuestionsListFragment fragment = new QuestionsListFragment();
-            fragmentTransaction.add(R.id.container, fragment);
+            questionListFragment = new QuestionsListFragment();
+            fragmentTransaction.add(R.id.container, questionListFragment);
             fragmentTransaction.commit();
         }
         mStatusView = (TextView) findViewById(R.id.status_text);
@@ -84,8 +85,8 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
         Fragment frg = fragmentManager.findFragmentById(R.id.container);
         if (frg == null) {
             android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            QuestionsListFragment fragment = new QuestionsListFragment();
-            fragmentTransaction.add(R.id.container, fragment);
+            questionListFragment = new QuestionsListFragment();
+            fragmentTransaction.add(R.id.container, questionListFragment);
             fragmentTransaction.commit();
         }
     }
@@ -169,6 +170,10 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
     public void onItemSelected(Question question) {
         Intent detailIntent = new Intent(this, QuestionDetail.class);
         detailIntent.putExtra("question", question);
+        if (drawerLayout == null){
+            questionsList = questionListFragment.getQuestionsFromList();
+            detailIntent.putParcelableArrayListExtra("questions", questionsList);
+        }
         startActivity(detailIntent);
         overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
     }

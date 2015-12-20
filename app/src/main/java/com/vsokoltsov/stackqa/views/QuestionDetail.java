@@ -1,6 +1,7 @@
 package com.vsokoltsov.stackqa.views;
 
 import android.graphics.Color;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -35,9 +36,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class QuestionDetail extends ActionBarActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class QuestionDetail extends ActionBarActivity implements QuestionsListFragment.Callbacks {
     public static Question selectedQuestion;
     private ScrollView layout;
+    private List<Question> questionsList = new ArrayList<Question>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,9 +52,10 @@ public class QuestionDetail extends ActionBarActivity {
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
             selectedQuestion = (Question) extras.getParcelable("question");
+            questionsList = extras.getParcelableArrayList("questions");
         }
         if (isTablet) {
-
+            baseConfigurationForTablet();
         }
         else {
             baseConfigForPhone(savedInstanceState);
@@ -76,6 +83,17 @@ public class QuestionDetail extends ActionBarActivity {
             // using a fragment transaction.
 
         }
+    }
+
+    private void baseConfigurationForTablet() {
+        Bundle arguments = new Bundle();
+        arguments.putParcelableArrayList("questions", (ArrayList<? extends Parcelable>) questionsList);
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        QuestionsListFragment fragment = new QuestionsListFragment();
+        fragment.setArguments(arguments);
+        fragmentTransaction.add(R.id.question_list, fragment);
+        fragmentTransaction.commit();
     }
 
     public void setLayoutHeight(int height){
@@ -187,5 +205,10 @@ public class QuestionDetail extends ActionBarActivity {
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onItemSelected(Question question) {
+
     }
 }

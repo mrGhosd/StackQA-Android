@@ -153,7 +153,20 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        this.loadQuestionsList();
+        Bundle bundle = getArguments();
+        if(bundle != null){
+            questionsList= bundle.getParcelableArrayList("questions");
+            setCustomAdapter();
+            setListAdapter(adapter);
+            adapter.notifyDataSetChanged();
+            mProgress = getProgressBar();
+            if(mProgress != null){
+                mProgress.setVisibility(View.GONE);
+            }
+        }
+        else {
+            this.loadQuestionsList();
+        }
     }
 
     private void loadQuestionsList(){
@@ -162,7 +175,7 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
             mProgress.setVisibility(View.VISIBLE);
         }
         questionsList = getCachedQuestionsList();
-        if(getAdapter() == null) setAdapter(new QuestionsListAdapter(getActivity(), questionsList));
+        setCustomAdapter();
         setListAdapter(adapter);
         mProgress = getProgressBar();
         if(questionsList.size() <= 0) {
@@ -173,6 +186,10 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
                 mProgress.setVisibility(View.GONE);
             }
         }
+    }
+
+    private void setCustomAdapter() {
+        if(getAdapter() == null) setAdapter(new QuestionsListAdapter(getActivity(), questionsList));
     }
 
     public void setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener listener) {
