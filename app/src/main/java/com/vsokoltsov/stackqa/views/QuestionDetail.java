@@ -47,6 +47,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     public static Question selectedQuestion;
     private ScrollView layout;
     private List<Question> questionsList = new ArrayList<Question>();
+    private boolean replaceFragment = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,12 +155,23 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     public void loadMainQuestionFragment(Bundle arguments, FragmentTransaction fragmentTransaction){
         QuestionDetailFragment fragment = new QuestionDetailFragment();
         fragment.setArguments(arguments);
-        fragmentTransaction.add(R.id.detail_fragment, fragment);
+        if (replaceFragment) {
+            fragmentTransaction.replace(R.id.detail_fragment, fragment);
+        }
+        else {
+            fragmentTransaction.add(R.id.detail_fragment, fragment);
+        }
+
     }
 
     public void loadQuestionAnswersFragment(Bundle arguments, FragmentTransaction fragmentTransaction, JSONArray answers){
         AnswerListFragment fragment = AnswerListFragment.newInstance(answers);
-        fragmentTransaction.add(R.id.answers_list, fragment);
+        if (replaceFragment) {
+            fragmentTransaction.replace(R.id.answers_list, fragment);
+        }
+        else {
+            fragmentTransaction.add(R.id.answers_list, fragment);
+        }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -214,7 +226,8 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
 
     @Override
     public void onItemSelected(Question question) {
-
+        replaceFragment = true;
+        QuestionFactory.getInstance().get(question.getID());
     }
 
     @Override
