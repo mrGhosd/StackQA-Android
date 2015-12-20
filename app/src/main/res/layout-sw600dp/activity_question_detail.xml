@@ -8,12 +8,47 @@
         android:layout_width="300dp"
         android:layout_height="match_parent"
         android:fillViewport="true" />
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TextView
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+        <ScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="DetailView"/>
-    </RelativeLayout>
+            android:id="@+id/questionViewMainLayout">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:orientation="vertical">
+                <FrameLayout
+                    android:id="@+id/detail_fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/answers_list" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#808080"
+                    android:gravity="bottom">
+                    <EditText
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:textColor="#FFFFFF"
+                        android:id="@+id/answerUserText"
+                        />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </ScrollView>
+    </LinearLayout>
+
 </LinearLayout>

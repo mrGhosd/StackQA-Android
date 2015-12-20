@@ -25,6 +25,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.vsokoltsov.stackqa.controllers.AppController;
+import com.vsokoltsov.stackqa.messages.QuestionMessage;
+import com.vsokoltsov.stackqa.models.QuestionFactory;
 import com.vsokoltsov.stackqa.views.QuestionDetailFragment;
 import com.vsokoltsov.stackqa.models.Question;
 
@@ -38,6 +40,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 public class QuestionDetail extends ActionBarActivity implements QuestionsListFragment.Callbacks {
     public static Question selectedQuestion;
@@ -86,6 +90,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     }
 
     private void baseConfigurationForTablet() {
+        QuestionFactory.getInstance().get(selectedQuestion.getID());
         Bundle arguments = new Bundle();
         arguments.putParcelableArrayList("questions", (ArrayList<? extends Parcelable>) questionsList);
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
@@ -120,7 +125,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        successCallback(response, "questionDetail");
+                        successQuestionLoadCallback(response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -131,7 +136,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         AppController.getInstance().addToRequestQueue(questionRequest);
     }
 
-    public void successCallback(JSONObject response, String requestTag){
+    public void successQuestionLoadCallback(JSONObject response){
         Question question = new Question(response);
         Bundle arguments = new Bundle();
         arguments.putParcelable("question", question);
@@ -211,4 +216,34 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     public void onItemSelected(Question question) {
 
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    // This method will be called when a MessageEvent is posted
+    public void onEvent(QuestionMessage event) throws JSONException {
+        if (event.response instanceof JSONObject) {
+            switch (event.operationName){
+                case "detail":
+                    successQuestionLoadCallback(event.response);
+                    break;
+            }
+        } else {
+            switch (event.operationName){
+                case "list":
+                    break;
+            }
+        }
+
+    }
+
 }

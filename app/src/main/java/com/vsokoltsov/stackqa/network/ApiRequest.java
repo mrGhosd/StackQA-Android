@@ -14,6 +14,7 @@ import com.vsokoltsov.stackqa.messages.FailureRequestMessage;
 import com.vsokoltsov.stackqa.messages.SuccessRequestMessage;
 import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.Question;
+import com.vsokoltsov.stackqa.models.QuestionFactory;
 
 import org.json.JSONObject;
 
@@ -28,9 +29,6 @@ import de.greenrobot.event.EventBus;
 public class ApiRequest {
     private static ApiRequest ourInstance = new ApiRequest();
     private static RequestCallbacks callbacks;
-    public static ApiRequest getInstance() {
-        return ourInstance;
-    }
     private final String PACKAGE_PATH = "com.vsokoltsov.stackqa.";
 
     public static ApiRequest getInstance(RequestCallbacks callbacks) {

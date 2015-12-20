@@ -199,6 +199,11 @@ public class Question implements Parcelable, RequestCallbacks{
         ApiRequest.getInstance(this).get(url, "messages.QuestionMessage", "list", null);
     }
 
+    public void get(int id){
+        String url = AppController.APP_HOST + "/api/v2/questions" + id;
+        ApiRequest.getInstance(this).get(url, "messages.QuestionMessage", "detail", null);
+    }
+
     @Override
     public void successCallback(String requestName, JSONObject object) {
         EventBus.getDefault().post(new QuestionMessage(requestName, object));
