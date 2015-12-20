@@ -334,7 +334,6 @@ public class NavigationFragment extends Fragment {
     }
 
 
-
     public void setupElementsList(){
         if(navigationItems != null) navigationItems = new ArrayList<NavigationItem>();
         if (authManager.getCurrentUser() != null) {
@@ -395,7 +394,9 @@ public class NavigationFragment extends Fragment {
                 setupElementsList();
                 break;
             case "signOut":
-                mDrawerLayout.closeDrawer(Gravity.LEFT);
+                if (mDrawerLayout != null) {
+                    mDrawerLayout.closeDrawer(Gravity.LEFT);
+                }
                 setupElementsList();
                 break;
         }

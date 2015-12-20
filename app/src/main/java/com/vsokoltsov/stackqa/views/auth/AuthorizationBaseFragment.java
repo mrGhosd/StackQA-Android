@@ -11,6 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 
 import com.vsokoltsov.stackqa.R;
+import com.vsokoltsov.stackqa.messages.UserMessage;
+import com.vsokoltsov.stackqa.views.QuestionsListFragment;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by vsokoltsov on 19.12.15.
@@ -69,5 +73,25 @@ public class AuthorizationBaseFragment extends Fragment {
         }
 
         return ll;
+    }
+
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    // This method will be called when a MessageEvent is posted
+    public void onEvent(UserMessage event){
+        android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        QuestionsListFragment questionList = new QuestionsListFragment();
+        fragmentTransaction.replace(R.id.container, questionList);
+        fragmentTransaction.commit();
     }
 }
