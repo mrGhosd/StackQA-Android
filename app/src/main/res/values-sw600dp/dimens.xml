@@ -2,5 +2,5 @@
 <resources>
     <dimen name="user_profile_avatar_in_navigation_menu">50dp</dimen>
     <dimen name="user_profile_avatar_top_margin">25dp</dimen>
-    <dimen name="user_header_navigation_menu_height">120dp</dimen>
+    <dimen name="user_header_navigation_menu_height">178dp</dimen>
 </resources>
