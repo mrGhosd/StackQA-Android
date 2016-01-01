@@ -4,4 +4,5 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="user_profile_avatar_in_navigation_menu">50dp</dimen>
     <dimen name="user_profile_avatar_top_margin">30dp</dimen>
+    <dimen name="user_header_navigation_menu_height">178dp</dimen>
 </resources>
