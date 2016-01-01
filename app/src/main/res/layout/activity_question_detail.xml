@@ -11,33 +11,49 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:orientation="vertical">
-            <fragment
+            <FrameLayout
                 android:id="@+id/detail_fragment"
-                android:name="com.vsokoltsov.stackqa.views.QuestionDetailFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <fragment
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/answers_list"
-                android:name="com.vsokoltsov.stackqa.views.answers.AnswerListFragment"
-                tools:context=".vies.QuestionsListActivity" />
+                android:id="@+id/answers_list" />
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="#808080"
-                android:gravity="bottom">
-                <EditText
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:textColor="#FFFFFF"
-                    android:id="@+id/answerUserText"
-                    />
-                </LinearLayout>
-            </LinearLayout>
+        </LinearLayout>
+
     </ScrollView>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_alignParentBottom="true">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFF"
+            android:orientation="horizontal">
+            <EditText
+                android:inputType="textMultiLine"
+                android:lines="10"
+                android:minLines="1"
+                android:gravity="top|left"
+                android:maxLines="10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000"
+                android:id="@+id/answerUserText"
+                android:layout_weight="1"/>
+            <ImageButton
+                android:layout_width="45dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                android:background="@drawable/sendicon"
+                android:padding="10dp"
+                android:layout_gravity="bottom"/>
+        </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>
