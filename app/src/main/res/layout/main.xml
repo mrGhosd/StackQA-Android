@@ -6,16 +6,20 @@
     android:layout_height="match_parent"
     android:id="@+id/drawer_layout"
     tools:context="com.vsokoltsov.stackqa.views.QuestionsListActivity">
-    <TextView
-        android:id="@+id/status_text"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <FrameLayout android:id="@+id/container"
+        <include layout="@layout/toolbar" />
+
+        <FrameLayout android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true" />
+    </LinearLayout>
+
+
     <LinearLayout
         android:id="@+id/progress_bar_wrapper"
         android:layout_width="150dp"

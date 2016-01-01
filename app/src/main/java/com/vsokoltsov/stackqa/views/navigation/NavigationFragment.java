@@ -202,7 +202,7 @@ public class NavigationFragment extends Fragment {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setBackgroundDrawable(new ColorDrawable(R.color.highlighted_text_material_light));
-        actionBar.setHomeAsUpIndicator(R.drawable.menu);
+//        actionBar.setHomeAsUpIndicator(R.drawable.menu);
         actionBar.setHomeButtonEnabled(true);
 
         // ActionBarDrawerToggle ties together the the proper interactions
@@ -210,7 +210,7 @@ public class NavigationFragment extends Fragment {
         mDrawerToggle = new ActionBarDrawerToggle(
                 getActivity(),                    /* host Activity */
                 mDrawerLayout,                    /* DrawerLayout object */
-                R.drawable.abc_tab_indicator_material,             /* nav drawer image to replace 'Up' caret */
+                R.drawable.menu,             /* nav drawer image to replace 'Up' caret */
                 R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
                 R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
         ) {
