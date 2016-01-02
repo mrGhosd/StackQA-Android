@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.FragmentTabHost;
@@ -15,9 +16,11 @@ import android.widget.TabHost;
 import android.widget.TabWidget;
 
 import com.vsokoltsov.stackqa.R;
+import com.vsokoltsov.stackqa.adapters.ViewPagerAdapter;
 import com.vsokoltsov.stackqa.messages.SuccessRequestMessage;
 import com.vsokoltsov.stackqa.messages.UserMessage;
 import com.vsokoltsov.stackqa.models.Question;
+import com.vsokoltsov.stackqa.util.SlidingTabLayout;
 import com.vsokoltsov.stackqa.views.QuestionDetail;
 import com.vsokoltsov.stackqa.views.QuestionsListActivity;
 import com.vsokoltsov.stackqa.views.navigation.NavigationFragment;
@@ -28,69 +31,74 @@ public class AuthorizationActivity extends ActionBarActivity
         implements NavigationFragment.NavigationDrawerCallbacks{
     private FragmentTabHost mTabHost;
     private NavigationFragment mNavigationDrawerFragment;
+    private DrawerLayout drawerLayout;
     private String action;
     private String userEmail;
     private String userPassword;
+
+    Toolbar toolbar;
+    ViewPager pager;
+    ViewPagerAdapter adapter;
+    SlidingTabLayout tabs;
+    CharSequence Titles[]={"Sign in","Sign up"};
+    int Numboftabs =2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.authorization);
-        Toolbar mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
-        setSupportActionBar(mActionBarToolbar);
-        try {
-            Bundle extras = getIntent().getExtras();
-            if(extras != null) {
-                action = extras.getString("action");
-            }
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_auth);
+        // Creating The Toolbar and setting it as the Toolbar for the activity
 
-            DrawerLayout l = (DrawerLayout) findViewById(R.id.drawer_auth);
-            android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
-            NavigationFragment nf = (NavigationFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-            mNavigationDrawerFragment = (NavigationFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-//
-//            // Set up the drawer.
-            mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_auth));
-
-            mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
-            mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
-
-
-            mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
-
-                @Override
-                public void onTabChanged(String tabId) {
-                    String title;
-                    int currentTab = mTabHost.getCurrentTab();
-                    switch(currentTab){
-                        case 0:
-                            title = "Sign in";
-                            break;
-                        case 1:
-                            title = "Sign up";
-                            break;
-                        case 2:
-                            title = "Restore password";
-                            break;
-                        default:
-                            title = "Sign in";
-                            break;
-                    }
-                    getSupportActionBar().setTitle(title);
-                }
-            });
-
-            mTabHost.addTab( mTabHost.newTabSpec("tab1").setIndicator("Sign in", null), SignInFragment.class, null);
-            mTabHost.addTab( mTabHost.newTabSpec("tab2").setIndicator("Sign up", null), SignUpFragment.class, null);
-            mTabHost.addTab( mTabHost.newTabSpec("tab3").setIndicator("Restore password", null), RestorePasswordFragment.class, null);
-            if(action.equals("sign_up")){
-                mTabHost.setCurrentTab(1);
-            } else {
-                mTabHost.setCurrentTab(0);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        Bundle extras = getIntent().getExtras();
+        if(extras != null) {
+            action = (String) extras.getString("action");
         }
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
+
+        mNavigationDrawerFragment = (NavigationFragment) fragmentManager.findFragmentById(R.id.navigation_drawer);
+        mNavigationDrawerFragment.setUp(R.id.navigation_drawer, drawerLayout);
+
+        // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
+        adapter =  new ViewPagerAdapter(getSupportFragmentManager(),Titles,Numboftabs);
+
+        // Assigning ViewPager View and setting the adapter
+        pager = (ViewPager) findViewById(R.id.pager);
+        pager.setAdapter(adapter);
+        if (action.equals("sign_in")) {
+            pager.setCurrentItem(0);
+            getSupportActionBar().setTitle(Titles[0]);
+        }
+        else if (action.equals("sign_up")) {
+            pager.setCurrentItem(1);
+            getSupportActionBar().setTitle(Titles[1]);
+        }
+
+        // Assiging the Sliding Tab Layout View
+        tabs = (SlidingTabLayout) findViewById(R.id.tabs);
+        tabs.setDistributeEvenly(true); // To make the Tabs Fixed set this true, This makes the tabs Space Evenly in Available width
+        tabs.setBackground(new ColorDrawable(R.color.highlighted_text_material_light));
+        tabs.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                String title = (String) Titles[position];
+                getSupportActionBar().setTitle(title);
+            }
+        });
+
+        // Setting Custom Color for the Scroll bar indicator of the Tab View
+        tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+            @Override
+            public int getIndicatorColor(int position) {
+                return getResources().getColor(R.color.white);
+            }
+        });
+
+        // Setting the ViewPager For the SlidingTabsLayout
+        tabs.setViewPager(pager);
     }
 
     @Override

@@ -15,5 +15,8 @@
     <color name="refresh_progress_2">#FFA000</color>
     <color name="refresh_progress_3">#FF9800</color>
     <color name="sliding_menu_text_color">#8C8C8C</color>
-
+    <color name="ColorPrimary">#e62117</color>
+    <color name="ColorPrimaryDark">#c31c13</color>
+    <color name="tabsScrollColor">#FFF</color>
+    <color name="toolbar_default">#ccc</color>
 </resources>
