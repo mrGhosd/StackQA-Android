@@ -25,6 +25,7 @@ import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.QuestionsListAdapter;
 import com.vsokoltsov.stackqa.adapters.RVAdapter;
+import com.vsokoltsov.stackqa.adapters.RecyclerViewClickListener;
 import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.messages.FailureRequestMessage;
 import com.vsokoltsov.stackqa.messages.QuestionMessage;
@@ -326,7 +327,7 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
             startSignUpService();
         }
         setCachedQuestionsList(questionsList);
-        cardAdapter = new RVAdapter(questionsList);
+        cardAdapter = new RVAdapter(questionsList, getActivity());
         rv.setAdapter(cardAdapter);
         cardAdapter.notifyDataSetChanged();
 //        adapter.notifyDataSetChanged();
