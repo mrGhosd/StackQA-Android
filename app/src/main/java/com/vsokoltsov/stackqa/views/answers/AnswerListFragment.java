@@ -91,9 +91,8 @@ public class AnswerListFragment extends ListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 //        try{
-            list = getListView();
-            setListViewHeightBasedOnChildren(list);
             this.mainActivity = (QuestionDetail) getActivity();
+            setListViewHeightBasedOnChildren(list);
 //            this.mainActivity.setLayoutHeight(3000);
 //            Activity mainAcitivty = qView.getParent();
 //            View relativeLayput = activity.findViewById(R.id.questionViewMainLayout);
@@ -106,8 +105,6 @@ public class AnswerListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        adapter = new AnswersListAdapter(getActivity(), answerList);
-        setListAdapter(adapter);
     }
 
     @Override
@@ -119,6 +116,9 @@ public class AnswerListFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         fragmentView =  inflater.inflate(R.layout.fragment_answer_list, container, false);
+        list = (ListView) fragmentView.findViewById(android.R.id.list);
+        adapter = new AnswersListAdapter(getActivity(), answerList);
+        setListAdapter(adapter);
         return fragmentView;
     }
 
@@ -153,10 +153,21 @@ public class AnswerListFragment extends ListFragment {
 
                     View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
             TextView answerText = (TextView) listItem.findViewById(R.id.answerText);
+            listItem.measure(0, 0);
+            float measuredHeight = answerText.getMeasuredHeight();
             float answerTextHeight = answerText.getTextSize();
-            int height = listItem.getMeasuredHeight();
-            totalHeight += listItem.getMeasuredHeight() + answerTextHeight + 50;
+            String text = (String) answerText.getText();
+            float px = 550 * (listView.getResources().getDisplayMetrics().density);
+            listItem.measure(View.MeasureSpec.makeMeasureSpec((int)px, View.MeasureSpec.AT_MOST), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+//            int height = listItem.getMeasuredHeight();
+
+//            int height += listView.getChildAt(i).getMeasuredHeight();
+//            height += listView.getDividerHeight();
+
+            totalHeight += listItem.getMeasuredHeight() + answerTextHeight + listItem.getHeight() + 30;
         }
+
+
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         DisplayMetrics dm = Resources.getSystem().getDisplayMetrics();
         WindowManager manager = (WindowManager) listView.getContext().getSystemService(Context.WINDOW_SERVICE);
@@ -165,7 +176,6 @@ public class AnswerListFragment extends ListFragment {
         d.getSize(size);
         int height = size.x;
         params.height = totalHeight;
-        listView.setLayoutParams(params);
-
+//        listView.setLayoutParams(params);
     }
 }
