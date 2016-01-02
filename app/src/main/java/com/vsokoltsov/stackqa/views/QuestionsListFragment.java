@@ -6,8 +6,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.QuestionsListAdapter;
+import com.vsokoltsov.stackqa.adapters.RVAdapter;
 import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.messages.FailureRequestMessage;
 import com.vsokoltsov.stackqa.messages.QuestionMessage;
@@ -50,7 +54,7 @@ import de.greenrobot.event.EventBus;
  * <p/>
  * interface.
  */
-public class QuestionsListFragment extends ListFragment implements SwipeRefreshLayout.OnRefreshListener, RequestCallbacks {
+public class QuestionsListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, RequestCallbacks {
 
     private SwipeRefreshLayout swipeLayout;
     private CircularProgressView progressView;
@@ -61,7 +65,9 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
     private static final String url = AppController.APP_HOST + "/api/v1/questions";
     public static QuestionsListAdapter adapter;
     private AuthManager manager = AuthManager.getInstance();
+    private RVAdapter cardAdapter;
     public ListView list;
+    private RecyclerView rv;
 
     private static List<Question> cachedQuestionsList = new ArrayList<Question>();
 
@@ -140,14 +146,15 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        list = (ListView) getListView();
-        mProgress = (ProgressBar) view.findViewById(R.id.progress_bar);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                listCallbacks.onItemSelected(questionsList.get(position));
-            }
-        });
+//        list = (ListView) getListView();
+
+//        mProgress = (ProgressBar) view.findViewById(R.id.progress_bar);
+//        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                listCallbacks.onItemSelected(questionsList.get(position));
+//            }
+//        });
     }
 
     @Override
@@ -157,12 +164,12 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
         if(bundle != null){
             questionsList= bundle.getParcelableArrayList("questions");
             setCustomAdapter();
-            setListAdapter(adapter);
+//            setListAdapter(adapter);
             adapter.notifyDataSetChanged();
-            mProgress = getProgressBar();
-            if(mProgress != null){
-                mProgress.setVisibility(View.GONE);
-            }
+//            mProgress = getProgressBar();
+//            if(mProgress != null){
+//                mProgress.setVisibility(View.GONE);
+//            }
         }
         else {
             this.loadQuestionsList();
@@ -170,21 +177,19 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
     }
 
     private void loadQuestionsList(){
-        mProgress = getProgressBar();
-        if(mProgress != null){
-            mProgress.setVisibility(View.VISIBLE);
-        }
+//        mProgress = getProgressBar();
+//        if(mProgress != null){
+//            mProgress.setVisibility(View.VISIBLE);
+//        }
         questionsList = getCachedQuestionsList();
-        setCustomAdapter();
-        setListAdapter(adapter);
-        mProgress = getProgressBar();
+//        mProgress = getProgressBar();
         if(questionsList.size() <= 0) {
             Question q = new Question();
             q.getCollection();
         } else {
-            if(mProgress != null){
-                mProgress.setVisibility(View.GONE);
-            }
+//            if(mProgress != null){
+//                mProgress.setVisibility(View.GONE);
+//            }
         }
     }
 
@@ -203,7 +208,7 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mProgress = getProgressBar();
+//        mProgress = getProgressBar();
     }
 
     @Override
@@ -212,27 +217,15 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
         listFragmentView = super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_question_list,
                 container, false);
-        mProgress = (ProgressBar) getActivity().findViewById(R.id.progress_bar);
-        swipeLayout = new ListFragmentSwipeRefreshLayout(container.getContext());
+        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_layout);
+        rv = (RecyclerView) rootView.findViewById(R.id.questionsList);
+        rv.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        rv.setLayoutManager(llm);
+//        mProgress = (ProgressBar) getActivity().findViewById(R.id.progress_bar);
         swipeLayout.setOnRefreshListener(this);
-        swipeLayout.addView(listFragmentView);
-        return swipeLayout;
+        return rootView;
 
-    }
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        //Do your stuff..
-    }
-
-
-
-    public void setActivateOnItemClick(boolean activateOnItemClick) {
-        // When setting CHOICE_MODE_SINGLE, ListView will automatically
-        // give items the 'activated' state when touched.
-        getListView().setChoiceMode(activateOnItemClick
-                ? ListView.CHOICE_MODE_SINGLE
-                : ListView.CHOICE_MODE_NONE);
     }
 
     public void errorCallback(VolleyError error, String requestID){
@@ -240,42 +233,18 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
     }
 
 
-    private class ListFragmentSwipeRefreshLayout extends SwipeRefreshLayout {
-
-        public ListFragmentSwipeRefreshLayout(Context context) {
-            super(context);
-        }
-
-        /**
-         * As mentioned above, we need to override this method to properly signal when a
-         * 'swipe-to-refresh' is possible.
-         *
-         * @return true if the {@link android.widget.ListView} is visible and can scroll up.
-         */
-        @Override
-        public boolean canChildScrollUp() {
-            final ListView listView = getListView();
-            if (listView.getVisibility() == View.VISIBLE) {
-                return canListViewScrollUp(listView);
-            } else {
-                return false;
-            }
-        }
-
-    }
-
-    private boolean canListViewScrollUp(ListView listView) {
-        if (android.os.Build.VERSION.SDK_INT >= 14) {
-            // For ICS and above we can call canScrollVertically() to determine this
-            return ViewCompat.canScrollVertically(listView, -1);
-        } else {
-            // Pre-ICS we need to manually check the first visible item and the child view's top
-            // value
-            return listView.getChildCount() > 0 &&
-                    (listView.getFirstVisiblePosition() > 0
-                            || listView.getChildAt(0).getTop() < listView.getPaddingTop());
-        }
-    }
+//    private boolean canListViewScrollUp(RecyclerView listView) {
+//        if (android.os.Build.VERSION.SDK_INT >= 14) {
+//            // For ICS and above we can call canScrollVertically() to determine this
+//            return ViewCompat.canScrollVertically(listView, -1);
+//        } else {
+//            // Pre-ICS we need to manually check the first visible item and the child view's top
+//            // value
+//            return listView.getChildCount() > 0 &&
+//                    (listView.getFirstVisiblePosition() > 0
+//                            || listView.getChildAt(0).getTop() < listView.getPaddingTop());
+//        }
+//    }
 
     @Override
     public void onStart() {
@@ -308,10 +277,10 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
     }
 
     private void handleQuestionListError(VolleyError error){
-        mProgress = getProgressBar();
-        if(mProgress != null){
-            mProgress.setVisibility(View.INVISIBLE);
-        }
+//        mProgress = getProgressBar();
+//        if(mProgress != null){
+//            mProgress.setVisibility(View.INVISIBLE);
+//        }
         swipeLayout.setRefreshing(false);
         String message = null;
         switch(error.networkResponse.statusCode){
@@ -357,12 +326,15 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
             startSignUpService();
         }
         setCachedQuestionsList(questionsList);
-        adapter.notifyDataSetChanged();
+        cardAdapter = new RVAdapter(questionsList);
+        rv.setAdapter(cardAdapter);
+        cardAdapter.notifyDataSetChanged();
+//        adapter.notifyDataSetChanged();
         swipeLayout.setRefreshing(false);
-        mProgress = getProgressBar();
-        if(mProgress != null){
-            mProgress.setVisibility(View.GONE);
-        }
+//        mProgress = getProgressBar();
+//        if(mProgress != null){
+//            mProgress.setVisibility(View.GONE);
+//        }
 
     }
 
@@ -375,4 +347,28 @@ public class QuestionsListFragment extends ListFragment implements SwipeRefreshL
     private ProgressBar getProgressBar(){
         return (ProgressBar) getActivity().findViewById(R.id.progress_bar);
     }
+
+//    private class RecyclerViewSwipeRefreshLayout extends SwipeRefreshLayout {
+//
+//        public RecyclerViewSwipeRefreshLayout(Context context) {
+//            super(context);
+//        }
+//
+//        /**
+//         * As mentioned above, we need to override this method to properly signal when a
+//         * 'swipe-to-refresh' is possible.
+//         *
+//         * @return true if the {@link android.widget.ListView} is visible and can scroll up.
+//         */
+//        @Override
+//        public boolean canChildScrollUp() {
+//            final RecyclerView listView = rv;
+//            if (listView.getVisibility() == View.VISIBLE) {
+//                return canListViewScrollUp(listView);
+//            } else {
+//                return false;
+//            }
+//        }
+//
+//    }
 }

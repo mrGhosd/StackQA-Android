@@ -6,8 +6,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,6 +55,8 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_detail);
+        Toolbar mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
+        setSupportActionBar(mActionBarToolbar);
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
@@ -65,8 +69,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         else {
             baseConfigForPhone(savedInstanceState);
         }
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(selectedQuestion.getTitle());
+
 
     }
 

@@ -105,7 +105,7 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
         inflater.inflate(R.menu.menu_achieve, mainMenu);
         MenuItem searchItem = mainMenu.findItem(R.id.search_quesitions);
         mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        setupSearchView(searchItem);
+//        setupSearchView(searchItem);
         showCreateQuestionIcon();
         return true;
     }
