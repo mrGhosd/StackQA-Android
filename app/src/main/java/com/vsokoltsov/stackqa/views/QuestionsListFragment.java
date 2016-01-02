@@ -172,9 +172,7 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
 //                mProgress.setVisibility(View.GONE);
 //            }
         }
-        else {
-            this.loadQuestionsList();
-        }
+
     }
 
     private void loadQuestionsList(){
@@ -183,6 +181,8 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
 //            mProgress.setVisibility(View.VISIBLE);
 //        }
         questionsList = getCachedQuestionsList();
+        cardAdapter = new RVAdapter(questionsList, getActivity());
+        rv.setAdapter(cardAdapter);
 //        mProgress = getProgressBar();
         if(questionsList.size() <= 0) {
             Question q = new Question();
@@ -191,6 +191,7 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
 //            if(mProgress != null){
 //                mProgress.setVisibility(View.GONE);
 //            }
+            cardAdapter.notifyDataSetChanged();
         }
     }
 
@@ -225,6 +226,7 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
         rv.setLayoutManager(llm);
 //        mProgress = (ProgressBar) getActivity().findViewById(R.id.progress_bar);
         swipeLayout.setOnRefreshListener(this);
+        this.loadQuestionsList();
         return rootView;
 
     }
@@ -327,8 +329,6 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
             startSignUpService();
         }
         setCachedQuestionsList(questionsList);
-        cardAdapter = new RVAdapter(questionsList, getActivity());
-        rv.setAdapter(cardAdapter);
         cardAdapter.notifyDataSetChanged();
 //        adapter.notifyDataSetChanged();
         swipeLayout.setRefreshing(false);

@@ -57,6 +57,8 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         setContentView(R.layout.activity_question_detail);
         Toolbar mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(mActionBarToolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
