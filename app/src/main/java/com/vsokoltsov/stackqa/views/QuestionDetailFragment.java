@@ -160,6 +160,8 @@ public class QuestionDetailFragment extends Fragment{
             public void onResponse(Bitmap response) {
                 userImage.setImageBitmap(response);
                 userName.setText(detailQuestion.getUser().getCorrectNaming());
+                userImage.getLayoutParams().height = 60;
+                userImage.getLayoutParams().width = 60;
             }
         }, 0, 0, null, null);
         AppController.getInstance().addToRequestQueue(ir);
