@@ -18,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.controllers.AppController;
@@ -124,21 +126,36 @@ public class NavigationListAdapter extends BaseAdapter {
         Drawable d = new BitmapDrawable(activity.getResources(), Bitmap.createScaledBitmap(bitmap, width, backgroundHeight, true));
         contentView.findViewById(R.id.backgroundView).setBackground(d);
         String url = AppController.APP_HOST + navigation.getUser().getAvatarUrl();
-        ImageRequest ir = new ImageRequest(url, new Response.Listener<Bitmap>() {
+//        nv.setDefaultImageResId(R.drawable.default_image); // image for loading...
+//        nv.setImageUrl(imageUrl, ImgController.getInstance().getImageLoader());
+        ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+        imageLoader.get(url, new ImageLoader.ImageListener() {
             @Override
-            public void onResponse(Bitmap response) {
-                int avatarSize = (int) activity.getResources().getDimension(R.dimen.user_profile_avatar_in_navigation_menu);
-                int avatarMargin = (int) activity.getResources().getDimension(R.dimen.user_profile_avatar_top_margin);
-                avatarView.setImageBitmap(response);
-//                text.setText(navigation.getUser().getCorrectNaming());
-//                text.setTextSize(16);
-//                setMarginsForTextField(text, avatarMargin);
-//                image.setImageBitmap(getRoundedShape(response));
-//                image.getLayoutParams().height = avatarSize;
-//                image.getLayoutParams().width = avatarSize;
+            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                avatarView.setImageBitmap(response.getBitmap());
             }
-        }, 0, 0, null, null);
-        AppController.getInstance().addToRequestQueue(ir);
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+//        ImageRequest ir = new ImageRequest(url, new Response.Listener<Bitmap>() {
+//            @Override
+//            public void onResponse(Bitmap response) {
+//                int avatarSize = (int) activity.getResources().getDimension(R.dimen.user_profile_avatar_in_navigation_menu);
+//                int avatarMargin = (int) activity.getResources().getDimension(R.dimen.user_profile_avatar_top_margin);
+//                avatarView.setImageBitmap(response);
+////                text.setText(navigation.getUser().getCorrectNaming());
+////                text.setTextSize(16);
+////                setMarginsForTextField(text, avatarMargin);
+////                image.setImageBitmap(getRoundedShape(response));
+////                image.getLayoutParams().height = avatarSize;
+////                image.getLayoutParams().width = avatarSize;
+//            }
+//        }, 0, 0, null, null);
+//        AppController.getInstance().addToRequestQueue(ir);
     }
 
     private void configViewForSimilarItem(View convertView) {

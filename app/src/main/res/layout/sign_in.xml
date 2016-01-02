@@ -15,9 +15,11 @@
             android:ems="10"
             android:id="@+id/emailField"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="75dp"
+            android:layout_marginTop="30dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
+            android:drawableLeft="@drawable/emailicon"
+            android:drawablePadding="10dp"
             android:hint="Email"/>
 
         <EditText
@@ -29,6 +31,8 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
+            android:drawableLeft="@drawable/passwordicon"
+            android:drawablePadding="10dp"
             android:hint="Password" />
         <TextView
             android:id="@+id/authError"
@@ -49,6 +53,7 @@
             android:layout_marginBottom="60dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:onClick="signIn"/>
+            android:onClick="signIn"
+            android:elevation="4dp"/>
     </LinearLayout>
 </FrameLayout>

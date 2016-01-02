@@ -1,9 +1,22 @@
 package com.vsokoltsov.stackqa.models;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.widget.Toast;
+
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.vsokoltsov.stackqa.controllers.AppController;
+import com.vsokoltsov.stackqa.util.ImageBitmap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import de.greenrobot.event.EventBus;
 
@@ -24,11 +37,17 @@ public class User {
             if (object.has("avatar")) setAvatarUrl(object.getJSONObject("avatar").getString("url"));
         } catch(JSONException e){
             e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    public void setAvatarUrl(String url){
+    public void setAvatarUrl(String url) throws MalformedURLException, IOException {
         this.avatarUrl = url;
+        ImageLoader imageLoader = AppController.getInstance().getImageLoader();
     }
     public String getAvatarUrl(){
         return this.avatarUrl;
@@ -65,4 +84,6 @@ public class User {
             return this.email;
         }
     }
+
+
 }
