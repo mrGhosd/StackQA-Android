@@ -273,12 +273,16 @@ public class NavigationFragment extends Fragment {
         }
         else {
             if (authManager.getCurrentUser() != null) {
-
+                actionsforSignedUserWithTablet(position);
             }
             else {
                 actionsforUnsignedUserWithTablet(position);
             }
         }
+    }
+
+    private void actionsforSignedUserWithTablet(int position) {
+
     }
 
     private void actionsforUnsignedUserWithTablet(int position) {

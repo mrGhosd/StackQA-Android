@@ -9,28 +9,25 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.QuestionsListAdapter;
 import com.vsokoltsov.stackqa.messages.UserMessage;
 import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.Question;
-import com.vsokoltsov.stackqa.receiver.StartedService;
 import com.vsokoltsov.stackqa.views.auth.AuthorizationActivity;
 import com.vsokoltsov.stackqa.views.navigation.NavigationFragment;
-import com.vsokoltsov.stackqa.views.questions.QuestionDetailTablet;
 import com.vsokoltsov.stackqa.views.questions.QuestionsFormActivity;
-
-import android.view.View;
-import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.TextView;
+import com.vsokoltsov.stackqa.views.questions.QuestionsFormFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -243,9 +240,20 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
             addItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    Intent regIntent = new Intent(ac, QuestionsFormActivity.class);
-                    startActivity(regIntent);
-                    overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                    boolean isTablet = getResources().getBoolean(R.bool.isTablet);
+                    if (isTablet) {
+                        Bundle arguments = new Bundle();
+                        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        QuestionsFormFragment formFragment = new QuestionsFormFragment();
+                        fragmentTransaction.replace(R.id.container, formFragment);
+                        fragmentTransaction.commit();
+                    }
+                    else {
+                        Intent regIntent = new Intent(ac, QuestionsFormActivity.class);
+                        startActivity(regIntent);
+                        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                    }
                     return true;
                 }
             });
