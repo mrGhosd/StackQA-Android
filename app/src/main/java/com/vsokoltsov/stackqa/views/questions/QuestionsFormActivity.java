@@ -1,16 +1,11 @@
 package com.vsokoltsov.stackqa.views.questions;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.SearchView;
 
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.views.navigation.NavigationFragment;
@@ -21,6 +16,7 @@ import com.vsokoltsov.stackqa.views.navigation.NavigationFragment;
 public class QuestionsFormActivity extends ActionBarActivity implements NavigationFragment.NavigationDrawerCallbacks{
     private DrawerLayout drawerLayout;
     private NavigationFragment mNavigationDrawerFragment;
+    private QuestionsFormFragment questionsFormFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -34,6 +30,14 @@ public class QuestionsFormActivity extends ActionBarActivity implements Navigati
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         mNavigationDrawerFragment = (NavigationFragment) fragmentManager.findFragmentById(R.id.navigation_drawer);
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, drawerLayout);
+
+        Fragment frg = fragmentManager.findFragmentById(R.id.form_fragment);
+        if (frg == null) {
+            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            questionsFormFragment = new QuestionsFormFragment();
+            fragmentTransaction.add(R.id.form_fragment, questionsFormFragment);
+            fragmentTransaction.commit();
+        }
     }
 
     @Override
