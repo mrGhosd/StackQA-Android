@@ -16,10 +16,12 @@
         android:ems="10"
         android:id="@+id/emailField"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="30dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:hint="Email"/>
+        android:hint="Email"
+        android:drawableLeft="@drawable/emailicon"
+        android:drawablePadding="10dp"/>
 
         <TextView
             android:id="@+id/emailErrors"
@@ -39,7 +41,9 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
-        android:hint="Password" />
+        android:hint="Password"
+        android:drawablePadding="10dp"
+        android:drawableLeft="@drawable/passwordicon" />
 
         <TextView
             android:id="@+id/passwordErrors"
@@ -58,7 +62,9 @@
         android:id="@+id/passwordConfirmationField"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
-        android:hint="Confirm Password" />
+        android:hint="Confirm Password"
+        android:drawablePadding="10dp"
+        android:drawableLeft="@drawable/passwordicon" />
 
         <TextView
             android:id="@+id/passwordConfirmationErrors"
