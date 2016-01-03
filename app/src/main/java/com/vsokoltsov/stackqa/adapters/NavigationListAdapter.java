@@ -79,34 +79,6 @@ public class NavigationListAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public Bitmap getRoundedShape(Bitmap scaleBitmapImage) {
-        int targetWidth = 100;
-        int targetHeight = 100;
-        Bitmap targetBitmap = Bitmap.createBitmap(targetWidth,
-                targetHeight,Bitmap.Config.ARGB_8888);
-
-        Canvas canvas = new Canvas(targetBitmap);
-        Path path = new Path();
-        path.addCircle(((float) targetWidth - 1) / 2,
-                ((float) targetHeight - 1) / 2,
-                (Math.min(((float) targetWidth),
-                        ((float) targetHeight)) / 2),
-                Path.Direction.CCW);
-
-        canvas.clipPath(path);
-        Bitmap sourceBitmap = scaleBitmapImage;
-        canvas.drawBitmap(sourceBitmap,
-                new Rect(0, 0, sourceBitmap.getWidth(),
-                        sourceBitmap.getHeight()),
-                new Rect(0, 0, targetWidth, targetHeight), null);
-        return targetBitmap;
-    }
-    public void setMarginsForTextField(TextView textview, int margin) {
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) textview.getLayoutParams();
-        params.setMargins(15, margin, 0, 0);
-        textview.setLayoutParams(params);
-    }
-
     private void configViewForUserItem(View contentView) {
         User user = navigation.getUser();
         final CircleImageView avatarView = (CircleImageView) contentView.findViewById(R.id.circleView);
@@ -140,22 +112,6 @@ public class NavigationListAdapter extends BaseAdapter {
 
             }
         });
-
-//        ImageRequest ir = new ImageRequest(url, new Response.Listener<Bitmap>() {
-//            @Override
-//            public void onResponse(Bitmap response) {
-//                int avatarSize = (int) activity.getResources().getDimension(R.dimen.user_profile_avatar_in_navigation_menu);
-//                int avatarMargin = (int) activity.getResources().getDimension(R.dimen.user_profile_avatar_top_margin);
-//                avatarView.setImageBitmap(response);
-////                text.setText(navigation.getUser().getCorrectNaming());
-////                text.setTextSize(16);
-////                setMarginsForTextField(text, avatarMargin);
-////                image.setImageBitmap(getRoundedShape(response));
-////                image.getLayoutParams().height = avatarSize;
-////                image.getLayoutParams().width = avatarSize;
-//            }
-//        }, 0, 0, null, null);
-//        AppController.getInstance().addToRequestQueue(ir);
     }
 
     private void configViewForSimilarItem(View convertView) {
