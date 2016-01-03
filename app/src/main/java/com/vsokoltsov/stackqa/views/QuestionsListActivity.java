@@ -25,6 +25,7 @@ import com.vsokoltsov.stackqa.receiver.StartedService;
 import com.vsokoltsov.stackqa.views.auth.AuthorizationActivity;
 import com.vsokoltsov.stackqa.views.navigation.NavigationFragment;
 import com.vsokoltsov.stackqa.views.questions.QuestionDetailTablet;
+import com.vsokoltsov.stackqa.views.questions.QuestionsFormActivity;
 
 import android.view.View;
 import android.widget.ListView;
@@ -230,6 +231,7 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
     }
 
     private void showCreateQuestionIcon() {
+        final Activity ac = this;
         MenuItem addItem = mainMenu.findItem(R.id.add_question);
         if(manager.getCurrentUser() == null) {
             addItem.setVisible(false);
@@ -238,6 +240,15 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
             addItem.setVisible(true);
             addItem .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
                     | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+            addItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    Intent regIntent = new Intent(ac, QuestionsFormActivity.class);
+                    startActivity(regIntent);
+                    overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                    return true;
+                }
+            });
         }
     }
 }

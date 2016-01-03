@@ -266,7 +266,7 @@ public class NavigationFragment extends Fragment {
     private void navigationItemActions(int position) {
         if (mDrawerLayout != null) {
             if (authManager.getCurrentUser() != null) {
-
+                actionsForSignedInUser(position);
             } else {
                 actionsForUnsignedUser(position);
             }
@@ -308,7 +308,13 @@ public class NavigationFragment extends Fragment {
     }
 
     private void actionsForSignedInUser(int position) {
-
+        switch(position){
+            case 1:
+                Intent questionsIntent = new Intent(getActivity(), QuestionsListActivity.class);
+                startActivity(questionsIntent);
+                getActivity().overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                break;
+        }
     }
 
     private void actionsForUnsignedUser(int position) {
