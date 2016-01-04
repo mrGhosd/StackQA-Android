@@ -17,6 +17,7 @@ public class QuestionsFormActivity extends ActionBarActivity implements Navigati
     private DrawerLayout drawerLayout;
     private NavigationFragment mNavigationDrawerFragment;
     private QuestionsFormFragment questionsFormFragment;
+    private Menu formMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -45,6 +46,7 @@ public class QuestionsFormActivity extends ActionBarActivity implements Navigati
         super.onCreateOptionsMenu(menu);
         return true;
     }
+
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {

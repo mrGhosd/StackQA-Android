@@ -202,7 +202,7 @@ public class NavigationFragment extends Fragment {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setBackgroundDrawable(new ColorDrawable(R.color.highlighted_text_material_light));
-//        actionBar.setHomeAsUpIndicator(R.drawable.menu);
+        actionBar.setHomeAsUpIndicator(R.drawable.menu);
         actionBar.setHomeButtonEnabled(true);
 
         // ActionBarDrawerToggle ties together the the proper interactions
