@@ -1,10 +1,8 @@
 package com.vsokoltsov.stackqa.views.auth;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.messages.FailureRequestMessage;
-import com.vsokoltsov.stackqa.messages.SuccessRequestMessage;
 import com.vsokoltsov.stackqa.models.AuthManager;
-import com.vsokoltsov.stackqa.models.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,6 +27,8 @@ import de.greenrobot.event.EventBus;
 public class SignInFragment extends Fragment {
     private View fragmentView;
     private TextView errorAuth;
+    private EditText emailField;
+    private EditText passwordField;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,6 +41,8 @@ public class SignInFragment extends Fragment {
         // Inflate the layout for this fragment
         fragmentView =  inflater.inflate(R.layout.sign_in, container, false);
         errorAuth = (TextView) fragmentView.findViewById(R.id.authError);
+        emailField = (EditText) fragmentView.findViewById(R.id.emailField);
+        passwordField= (EditText) fragmentView.findViewById(R.id.passwordField);
         Button signInButton = (Button) fragmentView.findViewById(R.id.signInButton);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,12 +67,11 @@ public class SignInFragment extends Fragment {
     }
 
     public void signIn(View v) {
-        errorAuth.setVisibility(View.GONE);
-        EditText email = (EditText) fragmentView.findViewById(R.id.emailField);
-        EditText password = (EditText) fragmentView.findViewById(R.id.passwordField);
+        emailField.setError(null);
+        passwordField.setError(null);
 
-        String emailString = email.getText().toString();
-        String passwordString = password.getText().toString();
+        String emailString = emailField.getText().toString();
+        String passwordString = passwordField.getText().toString();
         if (!emailString.isEmpty() && !passwordString.isEmpty()) {
             try {
                 AuthManager.getInstance().signIn(emailString, passwordString);
@@ -83,14 +83,46 @@ public class SignInFragment extends Fragment {
             String emailError = "";
             String passwordError = "";
             if (emailString.isEmpty()) {
-                emailError = "Email field is empty";
+                emailField.setError("Email field is empty");
             }
             if(passwordString.isEmpty()) {
-                passwordError = "Password field is empty";
+                passwordField.setError("Password field is empty");
             }
-            String answer = emailError + "\n" + passwordError;
-            errorAuth.setText(answer);
-            errorAuth.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    public void onEvent(FailureRequestMessage event) throws JSONException {
+        switch (event.operationName){
+            case "sign_in":
+                parseSignUpFailure(event.error);
+                break;
+        }
+    }
+
+    public void parseSignUpFailure(VolleyError error) throws JSONException {
+        JSONObject json;
+
+        String emailString = "";
+        String passwordString = "";
+
+        NetworkResponse response = error.networkResponse;
+        String serverResponse = new String(response.data);
+        json = new JSONObject(serverResponse);
+
+        if (json.has("error_description")) {
+            emailString = "There is no such user. Check your email or password.";
+            emailField.setError(emailString);
         }
     }
 }

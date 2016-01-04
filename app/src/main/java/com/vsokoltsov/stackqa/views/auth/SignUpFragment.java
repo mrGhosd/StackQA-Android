@@ -1,10 +1,8 @@
 package com.vsokoltsov.stackqa.views.auth;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +20,6 @@ import com.vsokoltsov.stackqa.models.AuthManager;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import de.greenrobot.event.EventBus;
 
@@ -34,6 +31,10 @@ public class SignUpFragment extends Fragment{
     private TextView emailErrors;
     private TextView passwordErrors;
     private TextView passwordConfirmationErrors;
+
+    private EditText emailField;
+    private EditText passwordField;
+    private EditText passwordConfirmationField;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,10 @@ public class SignUpFragment extends Fragment{
         passwordErrors = (TextView) fragmentView.findViewById(R.id.passwordErrors);
         passwordConfirmationErrors = (TextView) fragmentView.findViewById(R.id.passwordConfirmationErrors);
 
+        emailField = (EditText) fragmentView.findViewById(R.id.emailField);
+        passwordField = (EditText) fragmentView.findViewById(R.id.passwordField);
+        passwordConfirmationField = (EditText) fragmentView.findViewById(R.id.passwordConfirmationField);
+
         Button signUpButton = (Button) fragmentView.findViewById(R.id.signUpButton);
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,17 +66,14 @@ public class SignUpFragment extends Fragment{
 
     // TODO: Rename method, update argument and hook method into UI event
     public void signUp(View v) {
-        emailErrors.setVisibility(View.GONE);
-        passwordErrors.setVisibility(View.GONE);
-        passwordConfirmationErrors.setVisibility(View.GONE);
+        emailField.setError(null);
+        passwordField.setError(null);
+        passwordConfirmationField.setError(null);
 
-        EditText email = (EditText) getView().findViewById(R.id.emailField);
-        EditText password = (EditText) getView().findViewById(R.id.passwordField);
-        EditText passwordConfirmation = (EditText) getView().findViewById(R.id.passwordConfirmationField);
+        String emailString = emailField.getText().toString();
+        String passwordString = passwordField.getText().toString();
+        String passwordConfirmationString = passwordConfirmationField.getText().toString();
 
-        String emailString = email.getText().toString();
-        String passwordString = password.getText().toString();
-        String passwordConfirmationString = passwordConfirmation.getText().toString();
         if(!emailString.isEmpty() && !passwordString.isEmpty() &&
                 !passwordConfirmationString.isEmpty()) {
             try {
@@ -82,16 +84,13 @@ public class SignUpFragment extends Fragment{
         }
         else {
             if (emailString.isEmpty()) {
-                emailErrors.setText("Email can't be empty");
-                emailErrors.setVisibility(View.VISIBLE);
+                emailField.setError("Email can't be empty");
             }
             if (passwordString.isEmpty()) {
-                passwordErrors.setText("Password can't be empty");
-                passwordErrors.setVisibility(View.VISIBLE);
+                passwordField.setError("Password can't be empty");
             }
             if (passwordConfirmationString.isEmpty()) {
-                passwordConfirmationErrors.setText("Password confirmation can't be empty");
-                passwordConfirmationErrors.setVisibility(View.VISIBLE);
+                passwordConfirmationField.setError("Password confirmation can't be empty");
             }
         }
 
@@ -139,20 +138,17 @@ public class SignUpFragment extends Fragment{
         if (json.has("email")) {
             JSONArray emailErrorsArray = json.getJSONArray("email");
             emailString = (String) emailErrorsArray.get(0);
-            emailErrors.setText(emailString);
-            emailErrors.setVisibility(View.VISIBLE);
+            emailField.setError(emailString);
         }
         if (json.has("password")) {
             JSONArray passwordErrorsArray = json.getJSONArray("password");
             passwordString = (String) passwordErrorsArray.get(0);
-            passwordErrors.setText(passwordString);
-            passwordErrors.setVisibility(View.VISIBLE);
+            passwordField.setError(passwordString);
         }
         if (json.has("password_confirmation")) {
             JSONArray passwordConfirmationErrorsArray = json.getJSONArray("password_confirmation");
             passwordConfirmationString = (String) passwordConfirmationErrorsArray.get(0);
-            passwordConfirmationErrors.setText(passwordConfirmationString);
-            passwordConfirmationErrors.setVisibility(View.VISIBLE);
+            passwordConfirmationField.setError(passwordConfirmationString);
         }
     }
 
