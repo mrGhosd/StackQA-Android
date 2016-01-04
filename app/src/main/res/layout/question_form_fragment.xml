@@ -24,12 +24,13 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <EditText
+                    <com.vsokoltsov.stackqa.util.InstantAutoCompleteView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text"
+                        android:inputType="textAutoComplete"
                         android:id="@+id/questionCategory"
-                        android:hint="Category"/>
+                        android:hint="Category"
+                        android:imeOptions="actionNext"/>
                 </android.support.design.widget.TextInputLayout>
 
 
