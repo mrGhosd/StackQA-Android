@@ -17,17 +17,29 @@ public class Category implements RequestCallbacks {
     private String title;
     private String description;
     private String imageUrl;
+    private int id;
 
     public Category() {}
 
     public Category(JSONObject category){
         try{
+            String id = category.getString("id");
+            int intId = Integer.valueOf(id);
+            if (category.has("id")) setId(intId);
             if (category.has("title")) setTitle(String.valueOf(category.getString("title")));
             if (category.has("description")) setDescription(String.valueOf(category.getString("description")));
             if (category.has("image")) setImageUrl(String.valueOf(category.getJSONObject("image").getString("url")));
         } catch(JSONException e){
             e.printStackTrace();
         }
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle(){
@@ -53,7 +65,7 @@ public class Category implements RequestCallbacks {
 
     public void getCollection() {
         String url = AppController.APP_HOST + "/api/v1/categories";
-        ApiRequest.getInstance(this).get(url, "messages.QuestionMessage", "categories_collection", null);
+        ApiRequest.getInstance(this).get(url, "categories_collection", null);
     }
 
     @Override
@@ -73,4 +85,6 @@ public class Category implements RequestCallbacks {
                 break;
         }
     }
+
+
 }

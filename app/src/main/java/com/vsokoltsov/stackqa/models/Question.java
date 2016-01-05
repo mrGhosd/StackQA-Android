@@ -5,24 +5,23 @@ import android.os.Parcelable;
 import com.android.volley.VolleyError;
 import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.messages.QuestionMessage;
-import com.vsokoltsov.stackqa.models.Category;
 import com.vsokoltsov.stackqa.network.ApiRequest;
 import com.vsokoltsov.stackqa.network.RequestCallbacks;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-/**
- * Created by vsokoltsov on 06.07.15.
- */
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
+
+/**
+ * Created by vsokoltsov on 06.07.15.
+ */
 
 public class Question implements Parcelable, RequestCallbacks{
     private int id;
@@ -196,12 +195,12 @@ public class Question implements Parcelable, RequestCallbacks{
 
     public void getCollection(){
         String url = AppController.APP_HOST + "/api/v1/questions";
-        ApiRequest.getInstance(this).get(url, "messages.QuestionMessage", "list", null);
+        ApiRequest.getInstance(this).get(url, "list", null);
     }
 
     public void get(int id){
         String url = AppController.APP_HOST + "/api/v2/questions" + id;
-        ApiRequest.getInstance(this).get(url, "messages.QuestionMessage", "detail", null);
+        ApiRequest.getInstance(this).get(url, "detail", null);
     }
 
     @Override

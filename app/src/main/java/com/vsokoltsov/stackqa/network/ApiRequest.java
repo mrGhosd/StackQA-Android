@@ -1,27 +1,17 @@
 package com.vsokoltsov.stackqa.network;
 
-import android.content.Context;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.vsokoltsov.stackqa.controllers.AppController;
-import com.vsokoltsov.stackqa.messages.BaseMessage;
-import com.vsokoltsov.stackqa.messages.FailureRequestMessage;
-import com.vsokoltsov.stackqa.messages.SuccessRequestMessage;
 import com.vsokoltsov.stackqa.models.AuthManager;
-import com.vsokoltsov.stackqa.models.Question;
-import com.vsokoltsov.stackqa.models.QuestionFactory;
 
 import org.json.JSONObject;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * Created by vsokoltsov on 05.11.15.
@@ -39,19 +29,20 @@ public class ApiRequest {
     private ApiRequest() {
     }
 
-    public void get(String url, String requestName, String operationID, JSONObject parameters){
-        sendRequest(Request.Method.GET, url, requestName, operationID, parameters);
+    public void get(String url, String operationID, JSONObject parameters){
+        sendRequest(Request.Method.GET, url, operationID, parameters);
     }
 
-    public void post(String url, String requestName, String operationID, JSONObject parameters){
-        sendRequest(Request.Method.POST, url, requestName, operationID, parameters);
+    public void post(String url, String operationID, JSONObject parameters){
+        sendRequest(Request.Method.POST, url, operationID, parameters);
     }
 
-    private void sendRequest(int requestType, String url, final String requestName, final String operationID, JSONObject parameters) {
+    private void sendRequest(int requestType, String url, final String operationID, JSONObject parameters) {
         AuthManager manager = AuthManager.getInstance();
         if (manager.getToken() != null) {
             url += "?access_token=" + manager.getToken();
         }
+        String params = String.valueOf(parameters);
         JsonObjectRequest objectRequest = new JsonObjectRequest(requestType, url, parameters,
             new Response.Listener<JSONObject>() {
                 @Override

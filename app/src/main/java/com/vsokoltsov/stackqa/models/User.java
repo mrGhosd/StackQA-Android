@@ -1,24 +1,13 @@
 package com.vsokoltsov.stackqa.models;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.widget.Toast;
-
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.vsokoltsov.stackqa.controllers.AppController;
-import com.vsokoltsov.stackqa.util.ImageBitmap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URL;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * Created by vsokoltsov on 14.09.15.
@@ -28,9 +17,11 @@ public class User {
     private String surname;
     private String name;
     private String email;
+    private int id;
 
     public User(JSONObject object){
         try {
+            if(object.has("id")) setId(Integer.valueOf(object.getString("id")));
             if(object.has("surname")) setSurname(object.getString("surname"));
             if(object.has("name")) setName(object.getString("name"));
             if(object.has("email")) setEmail(object.getString("email"));
@@ -86,4 +77,11 @@ public class User {
     }
 
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

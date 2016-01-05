@@ -44,7 +44,7 @@
                         android:inputType="textMultiLine"
                         android:hint="Text"
                         android:ems="10"
-                        android:id="@+id/editText" />
+                        android:id="@+id/questionText" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
         </ScrollView>

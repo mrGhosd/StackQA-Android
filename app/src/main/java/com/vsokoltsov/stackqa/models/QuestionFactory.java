@@ -25,12 +25,17 @@ public class QuestionFactory implements RequestCallbacks {
 
     public void getCollection(){
         String url = AppController.APP_HOST + "/api/v1/questions";
-        ApiRequest.getInstance(this).get(url, "messages.QuestionMessage", "list", null);
+        ApiRequest.getInstance(this).get(url, "list", null);
     }
 
     public void get(int id){
         String url = AppController.APP_HOST + "/api/v2/questions/" + id;
-        ApiRequest.getInstance(this).get(url, "messages.QuestionMessage", "detail", null);
+        ApiRequest.getInstance(this).get(url, "detail", null);
+    }
+
+    public void create(JSONObject params) {
+        String url = AppController.APP_HOST + "/api/v1/questions/";
+        ApiRequest.getInstance(this).post(url, "create", params);
     }
 
     @Override

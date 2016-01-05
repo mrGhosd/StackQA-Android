@@ -52,7 +52,7 @@ public class AuthManager implements RequestCallbacks {
         params.put("grant_type", "password");
         params.put("email", userEmail);
         params.put("password", userPassword);
-        ApiRequest.getInstance(this).post(url, null, "sign_in", params);
+        ApiRequest.getInstance(this).post(url, "sign_in", params);
     }
 
     public void signUp(String email, String password, String passwordConfirmation) throws JSONException {
@@ -64,12 +64,12 @@ public class AuthManager implements RequestCallbacks {
         jsonUser.put("password_confirmation", passwordConfirmation);
 
         user.put("user", jsonUser );
-        ApiRequest.getInstance(this).post(url, null, "sign_up", user);
+        ApiRequest.getInstance(this).post(url, "sign_up", user);
     }
 
     public void currentUserRequest() throws JSONException {
         String url = AppController.APP_HOST + "/api/v1/profiles/me";
-        ApiRequest.getInstance(this).get(url, null, "current_user", null);
+        ApiRequest.getInstance(this).get(url, "current_user", null);
     }
 
     public void signOut() {
