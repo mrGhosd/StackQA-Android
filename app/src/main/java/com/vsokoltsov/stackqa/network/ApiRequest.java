@@ -37,12 +37,15 @@ public class ApiRequest {
         sendRequest(Request.Method.POST, url, operationID, parameters);
     }
 
+    public void put(String url, String operationID, JSONObject parameters) {
+        sendRequest(Request.Method.PUT, url, operationID, parameters);
+    }
+
     private void sendRequest(int requestType, String url, final String operationID, JSONObject parameters) {
         AuthManager manager = AuthManager.getInstance();
         if (manager.getToken() != null) {
             url += "?access_token=" + manager.getToken();
         }
-        String params = String.valueOf(parameters);
         JsonObjectRequest objectRequest = new JsonObjectRequest(requestType, url, parameters,
             new Response.Listener<JSONObject>() {
                 @Override

@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
 import com.vsokoltsov.stackqa.R;
+import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.views.navigation.NavigationFragment;
 
 /**
@@ -18,11 +19,17 @@ public class QuestionsFormActivity extends ActionBarActivity implements Navigati
     private NavigationFragment mNavigationDrawerFragment;
     private QuestionsFormFragment questionsFormFragment;
     private Menu formMenu;
+    private Question question;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.question_form_activity);
+
+        Bundle extras = getIntent().getExtras();
+        if(extras != null) {
+            question = (Question) extras.getParcelable("question");
+        }
 
         Toolbar mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(mActionBarToolbar);
@@ -34,8 +41,11 @@ public class QuestionsFormActivity extends ActionBarActivity implements Navigati
 
         Fragment frg = fragmentManager.findFragmentById(R.id.form_fragment);
         if (frg == null) {
+            Bundle arguments = new Bundle();
+            arguments.putParcelable("question", question);
             android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             questionsFormFragment = new QuestionsFormFragment();
+            questionsFormFragment.setArguments(arguments);
             fragmentTransaction.add(R.id.form_fragment, questionsFormFragment);
             fragmentTransaction.commit();
         }

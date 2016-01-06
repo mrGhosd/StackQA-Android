@@ -38,6 +38,11 @@ public class QuestionFactory implements RequestCallbacks {
         ApiRequest.getInstance(this).post(url, "create", params);
     }
 
+    public void update(int id, JSONObject params) {
+        String url = AppController.APP_HOST + "/api/v1/questions/" + id;
+        ApiRequest.getInstance(this).put(url, "update", params);
+    }
+
     @Override
     public void successCallback(String requestName, JSONObject object) {
         EventBus.getDefault().post(new QuestionMessage(requestName, object));

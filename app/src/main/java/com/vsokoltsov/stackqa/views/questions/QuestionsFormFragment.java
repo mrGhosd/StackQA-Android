@@ -1,11 +1,11 @@
 package com.vsokoltsov.stackqa.views.questions;
 
 import android.app.Activity;
-import android.support.v7.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,8 +22,10 @@ import com.vsokoltsov.stackqa.messages.CategoryMessage;
 import com.vsokoltsov.stackqa.messages.QuestionMessage;
 import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.Category;
+import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.models.QuestionFactory;
 import com.vsokoltsov.stackqa.util.InstantAutoCompleteView;
+import com.vsokoltsov.stackqa.views.QuestionDetail;
 import com.vsokoltsov.stackqa.views.QuestionsListActivity;
 
 import org.json.JSONArray;
@@ -46,6 +48,8 @@ public class QuestionsFormFragment extends Fragment {
     private EditText questionTitle;
     private InstantAutoCompleteView questionCategory;
     private EditText questionText;
+    private Question question;
+    private int questionID;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,10 @@ public class QuestionsFormFragment extends Fragment {
         setHasOptionsMenu(true);
         Category c = new Category();
         c.getCollection();
+        Bundle bundle = getArguments();
+        if(bundle != null){
+            question = bundle.getParcelable("question");
+        }
     }
 
     @Override
@@ -63,6 +71,7 @@ public class QuestionsFormFragment extends Fragment {
         questionCategory = (InstantAutoCompleteView) fragmentView.findViewById(R.id.questionCategory);
         questionTitle = (EditText) fragmentView.findViewById(R.id.questionTitle);
         questionText = (EditText) fragmentView.findViewById(R.id.questionText);
+
         return fragmentView;
     }
 
@@ -97,6 +106,15 @@ public class QuestionsFormFragment extends Fragment {
                 return false;
             }
         });
+        cancelItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Intent questionsIntent = new Intent(getActivity(), QuestionsListActivity.class);
+                startActivity(questionsIntent);
+                getActivity().overridePendingTransition(R.anim.push_out_left, R.anim.pull_in_right);
+                return false;
+            }
+        });
     }
 
     private void saveQuestion() throws JSONException {
@@ -104,16 +122,20 @@ public class QuestionsFormFragment extends Fragment {
         String text = questionText.getText().toString();
         int categoryId = getCategoryId(questionCategory.getText().toString());
         if (categoryId != 0) {
-            JSONObject question = new JSONObject();
-            question.put("title", title);
-            question.put("text", text);
-            question.put("category_id", categoryId);
+            JSONObject questionParams = new JSONObject();
+            questionParams.put("title", title);
+            questionParams.put("text", text);
+            questionParams.put("category_id", categoryId);
             int userId = AuthManager.getInstance().getCurrentUser().getId();
-            question.put("user_id", userId);
+            questionParams.put("user_id", userId);
             JSONObject params = new JSONObject();
-            params.put("question", question);
-
-            QuestionFactory.getInstance().create(params);
+            params.put("question", questionParams);
+            if (question != null) {
+                QuestionFactory.getInstance().update(question.getID(), params);
+            }
+            else {
+                QuestionFactory.getInstance().create(params);
+            }
         }
     }
 
@@ -181,8 +203,14 @@ public class QuestionsFormFragment extends Fragment {
     public void onEvent(QuestionMessage event) throws JSONException {
         if (event.response instanceof JSONObject) {
             switch (event.operationName){
+                case "detail":
+                    parseDetailQuestion(event.response);
+                    break;
                 case "create":
                     parseSuccessQuestionCreation(event.response);
+                    break;
+                case "update":
+                    parseSuccessQuestionUpdate(event.response);
                     break;
             }
         } else {
@@ -192,7 +220,14 @@ public class QuestionsFormFragment extends Fragment {
                     break;
             }
         }
+    }
 
+    private void parseDetailQuestion(JSONObject response) {
+        question = new Question(response);
+        String categoryTitle = question.getCategory().getTitle();
+        questionCategory.setText(categoryTitle);
+        questionTitle.setText(question.getTitle());
+        questionText.setText(question.getText());
     }
 
     private void parseSuccessQuestionCreation(JSONObject response) {
@@ -206,6 +241,27 @@ public class QuestionsFormFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                                 Intent questionsIntent = new Intent(getActivity(), QuestionsListActivity.class);
+                                startActivity(questionsIntent);
+                                getActivity().overridePendingTransition(R.anim.push_out_left, R.anim.pull_in_right);
+                            }
+                        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void parseSuccessQuestionUpdate(JSONObject response) {
+        final Question updateQuestion = new Question(response);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
+        builder.setTitle("Сообщение")
+                .setMessage("Ваш вопрос был успешно обновлен")
+                .setIcon(R.drawable.acepticon)
+                .setCancelable(false)
+                .setNegativeButton("Закрыть",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                Intent questionsIntent = new Intent(getActivity(), QuestionDetail.class);
+                                questionsIntent.putExtra("question", updateQuestion);
                                 startActivity(questionsIntent);
                                 getActivity().overridePendingTransition(R.anim.push_out_left, R.anim.pull_in_right);
                             }
@@ -270,6 +326,9 @@ public class QuestionsFormFragment extends Fragment {
             }
         }
         addCategoriesToCompleteTextField();
+        if (question != null) {
+            QuestionFactory.getInstance().get(question.getID());
+        }
     }
 
     private void addCategoriesToCompleteTextField() {

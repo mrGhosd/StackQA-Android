@@ -46,6 +46,7 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
     private Menu mainMenu;
     private QuestionsListFragment questionListFragment;
     private Context context;
+    private Question updatedQuestion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -57,7 +58,7 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
 
         Toolbar mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(mActionBarToolbar);
-//        mActionBarToolbar.setNavigationIcon(R.drawable.menu);
+        Bundle extras = getIntent().getExtras();
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawerLayout != null) {

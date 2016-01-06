@@ -190,7 +190,7 @@ public class Question implements Parcelable, RequestCallbacks{
         dest.writeInt(answersCount);
         dest.writeInt(commentsCount);
         dest.writeInt(views);
-        dest.writeString(createdAt.toString());
+        if (createdAt != null) dest.writeString(createdAt.toString());
     }
 
     public void getCollection(){

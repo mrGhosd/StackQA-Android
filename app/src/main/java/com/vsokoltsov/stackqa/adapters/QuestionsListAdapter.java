@@ -2,22 +2,17 @@ package com.vsokoltsov.stackqa.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.vsokoltsov.stackqa.R;
+import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.Question;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +21,7 @@ import java.util.List;
  * Created by vsokoltsov on 06.07.15.
  */
 public class QuestionsListAdapter extends BaseAdapter implements Filterable {
-    private Activity activity;
+    private final Activity activity;
     private LayoutInflater inflater;
     private List<Question> questionsList;
     private QuestionFilter questionFilter;
@@ -60,6 +55,7 @@ public class QuestionsListAdapter extends BaseAdapter implements Filterable {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        AuthManager authManager = AuthManager.getInstance();
 
         if (inflater == null)
             inflater = (LayoutInflater) activity
@@ -75,9 +71,9 @@ public class QuestionsListAdapter extends BaseAdapter implements Filterable {
         TextView answersCount = (TextView) convertView.findViewById(R.id.answersCount);
         TextView commentsCount = (TextView) convertView.findViewById(R.id.commentsCount);
         TextView views = (TextView) convertView.findViewById(R.id.viewsCount);
+
         // getting movie data for the row
         Question q = questionsList.get(position);
-
 
         title.setText(q.getTitle());
         rate.setText(String.valueOf(q.getRate()));

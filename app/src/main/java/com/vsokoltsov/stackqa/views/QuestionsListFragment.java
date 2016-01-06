@@ -2,37 +2,28 @@ package com.vsokoltsov.stackqa.views;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.support.v4.app.ListFragment;
 
-import com.android.volley.*;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.VolleyError;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.QuestionsListAdapter;
 import com.vsokoltsov.stackqa.adapters.RVAdapter;
-import com.vsokoltsov.stackqa.adapters.RecyclerViewClickListener;
 import com.vsokoltsov.stackqa.controllers.AppController;
-import com.vsokoltsov.stackqa.messages.FailureRequestMessage;
 import com.vsokoltsov.stackqa.messages.QuestionMessage;
-import com.vsokoltsov.stackqa.messages.SuccessRequestMessage;
 import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.Question;
-import com.vsokoltsov.stackqa.network.ApiRequest;
 import com.vsokoltsov.stackqa.network.RequestCallbacks;
 import com.vsokoltsov.stackqa.receiver.StartedService;
 
@@ -42,7 +33,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import android.widget.AdapterView;
 
 import de.greenrobot.event.EventBus;
 
@@ -69,8 +59,8 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
     private RVAdapter cardAdapter;
     public ListView list;
     private RecyclerView rv;
-
     private static List<Question> cachedQuestionsList = new ArrayList<Question>();
+    private Question updatedQuestion;
 
 
     private Callbacks listCallbacks = questionsCallbacks;
@@ -147,21 +137,13 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        list = (ListView) getListView();
-
-//        mProgress = (ProgressBar) view.findViewById(R.id.progress_bar);
-//        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                listCallbacks.onItemSelected(questionsList.get(position));
-//            }
-//        });
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
+        boolean isTablet = getResources().getBoolean(R.bool.isTablet);
         if(bundle != null){
             questionsList= bundle.getParcelableArrayList("questions");
             setCustomAdapter();
@@ -280,10 +262,6 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
     }
 
     private void handleQuestionListError(VolleyError error){
-//        mProgress = getProgressBar();
-//        if(mProgress != null){
-//            mProgress.setVisibility(View.INVISIBLE);
-//        }
         swipeLayout.setRefreshing(false);
         String message = null;
         switch(error.networkResponse.statusCode){
@@ -330,13 +308,7 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
         }
         setCachedQuestionsList(questionsList);
         cardAdapter.notifyDataSetChanged();
-//        adapter.notifyDataSetChanged();
         swipeLayout.setRefreshing(false);
-//        mProgress = getProgressBar();
-//        if(mProgress != null){
-//            mProgress.setVisibility(View.GONE);
-//        }
-
     }
 
     public void startSignUpService() {
@@ -348,28 +320,4 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
     private ProgressBar getProgressBar(){
         return (ProgressBar) getActivity().findViewById(R.id.progress_bar);
     }
-
-//    private class RecyclerViewSwipeRefreshLayout extends SwipeRefreshLayout {
-//
-//        public RecyclerViewSwipeRefreshLayout(Context context) {
-//            super(context);
-//        }
-//
-//        /**
-//         * As mentioned above, we need to override this method to properly signal when a
-//         * 'swipe-to-refresh' is possible.
-//         *
-//         * @return true if the {@link android.widget.ListView} is visible and can scroll up.
-//         */
-//        @Override
-//        public boolean canChildScrollUp() {
-//            final RecyclerView listView = rv;
-//            if (listView.getVisibility() == View.VISIBLE) {
-//                return canListViewScrollUp(listView);
-//            } else {
-//                return false;
-//            }
-//        }
-//
-//    }
 }
