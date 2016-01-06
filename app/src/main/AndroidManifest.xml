@@ -46,10 +46,6 @@
             android:name=".views.questions.QuestionsFormActivity">
         </activity>
         <activity
-            android:name=".views.questions.QuestionDetailTablet"
-            android:label="@string/title_activity_question_detail" >
-        </activity>
-        <activity
             android:name=".views.answers.AnswerList"
             android:label="@string/title_activity_answer_list" >
         </activity>

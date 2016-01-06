@@ -7,14 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.daimajia.swipe.SwipeLayout;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.views.QuestionDetail;
-import com.vsokoltsov.stackqa.views.questions.QuestionsFormActivity;
 
 import java.util.List;
 
@@ -35,13 +32,14 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.QuestionsViewHolde
     @Override
     public QuestionsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.questions_list_row, parent, false);
-        QuestionsViewHolder qvh = new QuestionsViewHolder(v, this);
+        QuestionsViewHolder qvh = new QuestionsViewHolder(v);
         return qvh;
     }
 
     @Override
     public void onBindViewHolder(QuestionsViewHolder holder, int position) {
         holder.questionId = questions.get(position).getID();
+        holder.adapter = this;
         holder.title.setText(questions.get(position).getTitle());
         holder.rate.setText(String.valueOf(questions.get(position).getRate()));
         holder.category.setText(questions.get(position).getCategory().getTitle());
@@ -64,7 +62,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.QuestionsViewHolde
         CardView cv;
 
         private int questionId;
-        final private RVAdapter adapter;
+        private RVAdapter adapter;
         private TextView title;
         private TextView rate;
         private TextView category;
@@ -72,14 +70,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.QuestionsViewHolde
         private TextView answersCount;
         private TextView commentsCount;
         private TextView views;
-        private Activity activity;
-        private Question question;
 
-        QuestionsViewHolder(final View itemView, final RVAdapter adapter) {
+        QuestionsViewHolder(View itemView) {
             super(itemView);
             cv = (CardView) itemView.findViewById(R.id.cardView);
-            this.adapter = adapter;
-            this.activity = adapter.activity;
             cv.setOnClickListener(this);
             title =  (TextView) itemView.findViewById(R.id.title);
             rate = (TextView) itemView.findViewById(R.id.rate);
@@ -88,33 +82,12 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.QuestionsViewHolde
             answersCount = (TextView) itemView.findViewById(R.id.answersCount);
             commentsCount = (TextView) itemView.findViewById(R.id.commentsCount);
             views = (TextView) itemView.findViewById(R.id.viewsCount);
-
-            SwipeLayout swipeLayout = (SwipeLayout) cv.findViewById(R.id.swipeWrapeer);
-            swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
-            ImageButton editPanel = (ImageButton) swipeLayout.findViewById(R.id.editPanel);
-            ImageButton deletePanel = (ImageButton) swipeLayout.findViewById(R.id.deletePanel);
-
-            editPanel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Question question = adapter.questions.get(getPosition());
-                    Intent detailIntent = new Intent(activity, QuestionsFormActivity.class);
-                    detailIntent.putExtra("question", question);
-                    activity.startActivity(detailIntent);
-                    activity.overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-                }
-            });
-            deletePanel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                }
-            });
         }
 
 
         @Override
         public void onClick(View v) {
+            Question question = this.adapter.questions.get(getPosition());
             Intent detailIntent = new Intent(views.getContext(), QuestionDetail.class);
             detailIntent.putExtra("question", question);
 

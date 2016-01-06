@@ -1,40 +1,33 @@
 package com.vsokoltsov.stackqa.views;
 
-import android.graphics.Color;
+import android.content.Intent;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentTransaction;
-import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroupOverlay;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.messages.QuestionMessage;
-import com.vsokoltsov.stackqa.models.QuestionFactory;
-import com.vsokoltsov.stackqa.views.QuestionDetailFragment;
 import com.vsokoltsov.stackqa.models.Question;
-
-import com.vsokoltsov.stackqa.R;
+import com.vsokoltsov.stackqa.models.QuestionFactory;
 import com.vsokoltsov.stackqa.views.answers.AnswerForm;
 import com.vsokoltsov.stackqa.views.answers.AnswerListFragment;
+import com.vsokoltsov.stackqa.views.questions.QuestionsFormActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -143,9 +136,9 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     }
 
     public void successQuestionLoadCallback(JSONObject response){
-        Question question = new Question(response);
+        selectedQuestion = new Question(response);
         Bundle arguments = new Bundle();
-        arguments.putParcelable("question", question);
+        arguments.putParcelable("question", selectedQuestion);
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         loadMainQuestionFragment(arguments, fragmentTransaction);
@@ -182,6 +175,13 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_question_detail, menu);
+        MenuItem editItem = (MenuItem) menu.findItem(R.id.editQuestion);
+        MenuItem deleteItem = (MenuItem) menu.findItem(R.id.deleteQuestion);
+
+        editItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
+                | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+        deleteItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
+                | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
         return true;
     }
 
@@ -192,11 +192,11 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
                 NavUtils.navigateUpTo(this, new Intent(this, QuestionsListActivity.class));
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
                 return true;
-            case R.id.add_answer:
-                showAnswerForm();
-                return true;
-            case R.id.add_comment:
-                showCommentForm();
+            case R.id.editQuestion:
+                Intent detailIntent = new Intent(this, QuestionsFormActivity.class);
+                detailIntent.putExtra("question", selectedQuestion);
+                startActivity(detailIntent);
+                overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
