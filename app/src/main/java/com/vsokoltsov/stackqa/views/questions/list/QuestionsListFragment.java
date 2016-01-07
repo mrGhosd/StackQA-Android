@@ -1,4 +1,4 @@
-package com.vsokoltsov.stackqa.views;
+package com.vsokoltsov.stackqa.views.questions.list;
 
 import android.app.Activity;
 import android.app.AlertDialog;

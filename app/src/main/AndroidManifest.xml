@@ -31,7 +31,7 @@
                 android:resource="@xml/searchable"/>
         </activity>
         <activity
-            android:name=".views.QuestionsListActivity"
+            android:name=".views.questions.list.QuestionsListActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -39,11 +39,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".views.QuestionDetail"
+            android:name=".views.questions.detail.QuestionDetail"
             android:label="@string/title_activity_question_detail" >
         </activity>
         <activity
-            android:name=".views.questions.QuestionsFormActivity">
+            android:name=".views.questions.form.QuestionsFormActivity">
         </activity>
         <activity
             android:name=".views.answers.AnswerList"

@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.models.Question;
-import com.vsokoltsov.stackqa.views.QuestionDetail;
+import com.vsokoltsov.stackqa.views.questions.detail.QuestionDetail;
 
 import java.util.List;
 

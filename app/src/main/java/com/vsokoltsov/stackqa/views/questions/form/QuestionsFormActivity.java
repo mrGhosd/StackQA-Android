@@ -1,4 +1,4 @@
-package com.vsokoltsov.stackqa.views.questions;
+package com.vsokoltsov.stackqa.views.questions.form;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

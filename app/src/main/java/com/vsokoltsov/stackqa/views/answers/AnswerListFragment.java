@@ -5,41 +5,24 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.view.WindowManager;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.vsokoltsov.stackqa.R;
-
 import com.vsokoltsov.stackqa.adapters.AnswersListAdapter;
-import com.vsokoltsov.stackqa.adapters.QuestionsListAdapter;
-import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.models.Answer;
-import com.vsokoltsov.stackqa.models.Question;
-import com.vsokoltsov.stackqa.views.QuestionDetail;
+import com.vsokoltsov.stackqa.views.questions.detail.QuestionDetail;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -145,25 +128,13 @@ public class AnswerListFragment extends ListFragment {
         }
 
         int totalHeight = 0;
-        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getHeight(), View.MeasureSpec.EXACTLY);
         for (int i = 0; i < listAdapter.getCount(); i++) {
             View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
             TextView answerText = (TextView) listItem.findViewById(R.id.answerText);
             listItem.measure(0, 0);
-            float measuredHeight = answerText.getMeasuredHeight();
             float answerTextHeight = answerText.getTextSize();
-            String text = (String) answerText.getText();
             float px = 550 * (listView.getResources().getDisplayMetrics().density);
             listItem.measure(View.MeasureSpec.makeMeasureSpec((int)px, View.MeasureSpec.AT_MOST), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-//            int height = listItem.getMeasuredHeight();
-
-//            int height += listView.getChildAt(i).getMeasuredHeight();
-//            height += listView.getDividerHeight();
-
             totalHeight += listItem.getMeasuredHeight() + answerTextHeight + listItem.getHeight() + 30;
         }
 

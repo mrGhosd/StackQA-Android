@@ -8,8 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.vsokoltsov.stackqa.R;
-import com.vsokoltsov.stackqa.views.QuestionDetail;
-import com.vsokoltsov.stackqa.views.QuestionsListActivity;
+import com.vsokoltsov.stackqa.views.questions.detail.QuestionDetail;
 
 public class AnswerForm extends ActionBarActivity {
 

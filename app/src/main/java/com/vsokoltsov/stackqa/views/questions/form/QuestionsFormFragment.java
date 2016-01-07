@@ -1,4 +1,4 @@
-package com.vsokoltsov.stackqa.views.questions;
+package com.vsokoltsov.stackqa.views.questions.form;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -25,8 +25,8 @@ import com.vsokoltsov.stackqa.models.Category;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.models.QuestionFactory;
 import com.vsokoltsov.stackqa.util.InstantAutoCompleteView;
-import com.vsokoltsov.stackqa.views.QuestionDetail;
-import com.vsokoltsov.stackqa.views.QuestionsListActivity;
+import com.vsokoltsov.stackqa.views.questions.detail.QuestionDetail;
+import com.vsokoltsov.stackqa.views.questions.list.QuestionsListActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;

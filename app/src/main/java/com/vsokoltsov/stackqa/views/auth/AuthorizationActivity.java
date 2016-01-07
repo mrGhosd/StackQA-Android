@@ -1,7 +1,6 @@
 package com.vsokoltsov.stackqa.views.auth;
 
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -11,18 +10,12 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.View;
-import android.widget.TabHost;
-import android.widget.TabWidget;
 
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.ViewPagerAdapter;
-import com.vsokoltsov.stackqa.messages.SuccessRequestMessage;
 import com.vsokoltsov.stackqa.messages.UserMessage;
-import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.util.SlidingTabLayout;
-import com.vsokoltsov.stackqa.views.QuestionDetail;
-import com.vsokoltsov.stackqa.views.QuestionsListActivity;
+import com.vsokoltsov.stackqa.views.questions.list.QuestionsListActivity;
 import com.vsokoltsov.stackqa.views.navigation.NavigationFragment;
 
 import de.greenrobot.event.EventBus;

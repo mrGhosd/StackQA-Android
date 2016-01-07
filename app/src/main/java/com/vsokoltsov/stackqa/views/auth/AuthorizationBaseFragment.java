@@ -13,13 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TabHost;
 
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.ViewPagerAdapter;
 import com.vsokoltsov.stackqa.messages.UserMessage;
 import com.vsokoltsov.stackqa.util.SlidingTabLayout;
-import com.vsokoltsov.stackqa.views.QuestionsListFragment;
+import com.vsokoltsov.stackqa.views.questions.list.QuestionsListFragment;
 import com.vsokoltsov.stackqa.views.navigation.NavigationFragment;
 
 import de.greenrobot.event.EventBus;

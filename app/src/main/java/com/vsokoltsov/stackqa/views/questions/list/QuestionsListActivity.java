@@ -1,4 +1,4 @@
-package com.vsokoltsov.stackqa.views;
+package com.vsokoltsov.stackqa.views.questions.list;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
@@ -26,8 +26,9 @@ import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.views.auth.AuthorizationActivity;
 import com.vsokoltsov.stackqa.views.navigation.NavigationFragment;
-import com.vsokoltsov.stackqa.views.questions.QuestionsFormActivity;
-import com.vsokoltsov.stackqa.views.questions.QuestionsFormFragment;
+import com.vsokoltsov.stackqa.views.questions.form.QuestionsFormActivity;
+import com.vsokoltsov.stackqa.views.questions.form.QuestionsFormFragment;
+import com.vsokoltsov.stackqa.views.questions.detail.QuestionDetail;
 
 import java.util.ArrayList;
 import java.util.List;

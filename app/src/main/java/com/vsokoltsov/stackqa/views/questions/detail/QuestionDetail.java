@@ -1,4 +1,4 @@
-package com.vsokoltsov.stackqa.views;
+package com.vsokoltsov.stackqa.views.questions.detail;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,9 +25,11 @@ import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.messages.QuestionMessage;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.models.QuestionFactory;
+import com.vsokoltsov.stackqa.views.questions.list.QuestionsListActivity;
+import com.vsokoltsov.stackqa.views.questions.list.QuestionsListFragment;
 import com.vsokoltsov.stackqa.views.answers.AnswerForm;
 import com.vsokoltsov.stackqa.views.answers.AnswerListFragment;
-import com.vsokoltsov.stackqa.views.questions.QuestionsFormActivity;
+import com.vsokoltsov.stackqa.views.questions.form.QuestionsFormActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;

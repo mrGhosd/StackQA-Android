@@ -2,10 +2,8 @@ package com.vsokoltsov.stackqa.views.navigation;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
@@ -23,24 +21,17 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 
 
-import com.android.volley.Response;
-import com.android.volley.toolbox.ImageRequest;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.NavigationListAdapter;
-import com.vsokoltsov.stackqa.controllers.AppController;
-import com.vsokoltsov.stackqa.messages.SuccessRequestMessage;
 import com.vsokoltsov.stackqa.messages.UserMessage;
 import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.NavigationItem;
-import com.vsokoltsov.stackqa.views.QuestionDetailFragment;
-import com.vsokoltsov.stackqa.views.QuestionsListActivity;
-import com.vsokoltsov.stackqa.views.QuestionsListFragment;
+import com.vsokoltsov.stackqa.views.questions.list.QuestionsListActivity;
+import com.vsokoltsov.stackqa.views.questions.list.QuestionsListFragment;
 import com.vsokoltsov.stackqa.views.auth.AuthorizationActivity;
 import com.vsokoltsov.stackqa.views.auth.AuthorizationBaseFragment;
-import com.vsokoltsov.stackqa.views.auth.SignInFragment;
 
 import java.util.ArrayList;
 import java.util.List;
