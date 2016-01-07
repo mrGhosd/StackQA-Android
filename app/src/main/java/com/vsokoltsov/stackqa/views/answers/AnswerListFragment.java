@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -35,7 +35,7 @@ import java.util.List;
  * <p
  * interface.
  */
-public class AnswerListFragment extends ListFragment {
+public class AnswerListFragment extends Fragment {
     private Activity activity;
     private QuestionDetail mainActivity;
     private List<Answer> answerList = new ArrayList<Answer>();
@@ -75,7 +75,7 @@ public class AnswerListFragment extends ListFragment {
         super.onViewCreated(view, savedInstanceState);
 //        try{
             this.mainActivity = (QuestionDetail) getActivity();
-            setListViewHeightBasedOnChildren(list);
+//            setListViewHeightBasedOnChildren(list);
 //            this.mainActivity.setLayoutHeight(3000);
 //            Activity mainAcitivty = qView.getParent();
 //            View relativeLayput = activity.findViewById(R.id.questionViewMainLayout);
@@ -99,25 +99,10 @@ public class AnswerListFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         fragmentView =  inflater.inflate(R.layout.fragment_answer_list, container, false);
-        list = (ListView) fragmentView.findViewById(android.R.id.list);
-        adapter = new AnswersListAdapter(getActivity(), answerList);
-        setListAdapter(adapter);
+//        list = (ListView) fragmentView.findViewById(android.R.id.list);
+//        adapter = new AnswersListAdapter(getActivity(), answerList);
+//        setListAdapter(adapter);
         return fragmentView;
-    }
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        //Do your stuff..
-    }
-
-
-
-    public void setActivateOnItemClick(boolean activateOnItemClick) {
-        // When setting CHOICE_MODE_SINGLE, ListView will automatically
-        // give items the 'activated' state when touched.
-        getListView().setChoiceMode(activateOnItemClick
-                ? ListView.CHOICE_MODE_SINGLE
-                : ListView.CHOICE_MODE_NONE);
     }
 
     public void setListViewHeightBasedOnChildren(ListView listView) {

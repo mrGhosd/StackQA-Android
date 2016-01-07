@@ -11,13 +11,13 @@
         android:layout_marginBottom="30dp">
         <include layout="@layout/toolbar" />
         <ScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:id="@+id/questionViewMainLayout"
             android:fillViewport="true">
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <FrameLayout
                     android:id="@+id/detail_fragment"
