@@ -126,7 +126,11 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        successQuestionLoadCallback(response);
+                        try {
+                            successQuestionLoadCallback(response);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -137,16 +141,18 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         AppController.getInstance().addToRequestQueue(questionRequest);
     }
 
-    public void successQuestionLoadCallback(JSONObject response){
+    public void successQuestionLoadCallback(JSONObject response) throws JSONException {
         selectedQuestion = new Question(response);
+        JSONArray answersList = response.getJSONArray("answers");
+        JSONArray commentsList = response.getJSONArray("comments");
         Bundle arguments = new Bundle();
         arguments.putParcelable("question", selectedQuestion);
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         loadMainQuestionFragment(arguments, fragmentTransaction);
         try {
-            loadQuestionAnswersFragment(arguments, fragmentTransaction, response.getJSONArray("answers"));
-        } catch(JSONException e){
+            loadQuestionDetailInfo(arguments, fragmentTransaction, answersList, commentsList);
+        } catch(Exception e){
             e.printStackTrace();
         }
         fragmentTransaction.commit();
@@ -162,6 +168,20 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
             fragmentTransaction.add(R.id.detail_fragment, fragment);
         }
 
+    }
+
+    private void loadQuestionDetailInfo(Bundle arguments, FragmentTransaction fragmentTransaction,
+                                        JSONArray answersList, JSONArray commentsList) {
+        arguments.putString("answers", answersList.toString());
+        arguments.putString("comments", commentsList.toString());
+        QuestionDetailInfoFragment fragment = new QuestionDetailInfoFragment();
+        fragment.setArguments(arguments);
+        if (replaceFragment) {
+            fragmentTransaction.replace(R.id.question_info, fragment);
+        }
+        else {
+            fragmentTransaction.add(R.id.question_info, fragment);
+        }
     }
 
     public void loadQuestionAnswersFragment(Bundle arguments, FragmentTransaction fragmentTransaction, JSONArray answers){
