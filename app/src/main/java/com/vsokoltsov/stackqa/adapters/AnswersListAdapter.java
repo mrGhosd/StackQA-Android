@@ -2,22 +2,21 @@ package com.vsokoltsov.stackqa.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.models.Answer;
-import com.vsokoltsov.stackqa.models.Question;
 
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by vsokoltsov on 19.09.15.
@@ -73,17 +72,20 @@ public class AnswersListAdapter extends BaseAdapter {
     }
 
     public void setUserInfo(View fragmentView, final Answer answer){
-        final ImageView userImage = (ImageView) fragmentView.findViewById(R.id.authorAvatar);
-        final TextView author = (TextView) fragmentView.findViewById(R.id.answerAuthor);
+        final CircleImageView userImage = (CircleImageView) fragmentView.findViewById(R.id.authorAvatar);
 
         String url = AppController.APP_HOST + answer.getUser().getAvatarUrl();
-        ImageRequest ir = new ImageRequest(url, new Response.Listener<Bitmap>() {
+        ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+        imageLoader.get(url, new ImageLoader.ImageListener() {
             @Override
-            public void onResponse(Bitmap response) {
-                userImage.setImageBitmap(response);
-                author.setText(answer.getUser().getCorrectNaming());
+            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                userImage.setImageBitmap(response.getBitmap());
             }
-        }, 0, 0, null, null);
-        AppController.getInstance().addToRequestQueue(ir);
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
     }
 }

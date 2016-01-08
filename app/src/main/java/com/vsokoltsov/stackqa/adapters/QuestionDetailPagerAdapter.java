@@ -36,7 +36,7 @@ public class QuestionDetailPagerAdapter extends FragmentStatePagerAdapter {
 
         if(position == 0) // if the position is 0 we are returning the First tab
         {
-            AnswerListFragment tab1 = new AnswerListFragment();
+            AnswerListFragment tab1 = AnswerListFragment.newInstance(answersList);
             return tab1;
         }
         else              // As we are having 2 tabs if the position is now 0 it must be 1 so we are returning second tab

@@ -4,8 +4,10 @@
     android:layout_height="wrap_content"
     tools:context="com.vsokoltsov.stackqa.views.answers.AnswerListFragment"
     android:padding="10dp">
-    <TextView
+    <ListView
+        android:id="@android:id/list"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="answersList"/>
+        android:layout_height="fill_parent"
+        android:scrollbars="none"
+        android:padding="0px" />
 </FrameLayout>
