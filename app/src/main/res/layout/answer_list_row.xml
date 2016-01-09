@@ -34,7 +34,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/answerText"
-                    android:maxHeight="38dp"
                     android:minWidth="160dp"
                     android:gravity="left" />
             </LinearLayout>

@@ -129,7 +129,7 @@ public class AnswerListFragment extends Fragment {
             float answerTextHeight = answerText.getMeasuredHeight();
             float px = 660 * (listView.getResources().getDisplayMetrics().density);
             listItem.measure(View.MeasureSpec.makeMeasureSpec((int)px, View.MeasureSpec.AT_MOST), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-            totalHeight += listItem.getMeasuredHeight() + answerTextHeight;
+            totalHeight += listItem.getMeasuredHeight() + answerTextHeight + answerText.getMeasuredWidth()/5;
         }
 
         CardView detaiLCardView = (CardView) getActivity().findViewById(R.id.detailInforCardView);
