@@ -53,7 +53,6 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
     private View listFragmentView;
     private List<Question> questionsList = new ArrayList<Question>();
     private static final String url = AppController.APP_HOST + "/api/v1/questions";
-    public static QuestionsListAdapter adapter;
     private AuthManager manager = AuthManager.getInstance();
     private RVAdapter cardAdapter;
     public ListView list;
@@ -77,14 +76,6 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
 
     public ListView getList() {
         return this.list;
-    }
-
-    public QuestionsListAdapter getAdapter(){
-        return this.adapter;
-    }
-
-    public void setAdapter(QuestionsListAdapter adapter){
-       this.adapter = adapter;
     }
 
     public ArrayList<Question> getQuestionsFromList(){
@@ -145,13 +136,6 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
         if(bundle != null){
             questionsList= bundle.getParcelableArrayList("questions");
-            setCustomAdapter();
-//            setListAdapter(adapter);
-            adapter.notifyDataSetChanged();
-//            mProgress = getProgressBar();
-//            if(mProgress != null){
-//                mProgress.setVisibility(View.GONE);
-//            }
         }
 
     }
@@ -174,10 +158,6 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
 //            }
             cardAdapter.notifyDataSetChanged();
         }
-    }
-
-    private void setCustomAdapter() {
-        if(getAdapter() == null) setAdapter(new QuestionsListAdapter(getActivity(), questionsList));
     }
 
     public void setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener listener) {

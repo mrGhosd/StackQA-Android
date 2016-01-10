@@ -1,19 +1,14 @@
 package com.vsokoltsov.stackqa.controllers;
 
-import com.vsokoltsov.stackqa.models.AuthManager;
-import com.vsokoltsov.stackqa.util.*;
 import android.app.Application;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Handler;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
-
-import org.json.JSONException;
+import com.vsokoltsov.stackqa.util.LruBitmapCache;
 
 /**
  * Created by vsokoltsov on 09.07.15.
@@ -22,7 +17,7 @@ public class AppController extends Application{
     public static final String TAG = AppController.class.getSimpleName();
 
 //    public static final String APP_HOST = "http://178.62.198.57";
-    public static final String APP_HOST = "http://61c7a8e1.ngrok.io";
+    public static final String APP_HOST = "http://ab49f793.ngrok.io";
 
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;

@@ -136,7 +136,6 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
             QuestionsListFragment frg = (QuestionsListFragment) fragmentManager.findFragmentById(R.id.container);
             final ListView questionsList = frg.getList();
             questionsList.setTextFilterEnabled(true);
-            final QuestionsListAdapter adapter = frg.getAdapter();
             ArrayList<Question> defaultQuestionsList = frg.getQuestionsFromList();
             mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
@@ -146,7 +145,6 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    adapter.getFilter().filter(newText);
                     return true;
                 }
             });
