@@ -7,6 +7,8 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -20,7 +22,10 @@ import android.widget.TextView;
 
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.AnswersListAdapter;
+import com.vsokoltsov.stackqa.adapters.AnswersListRecycleViewAdapter;
 import com.vsokoltsov.stackqa.models.Answer;
+import com.vsokoltsov.stackqa.util.MyLinearLayoutManager;
+import com.vsokoltsov.stackqa.util.SimpleDividerItemDecoration;
 import com.vsokoltsov.stackqa.views.questions.detail.QuestionDetail;
 
 import org.json.JSONArray;
@@ -28,6 +33,8 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
+
+;
 
 /**
  * A fragment representing a list of Items.
@@ -42,8 +49,12 @@ public class AnswerListFragment extends Fragment {
     private QuestionDetail mainActivity;
     private List<Answer> answerList = new ArrayList<Answer>();
     public AnswersListAdapter adapter;
+
     public ListView list;
     private View fragmentView;
+    private RecyclerView rv;
+    private MyLinearLayoutManager llm;
+    private AnswersListRecycleViewAdapter answerAdapter;
 
     public void setAnswerList(JSONArray answers){
         for(int i = 0; i < answers.length(); i++){
@@ -83,7 +94,7 @@ public class AnswerListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 //        try{
             this.mainActivity = (QuestionDetail) getActivity();
-            setListViewHeightBasedOnChildren(list);
+//            setListViewHeightBasedOnChildren(list);
 //            this.mainActivity.setLayoutHeight(3000);
 //            Activity mainAcitivty = qView.getParent();
 //            View relativeLayput = activity.findViewById(R.id.questionViewMainLayout);
@@ -107,9 +118,14 @@ public class AnswerListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         fragmentView =  inflater.inflate(R.layout.fragment_answer_list, container, false);
-        list = (ListView) fragmentView.findViewById(android.R.id.list);
-        adapter = new AnswersListAdapter(getActivity(), answerList);
-        list.setAdapter(adapter);
+        rv = (RecyclerView) fragmentView.findViewById(R.id.answersList);
+        rv.setHasFixedSize(true);
+        answerAdapter = new AnswersListRecycleViewAdapter(answerList, getActivity());
+        LinearLayoutManager llm = new org.solovyev.android.views.llm.LinearLayoutManager(getActivity().getApplicationContext(), 1, false);
+        rv.setLayoutManager(llm);
+        rv.addItemDecoration(new SimpleDividerItemDecoration(getActivity().getBaseContext()));
+        rv.setAdapter(answerAdapter);
+        answerAdapter.notifyDataSetChanged();
         return fragmentView;
     }
 

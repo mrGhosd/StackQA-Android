@@ -151,7 +151,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         loadMainQuestionFragment(arguments, fragmentTransaction);
         try {
-            loadQuestionDetailInfo(arguments, fragmentTransaction, answersList, commentsList);
+            loadQuestionAnswersFragment(arguments, fragmentTransaction, response.getJSONArray("answers"));
         } catch(Exception e){
             e.printStackTrace();
         }
@@ -187,10 +187,10 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     public void loadQuestionAnswersFragment(Bundle arguments, FragmentTransaction fragmentTransaction, JSONArray answers){
         AnswerListFragment fragment = AnswerListFragment.newInstance(answers);
         if (replaceFragment) {
-            fragmentTransaction.replace(R.id.answers_list, fragment);
+            fragmentTransaction.replace(R.id.question_info, fragment);
         }
         else {
-            fragmentTransaction.add(R.id.answers_list, fragment);
+            fragmentTransaction.add(R.id.question_info, fragment);
         }
     }
     @Override
