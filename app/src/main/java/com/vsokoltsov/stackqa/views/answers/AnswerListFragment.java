@@ -21,7 +21,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.vsokoltsov.stackqa.R;
-import com.vsokoltsov.stackqa.adapters.AnswersListAdapter;
 import com.vsokoltsov.stackqa.adapters.AnswersListRecycleViewAdapter;
 import com.vsokoltsov.stackqa.models.Answer;
 import com.vsokoltsov.stackqa.util.MyLinearLayoutManager;
@@ -48,7 +47,6 @@ public class AnswerListFragment extends Fragment {
     private Activity activity;
     private QuestionDetail mainActivity;
     private List<Answer> answerList = new ArrayList<Answer>();
-    public AnswersListAdapter adapter;
 
     public ListView list;
     private View fragmentView;

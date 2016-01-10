@@ -20,7 +20,6 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.vsokoltsov.stackqa.R;
-import com.vsokoltsov.stackqa.adapters.QuestionsListAdapter;
 import com.vsokoltsov.stackqa.messages.UserMessage;
 import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.Question;
