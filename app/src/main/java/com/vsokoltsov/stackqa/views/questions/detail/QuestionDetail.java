@@ -23,6 +23,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.messages.QuestionMessage;
+import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.models.QuestionFactory;
 import com.vsokoltsov.stackqa.views.questions.list.QuestionsListActivity;
@@ -45,6 +46,8 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     private ScrollView layout;
     private List<Question> questionsList = new ArrayList<Question>();
     private boolean replaceFragment = false;
+    private AuthManager authManager = AuthManager.getInstance();
+    private Menu mainMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +159,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
             e.printStackTrace();
         }
         fragmentTransaction.commit();
+        setActivityButtons();
     }
 
     public void loadMainQuestionFragment(Bundle arguments, FragmentTransaction fragmentTransaction){
@@ -197,13 +201,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_question_detail, menu);
-        MenuItem editItem = (MenuItem) menu.findItem(R.id.editQuestion);
-        MenuItem deleteItem = (MenuItem) menu.findItem(R.id.deleteQuestion);
-
-        editItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
-                | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-        deleteItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
-                | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+        mainMenu = menu;
         return true;
     }
 
@@ -284,6 +282,19 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
             }
         }
 
+    }
+
+    private void setActivityButtons() {
+        if (authManager.getCurrentUser() != null &&
+                authManager.getCurrentUser().getId() == selectedQuestion.getUser().getId()) {
+            MenuItem editItem = (MenuItem) mainMenu.findItem(R.id.editQuestion);
+            MenuItem deleteItem = (MenuItem) mainMenu.findItem(R.id.deleteQuestion);
+
+            editItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
+                    | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+            deleteItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
+                    | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+        }
     }
 
 }

@@ -120,7 +120,7 @@ public class AnswerListFragment extends Fragment {
         if (llm == null) {
             llm =
                     new org.solovyev.android.views.llm.LinearLayoutManager(getActivity().getApplicationContext(),
-                            orientation,
+                            1,
                             true);
             rv.setLayoutManager(llm);
             rv.addItemDecoration(new SimpleDividerItemDecoration(getActivity().getBaseContext()));
