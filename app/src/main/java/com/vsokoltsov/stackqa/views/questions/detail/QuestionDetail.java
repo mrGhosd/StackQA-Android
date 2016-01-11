@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ScrollView;
 
 import com.android.volley.Response;
@@ -22,15 +23,18 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.controllers.AppController;
+import com.vsokoltsov.stackqa.messages.AnswerMessage;
 import com.vsokoltsov.stackqa.messages.QuestionMessage;
+import com.vsokoltsov.stackqa.models.Answer;
+import com.vsokoltsov.stackqa.models.AnswerFactory;
 import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.models.QuestionFactory;
-import com.vsokoltsov.stackqa.views.questions.list.QuestionsListActivity;
-import com.vsokoltsov.stackqa.views.questions.list.QuestionsListFragment;
 import com.vsokoltsov.stackqa.views.answers.AnswerForm;
 import com.vsokoltsov.stackqa.views.answers.AnswerListFragment;
 import com.vsokoltsov.stackqa.views.questions.form.QuestionsFormActivity;
+import com.vsokoltsov.stackqa.views.questions.list.QuestionsListActivity;
+import com.vsokoltsov.stackqa.views.questions.list.QuestionsListFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,6 +52,9 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     private boolean replaceFragment = false;
     private AuthManager authManager = AuthManager.getInstance();
     private Menu mainMenu;
+    private ImageButton sendAnswer;
+    private EditText answerText;
+    private AnswerListFragment answersListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +64,20 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         setSupportActionBar(mActionBarToolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        sendAnswer = (ImageButton) findViewById(R.id.sendAnswer);
+        answerText = (EditText) findViewById(R.id.answerUserText);
+        if (sendAnswer != null && answerText != null) {
+            sendAnswer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        sendAnswer(view);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
@@ -69,8 +90,22 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         else {
             baseConfigForPhone(savedInstanceState);
         }
+    }
 
-
+    private void sendAnswer(View view) throws JSONException {
+        if (answerText.getText().toString().trim().equals("")) {
+            answerText.setError("Answer can't be blank");
+        }
+        else {
+            String answerTextString = answerText.getText().toString();
+            JSONObject answerParams = new JSONObject();
+            answerParams.put("text", answerTextString);
+            answerParams.put("user_id", authManager.getCurrentUser().getId());
+            answerParams.put("question_id", selectedQuestion.getID());
+            JSONObject params = new JSONObject();
+            params.put("answer", answerParams);
+            AnswerFactory.getInstance().create(selectedQuestion.getID(), params);
+        }
     }
 
     private void baseConfigForPhone(Bundle savedInstanceState) {
@@ -189,12 +224,12 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     }
 
     public void loadQuestionAnswersFragment(Bundle arguments, FragmentTransaction fragmentTransaction, JSONArray answers){
-        AnswerListFragment fragment = AnswerListFragment.newInstance(answers);
+        answersListFragment = AnswerListFragment.newInstance(answers);
         if (replaceFragment) {
-            fragmentTransaction.replace(R.id.question_info, fragment);
+            fragmentTransaction.replace(R.id.question_info, answersListFragment);
         }
         else {
-            fragmentTransaction.add(R.id.question_info, fragment);
+            fragmentTransaction.add(R.id.question_info, answersListFragment);
         }
     }
     @Override
@@ -281,6 +316,33 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
                     break;
             }
         }
+
+    }
+
+    public void onEvent(AnswerMessage event) throws JSONException {
+        if (event.response instanceof JSONObject) {
+            switch (event.operationName){
+                case "create":
+                    parseSuccessAnswerCreation(event.response);
+                    break;
+            }
+        } else {
+            switch (event.operationName){
+                case "create":
+                    break;
+            }
+        }
+
+    }
+
+    private void parseSuccessAnswerCreation(JSONObject object) {
+        answerText.setText("");
+        Answer answer = new Answer(object);
+        answersListFragment.setNewAnswerItem(answer);
+
+    }
+
+    private void parseFailureAnswerCreation(JSONObject object) {
 
     }
 

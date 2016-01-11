@@ -132,4 +132,11 @@ public class AnswerListFragment extends Fragment {
         }
         return fragmentView;
     }
+
+    public void setNewAnswerItem(Answer answer) {
+        int index = answerAdapter.answers.size();
+        answerAdapter.answers.add(index, answer);
+        answerAdapter.notifyDataSetChanged();
+        rv.smoothScrollToPosition(index);
+    }
 }
