@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.AnswersListRecycleViewAdapter;
@@ -134,9 +135,11 @@ public class AnswerListFragment extends Fragment {
     }
 
     public void setNewAnswerItem(Answer answer) {
+        ScrollView sc = (ScrollView) getActivity().findViewById(R.id.questionViewMainLayout);
+
         int index = answerAdapter.answers.size();
         answerAdapter.answers.add(index, answer);
         answerAdapter.notifyDataSetChanged();
-        rv.smoothScrollToPosition(index);
+        sc.scrollTo(0, 0);
     }
 }
