@@ -3,9 +3,9 @@ package com.vsokoltsov.stackqa.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -17,6 +17,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.models.Answer;
+import com.vsokoltsov.stackqa.util.PopupWithMenuIcons;
 
 import java.util.List;
 
@@ -85,9 +86,10 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
                 @Override
                 public void onClick(View view) {
                     Context context = view.getContext();
-                    PopupMenu popup = new PopupMenu(context, view);
+                    PopupWithMenuIcons popup = new PopupWithMenuIcons(context, view);
 
                     // This activity implements OnMenuItemClickListener
+                    MenuInflater inflater = popup.getMenuInflater();
                     popup.inflate(R.menu.menu_answer_list);
                     popup.show();
                 }

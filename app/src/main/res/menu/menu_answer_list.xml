@@ -6,15 +6,18 @@
         android:id="@+id/action_edit"
         android:title="@string/answer_item_edit"
         android:orderInCategory="100"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        android:icon="@drawable/editpopupicon"/>
     <item
         android:id="@+id/action_remove"
         android:title="@string/answer_item_delete"
         android:orderInCategory="100"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        android:icon="@drawable/deletepopupicon"/>
     <item
         android:id="@+id/action_complain"
         android:title="@string/answer_item_complain"
         android:orderInCategory="100"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        android:icon="@drawable/complainpopupicon"/>
 </menu>

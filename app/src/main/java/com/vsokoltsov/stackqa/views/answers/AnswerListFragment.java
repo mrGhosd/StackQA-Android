@@ -82,16 +82,7 @@ public class AnswerListFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        try{
-            this.mainActivity = (QuestionDetail) getActivity();
-//            setListViewHeightBasedOnChildren(list);
-//            this.mainActivity.setLayoutHeight(3000);
-//            Activity mainAcitivty = qView.getParent();
-//            View relativeLayput = activity.findViewById(R.id.questionViewMainLayout);
-//            int scViewheight = qD.getHeight();
-//        } catch (Exception e){
-//            e.printStackTrace();
-//        }
+        this.mainActivity = (QuestionDetail) getActivity();
     }
 
     @Override
