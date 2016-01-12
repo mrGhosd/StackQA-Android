@@ -235,7 +235,6 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_question_detail, menu);
         mainMenu = menu;
         return true;
     }
@@ -349,6 +348,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     private void setActivityButtons() {
         if (authManager.getCurrentUser() != null &&
                 authManager.getCurrentUser().getId() == selectedQuestion.getUser().getId()) {
+            getMenuInflater().inflate(R.menu.menu_question_detail, mainMenu);
             MenuItem editItem = (MenuItem) mainMenu.findItem(R.id.editQuestion);
             MenuItem deleteItem = (MenuItem) mainMenu.findItem(R.id.deleteQuestion);
 

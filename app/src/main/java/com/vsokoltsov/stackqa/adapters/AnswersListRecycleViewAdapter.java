@@ -1,11 +1,14 @@
 package com.vsokoltsov.stackqa.adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -68,6 +71,7 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
         private TextView createdAt;
         private TextView commentsCount;
         private TextView rate;
+        private ImageButton popupMenu;
 
         AnswerViewHolder(View itemView) {
             super(itemView);
@@ -76,6 +80,18 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
             createdAt = (TextView) itemView.findViewById(R.id.answerCreatedAt);
             commentsCount = (TextView) itemView.findViewById(R.id.answerCommentsCount);
             rate = (TextView) itemView.findViewById(R.id.answerRateCount);
+            popupMenu = (ImageButton) itemView.findViewById(R.id.popupMenu);
+            popupMenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Context context = view.getContext();
+                    PopupMenu popup = new PopupMenu(context, view);
+
+                    // This activity implements OnMenuItemClickListener
+                    popup.inflate(R.menu.menu_answer_list);
+                    popup.show();
+                }
+            });
         }
 
 
