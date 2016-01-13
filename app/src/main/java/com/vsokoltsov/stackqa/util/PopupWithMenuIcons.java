@@ -4,24 +4,20 @@ import android.content.Context;
 import android.support.v7.internal.view.SupportMenuInflater;
 import android.support.v7.internal.view.menu.MenuBuilder;
 import android.support.v7.internal.view.menu.MenuPopupHelper;
-import android.support.v7.internal.view.menu.MenuPresenter;
 import android.support.v7.internal.view.menu.SubMenuBuilder;
 import android.support.v7.widget.PopupMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 
 /**
  * Created by vsokoltsov on 13.01.16.
  */
-public class PopupWithMenuIcons extends PopupMenu implements MenuBuilder.Callback, MenuPresenter.Callback {
+public class PopupWithMenuIcons extends PopupMenu {
     private Context mContext;
     private MenuBuilder mMenu;
     private View mAnchor;
     private MenuPopupHelper mPopup;
-    private PopupMenu.OnMenuItemClickListener mMenuItemClickListener;
-    private PopupMenu.OnDismissListener mDismissListener;
 
     public PopupWithMenuIcons(Context context, View anchor) {
         super(context, anchor);
@@ -81,43 +77,6 @@ public class PopupWithMenuIcons extends PopupMenu implements MenuBuilder.Callbac
     }
 
     /**
-     * Set a listener that will be notified when the user selects an item from the menu.
-     *
-     * @param listener Listener to notify
-     */
-    public void setOnMenuItemClickListener(OnMenuItemClickListener listener) {
-        mMenuItemClickListener = (PopupMenu.OnMenuItemClickListener) listener;
-    }
-
-    /**
-     * Set a listener that will be notified when this menu is dismissed.
-     *
-     * @param listener Listener to notify
-     */
-    public void setOnDismissListener(PopupMenu.OnDismissListener listener) {
-        mDismissListener = listener;
-    }
-
-    /**
-     * @hide
-     */
-    public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
-        if (mMenuItemClickListener != null) {
-            return mMenuItemClickListener.onMenuItemClick(item);
-        }
-        return false;
-    }
-
-    /**
-     * @hide
-     */
-    public void onCloseMenu(MenuBuilder menu, boolean allMenusAreClosing) {
-        if (mDismissListener != null) {
-            mDismissListener.onDismiss(this);
-        }
-    }
-
-    /**
      * @hide
      */
     public boolean onOpenSubMenu(MenuBuilder subMenu) {
@@ -148,15 +107,4 @@ public class PopupWithMenuIcons extends PopupMenu implements MenuBuilder.Callbac
      * Interface responsible for receiving menu item click events if the items themselves
      * do not have individual item click listeners.
      */
-    public interface OnMenuItemClickListener {
-        /**
-         * This method will be invoked when a menu item is clicked if the item itself did
-         * not already handle the event.
-         *
-         * @param item {@link MenuItem} that was clicked
-         * @return <code>true</code> if the event was handled, <code>false</code> otherwise.
-         */
-        public boolean onMenuItemClick(MenuItem item);
-    }
-
 }

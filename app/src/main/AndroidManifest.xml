@@ -57,6 +57,10 @@
             android:name=".views.auth.AuthorizationActivity"
             android:label="Sign in" >
         </activity>
+        <activity
+            android:name=".views.answers.AnswerFormActivity"
+            android:label="Answer Form" >
+        </activity>
         <service android:enabled="true" android:name=".receiver.StartedService">
         </service>
     </application>

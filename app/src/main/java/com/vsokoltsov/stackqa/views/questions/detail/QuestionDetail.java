@@ -48,7 +48,7 @@ import de.greenrobot.event.EventBus;
 public class QuestionDetail extends ActionBarActivity implements QuestionsListFragment.Callbacks {
     public static Question selectedQuestion;
     private ScrollView layout;
-    private List<Question> questionsList = new ArrayList<Question>();
+    private static List<Question> questionsList = new ArrayList<Question>();
     private boolean replaceFragment = false;
     private AuthManager authManager = AuthManager.getInstance();
     private Menu mainMenu;
