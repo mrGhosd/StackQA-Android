@@ -105,11 +105,13 @@ public class Answer implements Parcelable {
             answer.text = in.readString();
             answer.id = in.readInt();
             answer.questionID = in.readInt();
-            try {
-                answer.setCreatedAt(in.readString());
-            } catch (ParseException e){
-                e.printStackTrace();
-            }
+            answer.createdAt = (Date) in.readSerializable();
+
+//            try {
+//                answer.setCreatedAt(in.readString());
+//            } catch (ParseException e){
+//                e.printStackTrace();
+//            }
             return answer;
         }
         public Answer[] newArray(int size) {
@@ -122,6 +124,6 @@ public class Answer implements Parcelable {
         dest.writeString(text);
         dest.writeInt(id);
         dest.writeInt(questionID);
-        dest.writeString(createdAt.toString());
+        dest.writeSerializable(createdAt);
     }
 }

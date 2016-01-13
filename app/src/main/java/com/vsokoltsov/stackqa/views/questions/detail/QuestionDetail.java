@@ -47,6 +47,7 @@ import de.greenrobot.event.EventBus;
 
 public class QuestionDetail extends ActionBarActivity implements QuestionsListFragment.Callbacks {
     public static Question selectedQuestion;
+    private static JSONArray answersList;
     private ScrollView layout;
     private static List<Question> questionsList = new ArrayList<Question>();
     private boolean replaceFragment = false;
@@ -55,6 +56,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     private ImageButton sendAnswer;
     private EditText answerText;
     private AnswerListFragment answersListFragment;
+    private Answer editedAnswer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,9 +83,26 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
-            selectedQuestion = (Question) extras.getParcelable("question");
-            questionsList = extras.getParcelableArrayList("questions");
+            if (selectedQuestion == null) selectedQuestion = (Question) extras.getParcelable("question");
+            if (questionsList == null) questionsList = extras.getParcelableArrayList("questions");
+            if (editedAnswer == null) editedAnswer = extras.getParcelable("edited_answer");
         }
+
+        if (editedAnswer != null) {
+            for (int i = 0; i < answersList.length(); i++) {
+                JSONObject answer = null;
+                try {
+                    answer = (JSONObject) answersList.get(i);
+                    if(answer.getInt("id") == editedAnswer.getID()) {
+                        answer.put("text", editedAnswer.getText());
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
         if (isTablet) {
             baseConfigurationForTablet();
         }
@@ -119,8 +138,11 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         }
 
         if (savedInstanceState == null) {
-            if(selectedQuestion != null) {
+            if(answersList == null) {
                 loadQuestionData();
+            }
+            else {
+                setDataToDetailView();
             }
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
@@ -181,15 +203,18 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
 
     public void successQuestionLoadCallback(JSONObject response) throws JSONException {
         selectedQuestion = new Question(response);
-        JSONArray answersList = response.getJSONArray("answers");
-        JSONArray commentsList = response.getJSONArray("comments");
+        answersList = response.getJSONArray("answers");
+        setDataToDetailView();
+    }
+
+    private void setDataToDetailView() {
         Bundle arguments = new Bundle();
         arguments.putParcelable("question", selectedQuestion);
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         loadMainQuestionFragment(arguments, fragmentTransaction);
         try {
-            loadQuestionAnswersFragment(arguments, fragmentTransaction, response.getJSONArray("answers"));
+            loadQuestionAnswersFragment(arguments, fragmentTransaction, answersList);
         } catch(Exception e){
             e.printStackTrace();
         }
@@ -347,7 +372,8 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
 
     private void setActivityButtons() {
         if (authManager.getCurrentUser() != null &&
-                authManager.getCurrentUser().getId() == selectedQuestion.getUser().getId()) {
+                authManager.getCurrentUser().getId() == selectedQuestion.getUser().getId()
+                && mainMenu != null) {
             getMenuInflater().inflate(R.menu.menu_question_detail, mainMenu);
             MenuItem editItem = (MenuItem) mainMenu.findItem(R.id.editQuestion);
             MenuItem deleteItem = (MenuItem) mainMenu.findItem(R.id.deleteQuestion);
