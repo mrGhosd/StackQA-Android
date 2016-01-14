@@ -12,8 +12,16 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.vsokoltsov.stackqa.R;
+import com.vsokoltsov.stackqa.messages.AnswerMessage;
 import com.vsokoltsov.stackqa.models.Answer;
+import com.vsokoltsov.stackqa.models.AnswerFactory;
+import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.views.questions.detail.QuestionDetail;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by vsokoltsov on 13.01.16.
@@ -23,6 +31,9 @@ public class AnswerFormActivity extends ActionBarActivity implements View.OnClic
     private EditText answerText;
     private Button saveButton;
     private Button cancelButton;
+    private AuthManager authManager = AuthManager.getInstance();
+    private JSONObject answerParams;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,8 +72,50 @@ public class AnswerFormActivity extends ActionBarActivity implements View.OnClic
     public void onClick(View view) {
         String formText = answerText.getText().toString();
         answer.setText(formText);
+        answerParams = new JSONObject();
+        try {
+            answerParams.put("text", formText);
+            answerParams.put("user_id", authManager.getCurrentUser().getId());
+            answerParams.put("question_id", answer.getQuestionID());
+            JSONObject params = new JSONObject();
+            params.put("answer", answerParams);
+            AnswerFactory.getInstance().update(answer.getQuestionID(), answer.getID(),answerParams);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    public void onEvent(AnswerMessage event) throws JSONException {
+        if (event.response instanceof JSONObject) {
+            switch (event.operationName) {
+                case "update":
+                    parseSuccessAnswerUpdate(event.response);
+                    break;
+            }
+        } else {
+            switch (event.operationName) {
+                case "update":
+                    break;
+            }
+        }
+    }
+
+    private void parseSuccessAnswerUpdate(JSONObject response) {
         Intent detailIntent = new Intent(this, QuestionDetail.class);
-        detailIntent.putExtra("edited_answer", answer);
+        detailIntent.putExtra("edited_answer", response.toString());
         startActivity(detailIntent);
         overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
     }

@@ -17,12 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.vsokoltsov.stackqa.R;
-import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.messages.AnswerMessage;
 import com.vsokoltsov.stackqa.messages.QuestionMessage;
 import com.vsokoltsov.stackqa.models.Answer;
@@ -56,7 +51,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     private ImageButton sendAnswer;
     private EditText answerText;
     private AnswerListFragment answersListFragment;
-    private Answer editedAnswer;
+    private JSONObject editedAnswer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +80,17 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         if(extras != null) {
             if (selectedQuestion == null) selectedQuestion = (Question) extras.getParcelable("question");
             if (questionsList == null) questionsList = extras.getParcelableArrayList("questions");
-            if (editedAnswer == null) editedAnswer = extras.getParcelable("edited_answer");
+            if (editedAnswer == null) {
+                String editedAnswerData = extras.getString("edited_answer");
+                try {
+                    if (editedAnswerData != null) {
+                        editedAnswer = new JSONObject(editedAnswerData);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
         }
 
         if (editedAnswer != null) {
@@ -93,8 +98,8 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
                 JSONObject answer = null;
                 try {
                     answer = (JSONObject) answersList.get(i);
-                    if(answer.getInt("id") == editedAnswer.getID()) {
-                        answer.put("text", editedAnswer.getText());
+                    if(answer.getInt("id") == editedAnswer.getInt("id")) {
+                        answer.put("text", editedAnswer.get("text"));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -181,24 +186,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     }
 
     public void loadQuestionData(){
-        String url = AppController.APP_HOST+"/api/v2/questions/"+selectedQuestion.getID();
-        JsonObjectRequest questionRequest = new JsonObjectRequest(url,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            successQuestionLoadCallback(response);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d("TAG", "Error: " + error.getMessage());
-            }
-        });
-        AppController.getInstance().addToRequestQueue(questionRequest);
+        QuestionFactory.getInstance().get(selectedQuestion.getID());
     }
 
     public void successQuestionLoadCallback(JSONObject response) throws JSONException {
@@ -268,6 +256,8 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                selectedQuestion = null;
+                answersList = null;
                 NavUtils.navigateUpTo(this, new Intent(this, QuestionsListActivity.class));
                 overridePendingTransition(R.anim.pull_in_left, R.anim.push_out_right);
                 return true;

@@ -28,6 +28,11 @@ public class AnswerFactory implements RequestCallbacks {
         ApiRequest.getInstance(this).post(url, "create", params);
     }
 
+    public void update(int questionId, int answerId, JSONObject params) {
+        String url = AppController.APP_HOST + "/api/v1/questions/" + questionId + "/answers/" + answerId;
+        ApiRequest.getInstance(this).put(url, "update", params);
+    }
+
     @Override
     public void successCallback(String requestName, JSONObject object) throws JSONException {
         EventBus.getDefault().post(new AnswerMessage(requestName, object));
