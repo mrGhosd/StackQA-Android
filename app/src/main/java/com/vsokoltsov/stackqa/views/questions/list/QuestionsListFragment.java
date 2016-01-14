@@ -16,7 +16,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.android.volley.VolleyError;
-import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.RVAdapter;
 import com.vsokoltsov.stackqa.controllers.AppController;
@@ -25,6 +24,7 @@ import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.network.RequestCallbacks;
 import com.vsokoltsov.stackqa.receiver.StartedService;
+import com.vsokoltsov.stackqa.util.MaterialProgressBar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,9 +45,8 @@ import de.greenrobot.event.EventBus;
  * interface.
  */
 public class QuestionsListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, RequestCallbacks {
-
+    private static MaterialProgressBar progressBar;
     private SwipeRefreshLayout swipeLayout;
-    private CircularProgressView progressView;
     private ProgressBar mProgress;
     private Activity activity;
     private View listFragmentView;
@@ -134,6 +133,7 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
+        progressBar = (MaterialProgressBar) getActivity().findViewById(R.id.progress_bar);
         if(bundle != null){
             questionsList= bundle.getParcelableArrayList("questions");
         }
@@ -141,21 +141,15 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
     }
 
     private void loadQuestionsList(){
-//        mProgress = getProgressBar();
-//        if(mProgress != null){
-//            mProgress.setVisibility(View.VISIBLE);
-//        }
+        progressBar.setVisibility(View.VISIBLE);
         questionsList = getCachedQuestionsList();
         cardAdapter = new RVAdapter(questionsList, getActivity());
         rv.setAdapter(cardAdapter);
-//        mProgress = getProgressBar();
         if(questionsList.size() <= 0) {
             Question q = new Question();
             q.getCollection();
         } else {
-//            if(mProgress != null){
-//                mProgress.setVisibility(View.GONE);
-//            }
+            progressBar.setVisibility(View.GONE);
             cardAdapter.notifyDataSetChanged();
         }
     }
@@ -171,7 +165,6 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        mProgress = getProgressBar();
     }
 
     @Override
@@ -185,7 +178,6 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
         rv.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(llm);
-//        mProgress = (ProgressBar) getActivity().findViewById(R.id.progress_bar);
         swipeLayout.setOnRefreshListener(this);
         this.loadQuestionsList();
         return rootView;
@@ -195,20 +187,6 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
     public void errorCallback(VolleyError error, String requestID){
         swipeLayout.setRefreshing(false);
     }
-
-
-//    private boolean canListViewScrollUp(RecyclerView listView) {
-//        if (android.os.Build.VERSION.SDK_INT >= 14) {
-//            // For ICS and above we can call canScrollVertically() to determine this
-//            return ViewCompat.canScrollVertically(listView, -1);
-//        } else {
-//            // Pre-ICS we need to manually check the first visible item and the child view's top
-//            // value
-//            return listView.getChildCount() > 0 &&
-//                    (listView.getFirstVisiblePosition() > 0
-//                            || listView.getChildAt(0).getTop() < listView.getPaddingTop());
-//        }
-//    }
 
     @Override
     public void onStart() {
@@ -257,7 +235,7 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
                     }
                 });
 
-        // Create the AlertDialog object and return it
+        progressBar.setVisibility(View.GONE);
         builder.create();
         builder.show();
     }
@@ -285,6 +263,7 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
         if (manager.getCurrentUser() == null) {
             startSignUpService();
         }
+        progressBar.setVisibility(View.GONE);
         setCachedQuestionsList(questionsList);
         cardAdapter.notifyDataSetChanged();
         swipeLayout.setRefreshing(false);
