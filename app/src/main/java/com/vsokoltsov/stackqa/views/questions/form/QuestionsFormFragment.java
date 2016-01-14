@@ -25,6 +25,7 @@ import com.vsokoltsov.stackqa.models.Category;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.models.QuestionFactory;
 import com.vsokoltsov.stackqa.util.InstantAutoCompleteView;
+import com.vsokoltsov.stackqa.util.MaterialProgressBar;
 import com.vsokoltsov.stackqa.views.questions.detail.QuestionDetail;
 import com.vsokoltsov.stackqa.views.questions.list.QuestionsListActivity;
 
@@ -41,6 +42,7 @@ import de.greenrobot.event.EventBus;
  * Created by vsokoltsov on 03.01.16.
  */
 public class QuestionsFormFragment extends Fragment {
+    public  static MaterialProgressBar progressBar;
     private View fragmentView;
     private Menu formMenu;
     private List<Category> categoryList = new ArrayList<Category>();
@@ -54,6 +56,7 @@ public class QuestionsFormFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setHasOptionsMenu(true);
         Category c = new Category();
         c.getCollection();
@@ -68,10 +71,12 @@ public class QuestionsFormFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         fragmentView =  inflater.inflate(R.layout.question_form_fragment, container, false);
+        progressBar = (MaterialProgressBar) fragmentView.findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.VISIBLE);
         questionCategory = (InstantAutoCompleteView) fragmentView.findViewById(R.id.questionCategory);
         questionTitle = (EditText) fragmentView.findViewById(R.id.questionTitle);
         questionText = (EditText) fragmentView.findViewById(R.id.questionText);
-
+        enableInputs(false);
         return fragmentView;
     }
 
@@ -83,6 +88,12 @@ public class QuestionsFormFragment extends Fragment {
         inflater.inflate(R.menu.menu_question_form, formMenu);
         setFragmentButtons(formMenu);
 
+    }
+
+    private void enableInputs(Boolean value) {
+        questionTitle.setEnabled(value);
+        questionCategory.setEnabled(value);
+        questionText.setEnabled(value);
     }
 
     private void setFragmentButtons(Menu menu) {
@@ -228,6 +239,8 @@ public class QuestionsFormFragment extends Fragment {
         questionCategory.setText(categoryTitle);
         questionTitle.setText(question.getTitle());
         questionText.setText(question.getText());
+        progressBar.setVisibility(View.GONE);
+        enableInputs(true);
     }
 
     private void parseSuccessQuestionCreation(JSONObject response) {
@@ -328,6 +341,10 @@ public class QuestionsFormFragment extends Fragment {
         addCategoriesToCompleteTextField();
         if (question != null) {
             QuestionFactory.getInstance().get(question.getID());
+        }
+        if (question == null) {
+            progressBar.setVisibility(View.GONE);
+            enableInputs(true);
         }
     }
 
