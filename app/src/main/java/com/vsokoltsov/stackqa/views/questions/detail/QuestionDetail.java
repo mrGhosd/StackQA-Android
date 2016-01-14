@@ -25,6 +25,7 @@ import com.vsokoltsov.stackqa.models.AnswerFactory;
 import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.models.QuestionFactory;
+import com.vsokoltsov.stackqa.util.MaterialProgressBar;
 import com.vsokoltsov.stackqa.views.answers.AnswerForm;
 import com.vsokoltsov.stackqa.views.answers.AnswerListFragment;
 import com.vsokoltsov.stackqa.views.questions.form.QuestionsFormActivity;
@@ -41,6 +42,7 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 public class QuestionDetail extends ActionBarActivity implements QuestionsListFragment.Callbacks {
+    public  static MaterialProgressBar progressBar;
     public static Question selectedQuestion;
     private static JSONArray answersList;
     private ScrollView layout;
@@ -57,6 +59,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_detail);
+        progressBar = (MaterialProgressBar) findViewById(R.id.progress_bar);
         Toolbar mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(mActionBarToolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -186,6 +189,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     }
 
     public void loadQuestionData(){
+        progressBar.setVisibility(View.VISIBLE);
         QuestionFactory.getInstance().get(selectedQuestion.getID());
     }
 
@@ -208,6 +212,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         }
         fragmentTransaction.commit();
         setActivityButtons();
+        progressBar.setVisibility(View.GONE);
     }
 
     public void loadMainQuestionFragment(Bundle arguments, FragmentTransaction fragmentTransaction){
@@ -275,7 +280,6 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     private void showAnswerForm(){
         try {
             Intent detailIntent = new Intent(this, AnswerForm.class);
-//            detailIntent.putExtra("question", selectedQuestion);
             startActivity(detailIntent);
             overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
         } catch(Exception e){
