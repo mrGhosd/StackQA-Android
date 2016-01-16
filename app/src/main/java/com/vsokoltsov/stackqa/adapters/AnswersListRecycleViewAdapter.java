@@ -106,10 +106,16 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
                     public void onClick(View view) {
                         Context context = view.getContext();
                         PopupWithMenuIcons popup = new PopupWithMenuIcons(context, view);
-
                         // This activity implements OnMenuItemClickListener
                         MenuInflater inflater = popup.getMenuInflater();
                         popup.inflate(R.menu.menu_answer_list);
+                        MenuItem editItem = popup.getMenu().getItem(0);
+                        MenuItem deleteItem = popup.getMenu().getItem(1);
+                        MenuItem complainItem = popup.getMenu().getItem(2);
+                        if (AuthManager.getInstance().getCurrentUser().getId() != answer.getUser().getId()) {
+                            editItem.setVisible(false);
+                            deleteItem.setVisible(false);
+                        }
                         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem item) {
