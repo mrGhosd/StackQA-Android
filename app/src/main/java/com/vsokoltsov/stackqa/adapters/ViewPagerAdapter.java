@@ -8,16 +8,18 @@ import com.vsokoltsov.stackqa.views.auth.RestorePasswordFragment;
 import com.vsokoltsov.stackqa.views.auth.SignInFragment;
 import com.vsokoltsov.stackqa.views.auth.SignUpFragment;
 
+import java.util.List;
+
 /**
  * Created by vsokoltsov on 02.01.16.
  */
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
-    CharSequence Titles[]; // This will Store the Titles of the Tabs which are Going to be passed when ViewPagerAdapter is created
+    List<String> Titles; // This will Store the Titles of the Tabs which are Going to be passed when ViewPagerAdapter is created
     int NumbOfTabs; // Store the number of tabs, this will also be passed when the ViewPagerAdapter is created
 
 
     // Build a Constructor and assign the passed Values to appropriate values in the class
-    public ViewPagerAdapter(FragmentManager fm,CharSequence mTitles[], int mNumbOfTabsumb) {
+    public ViewPagerAdapter(FragmentManager fm,List<String> mTitles, int mNumbOfTabsumb) {
         super(fm);
 
         this.Titles = mTitles;
@@ -51,7 +53,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return Titles[position];
+        return Titles.get(position);
     }
 
     // This method return the Number of tabs for the tabs Strip

@@ -7,4 +7,11 @@
 
     <string name="sign_in">Войти</string>
     <string name="sign_up">Регистрация</string>
+
+    <string name="email">Электронная почта</string>
+    <string name="password">Пароль</string>
+    <string name="password_confirmation">Подтверждение пароля</string>
+
+    <string name="sign_in_loader">Авторизация...</string>
+    <string name="sign_up_loader">Регистрация...</string>
 </resources>

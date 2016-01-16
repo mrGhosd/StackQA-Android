@@ -1,6 +1,9 @@
 package com.vsokoltsov.stackqa.views.auth;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,7 +18,9 @@ import com.android.volley.VolleyError;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.messages.FailureRequestMessage;
 import com.vsokoltsov.stackqa.messages.SuccessRequestMessage;
+import com.vsokoltsov.stackqa.messages.UserMessage;
 import com.vsokoltsov.stackqa.models.AuthManager;
+import com.vsokoltsov.stackqa.views.questions.list.QuestionsListActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,6 +36,8 @@ public class SignUpFragment extends Fragment{
     private TextView emailErrors;
     private TextView passwordErrors;
     private TextView passwordConfirmationErrors;
+    private ProgressDialog dialog;
+    private Resources res;
 
     private EditText emailField;
     private EditText passwordField;
@@ -46,6 +53,7 @@ public class SignUpFragment extends Fragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         fragmentView =  inflater.inflate(R.layout.sign_up, container, false);
+        res = getResources();
         emailErrors = (TextView) fragmentView.findViewById(R.id.emailErrors);
         passwordErrors = (TextView) fragmentView.findViewById(R.id.passwordErrors);
         passwordConfirmationErrors = (TextView) fragmentView.findViewById(R.id.passwordConfirmationErrors);
@@ -77,6 +85,11 @@ public class SignUpFragment extends Fragment{
         if(!emailString.isEmpty() && !passwordString.isEmpty() &&
                 !passwordConfirmationString.isEmpty()) {
             try {
+                dialog = new ProgressDialog(getActivity());
+                dialog.setMessage(res.getString(R.string.sign_up_loader));
+                dialog.setCancelable(false);
+                dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                dialog.show();
                 AuthManager.getInstance().signUp(emailString, passwordString, passwordConfirmationString);
             } catch (JSONException e){
                 e.printStackTrace();
@@ -107,11 +120,21 @@ public class SignUpFragment extends Fragment{
         super.onStop();
     }
 
+    public void onEvent(UserMessage event){
+        dialog.hide();
+        Intent detailIntent = new Intent(getActivity(), QuestionsListActivity.class);
+        getActivity().startActivity(detailIntent);
+        getActivity().overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+    }
+
     // This method will be called when a MessageEvent is posted
     public void onEvent(SuccessRequestMessage event){
         switch (event.operationName){
             case "sign_up":
-
+                dialog.hide();
+                Intent detailIntent = new Intent(getActivity(), QuestionsListActivity.class);
+                getActivity().startActivity(detailIntent);
+                getActivity().overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
                 break;
         }
     }

@@ -19,7 +19,7 @@
         android:layout_marginTop="30dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:hint="Email"
+        android:hint="@string/email"
         android:drawableLeft="@drawable/emailicon"
         android:drawablePadding="10dp"/>
 
@@ -41,7 +41,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
-        android:hint="Password"
+        android:hint="@string/password"
         android:drawablePadding="10dp"
         android:drawableLeft="@drawable/passwordicon" />
 
@@ -62,7 +62,7 @@
         android:id="@+id/passwordConfirmationField"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
-        android:hint="Confirm Password"
+        android:hint="@string/password_confirmation"
         android:drawablePadding="10dp"
         android:drawableLeft="@drawable/passwordicon" />
 
@@ -78,7 +78,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sign up"
+        android:text="@string/sign_up"
         android:id="@+id/signUpButton"
         android:layout_gravity="top|center"
         android:layout_marginBottom="60dp"

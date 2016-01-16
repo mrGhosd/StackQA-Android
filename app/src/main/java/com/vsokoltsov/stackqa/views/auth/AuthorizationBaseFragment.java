@@ -1,5 +1,6 @@
 package com.vsokoltsov.stackqa.views.auth;
 
+import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,8 +19,11 @@ import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.ViewPagerAdapter;
 import com.vsokoltsov.stackqa.messages.UserMessage;
 import com.vsokoltsov.stackqa.util.SlidingTabLayout;
-import com.vsokoltsov.stackqa.views.questions.list.QuestionsListFragment;
 import com.vsokoltsov.stackqa.views.navigation.NavigationFragment;
+import com.vsokoltsov.stackqa.views.questions.list.QuestionsListFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
@@ -36,13 +40,17 @@ public class AuthorizationBaseFragment extends Fragment {
     private Toolbar toolbar;
     private ViewPager pager;
     private ViewPagerAdapter adapter;
+    private Resources res;
     private SlidingTabLayout tabs;
-    private CharSequence Titles[]={"Sign in","Sign up"};
+    private CharSequence Titles[];
+    List<String> titles = new ArrayList<String>();
     private int Numboftabs =2;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         fa = super.getActivity();
+        res = getResources();
+        titles.add(res.getString(R.string.sign_in));
+        titles.add(res.getString(R.string.sign_up));
         android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         Bundle extras = getArguments();
         if(extras != null) {
@@ -51,16 +59,16 @@ public class AuthorizationBaseFragment extends Fragment {
         ll = (LinearLayout) inflater.inflate(R.layout.authorization_fragment, container, false);
 
         // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
-        adapter =  new ViewPagerAdapter(getActivity().getSupportFragmentManager(),Titles,Numboftabs);
+        adapter =  new ViewPagerAdapter(getActivity().getSupportFragmentManager(),titles,Numboftabs);
 
         // Assigning ViewPager View and setting the adapter
         pager = (ViewPager) ll.findViewById(R.id.pager);
         pager.setAdapter(adapter);
-        if (action.equals("sign_in")) {
+        if (action.equals(getResources().getString(R.string.sign_in))) {
             pager.setCurrentItem(0);
             ((ActionBarActivity) getActivity()).getSupportActionBar().setTitle(Titles[0]);
         }
-        else if (action.equals("sign_up")) {
+        else if (action.equals(getResources().getString(R.string.sign_up))) {
             pager.setCurrentItem(1);
             ((ActionBarActivity) getActivity()).getSupportActionBar().setTitle(Titles[1]);
         }
@@ -73,7 +81,7 @@ public class AuthorizationBaseFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                String title = (String) Titles[position];
+                String title = titles.get(position);
                 ((ActionBarActivity) getActivity()).getSupportActionBar().setTitle(title);
             }
         });

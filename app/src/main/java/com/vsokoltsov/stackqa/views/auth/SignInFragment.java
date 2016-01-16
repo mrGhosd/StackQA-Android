@@ -3,6 +3,7 @@ package com.vsokoltsov.stackqa.views.auth;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -34,6 +35,7 @@ public class SignInFragment extends Fragment {
     private EditText emailField;
     private EditText passwordField;
     private ProgressDialog dialog;
+    private Resources res;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,7 @@ public class SignInFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         fragmentView =  inflater.inflate(R.layout.sign_in, container, false);
+        res = getResources();
         errorAuth = (TextView) fragmentView.findViewById(R.id.authError);
         emailField = (EditText) fragmentView.findViewById(R.id.emailField);
         passwordField= (EditText) fragmentView.findViewById(R.id.passwordField);
@@ -80,7 +83,7 @@ public class SignInFragment extends Fragment {
         if (!emailString.isEmpty() && !passwordString.isEmpty()) {
             try {
                 dialog = new ProgressDialog(getActivity());
-                dialog.setMessage("Authorization");
+                dialog.setMessage(res.getString(R.string.sign_in_loader));
                 dialog.setCancelable(false);
                 dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 dialog.show();

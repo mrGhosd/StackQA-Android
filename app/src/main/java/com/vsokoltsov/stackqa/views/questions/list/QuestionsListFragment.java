@@ -134,7 +134,6 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
         getActivity().setTitle(getResources().getString(R.string.questions));
         Bundle bundle = getArguments();
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
-        progressBar = (MaterialProgressBar) getActivity().findViewById(R.id.progress_bar);
         if(bundle != null){
             questionsList= bundle.getParcelableArrayList("questions");
         }
@@ -172,6 +171,7 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         listFragmentView = super.onCreateView(inflater, container, savedInstanceState);
+        progressBar = (MaterialProgressBar) getActivity().findViewById(R.id.progress_bar);
         View rootView = inflater.inflate(R.layout.fragment_question_list,
                 container, false);
         swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_layout);
