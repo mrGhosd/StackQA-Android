@@ -59,6 +59,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_detail);
+        setTitle(getResources().getString(R.string.question));
         progressBar = (MaterialProgressBar) findViewById(R.id.progress_bar);
         Toolbar mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(mActionBarToolbar);

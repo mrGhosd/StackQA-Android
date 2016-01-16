@@ -1,17 +1,18 @@
 package com.vsokoltsov.stackqa.views.navigation;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
-import android.app.Activity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.widget.DrawerLayout;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -22,16 +23,15 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
-
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.NavigationListAdapter;
 import com.vsokoltsov.stackqa.messages.UserMessage;
 import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.NavigationItem;
-import com.vsokoltsov.stackqa.views.questions.list.QuestionsListActivity;
-import com.vsokoltsov.stackqa.views.questions.list.QuestionsListFragment;
 import com.vsokoltsov.stackqa.views.auth.AuthorizationActivity;
 import com.vsokoltsov.stackqa.views.auth.AuthorizationBaseFragment;
+import com.vsokoltsov.stackqa.views.questions.list.QuestionsListActivity;
+import com.vsokoltsov.stackqa.views.questions.list.QuestionsListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -336,16 +336,18 @@ public class NavigationFragment extends Fragment {
 
 
     public void setupElementsList(){
+        Resources res = getResources();
         if(navigationItems != null) navigationItems = new ArrayList<NavigationItem>();
         if (authManager.getCurrentUser() != null) {
             navigationItems.add(new NavigationItem(authManager.getCurrentUser()));
         }
         else {
-            navigationItems.add(new NavigationItem(R.drawable.auth, "Sign in"));
-            navigationItems.add(new NavigationItem(R.drawable.registr, "Sign up"));
+
+            navigationItems.add(new NavigationItem(R.drawable.auth, res.getString(R.string.sign_in)));
+            navigationItems.add(new NavigationItem(R.drawable.registr, res.getString(R.string.sign_up)));
         }
-        navigationItems.add(new NavigationItem(R.drawable.question, "Questions"));
-        navigationItems.add(new NavigationItem(R.drawable.category, "Categories"));
+        navigationItems.add(new NavigationItem(R.drawable.question, res.getString(R.string.questions)));
+        navigationItems.add(new NavigationItem(R.drawable.category, res.getString(R.string.categories)));
         setSignOutButton();
         adapter = new NavigationListAdapter(getActivity(), navigationItems);
         mDrawerListView.setAdapter(adapter);

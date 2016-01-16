@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="questions">Questions</string>
+    <string name="question">Question</string>
+
+    <string name="categories">Categories</string>
+
+    <string name="sign_in">Sign in</string>
+    <string name="sign_up">Sign up</string>
+
 </resources>

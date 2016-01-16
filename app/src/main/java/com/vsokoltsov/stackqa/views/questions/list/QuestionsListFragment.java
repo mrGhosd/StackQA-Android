@@ -131,6 +131,7 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        getActivity().setTitle(getResources().getString(R.string.questions));
         Bundle bundle = getArguments();
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
         progressBar = (MaterialProgressBar) getActivity().findViewById(R.id.progress_bar);
