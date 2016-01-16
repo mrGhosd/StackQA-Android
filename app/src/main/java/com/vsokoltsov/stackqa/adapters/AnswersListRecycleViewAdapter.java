@@ -3,6 +3,7 @@ package com.vsokoltsov.stackqa.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.models.Answer;
+import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.util.PopupWithMenuIcons;
 import com.vsokoltsov.stackqa.views.answers.AnswerFormActivity;
 
@@ -72,6 +74,7 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
     public static class AnswerViewHolder extends RecyclerView.ViewHolder implements PopupMenu.OnMenuItemClickListener {
         CardView cv;
         LinearLayout ll;
+        private Resources res;
 
         private TextView text;
         private TextView createdAt;
@@ -84,40 +87,49 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
         AnswerViewHolder(View itemView, final AnswersListRecycleViewAdapter adapter) {
             super(itemView);
             mAdapter = adapter;
+            res = mAdapter.activity.getResources();
             ll = (LinearLayout) itemView.findViewById(R.id.answerRowItem);
             text = (TextView) itemView.findViewById(R.id.answerText);
             createdAt = (TextView) itemView.findViewById(R.id.answerCreatedAt);
             commentsCount = (TextView) itemView.findViewById(R.id.answerCommentsCount);
             rate = (TextView) itemView.findViewById(R.id.answerRateCount);
+            LinearLayout popupMenuWrapper = (LinearLayout) itemView.findViewById(R.id.popupMenuWrapper);
             popupMenu = (ImageButton) itemView.findViewById(R.id.popupMenu);
-            popupMenu.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Context context = view.getContext();
-                    PopupWithMenuIcons popup = new PopupWithMenuIcons(context, view);
 
-                    // This activity implements OnMenuItemClickListener
-                    MenuInflater inflater = popup.getMenuInflater();
-                    popup.inflate(R.menu.menu_answer_list);
-                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            switch ((String) item.getTitle()) {
-                                case "Edit":
-                                    Intent detailIntent = new Intent(mAdapter.activity ,AnswerFormActivity.class);
-                                    detailIntent.putExtra("answer", answer);
-                                    mAdapter.activity.startActivity(detailIntent);
-                                    mAdapter.activity.overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-                                    break;
-                                default:
-                                    break;
+            if (AuthManager.getInstance().getCurrentUser() == null) {
+                popupMenuWrapper.setVisibility(View.GONE);
+            }
+            else {
+                popupMenuWrapper.setVisibility(View.VISIBLE);
+                popupMenu.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Context context = view.getContext();
+                        PopupWithMenuIcons popup = new PopupWithMenuIcons(context, view);
+
+                        // This activity implements OnMenuItemClickListener
+                        MenuInflater inflater = popup.getMenuInflater();
+                        popup.inflate(R.menu.menu_answer_list);
+                        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                switch ((String) item.getTitle()) {
+                                    case "Edit":
+                                        Intent detailIntent = new Intent(mAdapter.activity, AnswerFormActivity.class);
+                                        detailIntent.putExtra("answer", answer);
+                                        mAdapter.activity.startActivity(detailIntent);
+                                        mAdapter.activity.overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                return false;
                             }
-                            return false;
-                        }
-                    });
-                    popup.show();
-                }
-            });
+                        });
+                        popup.show();
+                    }
+                });
+            }
         }
 
         public void setUserInfo(final Answer answer){

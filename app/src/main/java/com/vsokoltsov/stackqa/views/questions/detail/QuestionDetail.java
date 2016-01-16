@@ -162,9 +162,6 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
             else {
                 setDataToDetailView();
             }
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
-
         }
     }
 
@@ -295,10 +292,6 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         } catch(Exception e){
             e.printStackTrace();
         }
-    }
-
-    private void showCommentForm(){
-
     }
 
     private void setSuccesButtonHandler(EditText answerText){
