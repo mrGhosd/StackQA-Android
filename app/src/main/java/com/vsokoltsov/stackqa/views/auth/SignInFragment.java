@@ -96,10 +96,10 @@ public class SignInFragment extends Fragment {
             String emailError = "";
             String passwordError = "";
             if (emailString.isEmpty()) {
-                emailField.setError("Email field is empty");
+                emailField.setError(res.getString(R.string.email_field_error));
             }
             if(passwordString.isEmpty()) {
-                passwordField.setError("Password field is empty");
+                passwordField.setError(res.getString(R.string.password_field_error));
             }
         }
     }
@@ -135,7 +135,6 @@ public class SignInFragment extends Fragment {
         JSONObject json;
 
         String emailString = "";
-        String passwordString = "";
 
         NetworkResponse response = error.networkResponse;
         String serverResponse = new String(response.data);

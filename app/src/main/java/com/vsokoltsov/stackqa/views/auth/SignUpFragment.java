@@ -97,13 +97,13 @@ public class SignUpFragment extends Fragment{
         }
         else {
             if (emailString.isEmpty()) {
-                emailField.setError("Email can't be empty");
+                emailField.setError(res.getString(R.string.email_field_error));
             }
             if (passwordString.isEmpty()) {
-                passwordField.setError("Password can't be empty");
+                passwordField.setError(res.getString(R.string.password_field_error));
             }
             if (passwordConfirmationString.isEmpty()) {
-                passwordConfirmationField.setError("Password confirmation can't be empty");
+                passwordConfirmationField.setError(res.getString(R.string.password_confirmation_field_error));
             }
         }
 

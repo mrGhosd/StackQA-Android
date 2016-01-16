@@ -14,4 +14,10 @@
 
     <string name="sign_in_loader">Авторизация...</string>
     <string name="sign_up_loader">Регистрация...</string>
+
+    <string name="sign_in_error">Такого пользователя не существует. Проверьте логин или пароль</string>
+
+    <string name="email_field_error">Электронная почта не может быть пустой</string>
+    <string name="password_field_error">Пароль не может быть пустой</string>
+    <string name="password_confirmation_field_error">Подтверждение пароля не может быть пустым</string>
 </resources>
