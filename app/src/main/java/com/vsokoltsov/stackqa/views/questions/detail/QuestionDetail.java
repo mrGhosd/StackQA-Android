@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.vsokoltsov.stackqa.R;
@@ -54,6 +55,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     private EditText answerText;
     private AnswerListFragment answersListFragment;
     private JSONObject editedAnswer;
+    private LinearLayout answerTextLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,13 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sendAnswer = (ImageButton) findViewById(R.id.sendAnswer);
         answerText = (EditText) findViewById(R.id.answerUserText);
+        answerTextLayout = (LinearLayout) findViewById(R.id.answerTextLayout);
+        if (authManager.getCurrentUser() != null) {
+            answerTextLayout.setVisibility(View.VISIBLE);
+        }
+        else {
+            answerTextLayout.setVisibility(View.GONE);
+        }
         if (sendAnswer != null && answerText != null) {
             sendAnswer.setOnClickListener(new View.OnClickListener() {
                 @Override

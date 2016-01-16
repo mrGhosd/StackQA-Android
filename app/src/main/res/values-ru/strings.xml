@@ -7,6 +7,7 @@
 
     <string name="sign_in">Войти</string>
     <string name="sign_up">Регистрация</string>
+    <string name="sign_out">Выйти</string>
 
     <string name="email">Электронная почта</string>
     <string name="password">Пароль</string>
@@ -20,4 +21,9 @@
     <string name="email_field_error">Электронная почта не может быть пустой</string>
     <string name="password_field_error">Пароль не может быть пустой</string>
     <string name="password_confirmation_field_error">Подтверждение пароля не может быть пустым</string>
+
+    <!--Вопросы-->
+    <string name="question_title">Заголовок</string>
+    <string name="question_category">Категория</string>
+    <string name="question_text">Текст</string>
 </resources>
