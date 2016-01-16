@@ -17,11 +17,13 @@ import android.widget.ProgressBar;
 
 import com.android.volley.VolleyError;
 import com.vsokoltsov.stackqa.R;
+import com.vsokoltsov.stackqa.adapters.OnLoadMoreListener;
 import com.vsokoltsov.stackqa.adapters.RVAdapter;
 import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.messages.QuestionMessage;
 import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.Question;
+import com.vsokoltsov.stackqa.models.QuestionFactory;
 import com.vsokoltsov.stackqa.network.RequestCallbacks;
 import com.vsokoltsov.stackqa.receiver.StartedService;
 import com.vsokoltsov.stackqa.util.MaterialProgressBar;
@@ -58,6 +60,7 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
     private RecyclerView rv;
     private static List<Question> cachedQuestionsList = new ArrayList<Question>();
     private Question updatedQuestion;
+    private int pageNumber = 1;
 
 
     private Callbacks listCallbacks = questionsCallbacks;
@@ -85,7 +88,11 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
     public void onRefresh() {
         cachedQuestionsList = new ArrayList<Question>();
         questionsList = new ArrayList<Question>();
-        this.loadQuestionsList();
+        try {
+            this.loadQuestionsList();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -140,14 +147,19 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
 
     }
 
-    private void loadQuestionsList(){
+    private void loadQuestionsList() throws JSONException {
         progressBar.setVisibility(View.VISIBLE);
         questionsList = getCachedQuestionsList();
-        cardAdapter = new RVAdapter(questionsList, getActivity());
+        cardAdapter = new RVAdapter(questionsList, getActivity(), rv, new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                pageNumber++;
+                QuestionFactory.getInstance().getCollection(pageNumber);
+            }
+        });
         rv.setAdapter(cardAdapter);
         if(questionsList.size() <= 0) {
-            Question q = new Question();
-            q.getCollection();
+            QuestionFactory.getInstance().getCollection(pageNumber);
         } else {
             progressBar.setVisibility(View.GONE);
             cardAdapter.notifyDataSetChanged();
@@ -180,7 +192,11 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(llm);
         swipeLayout.setOnRefreshListener(this);
-        this.loadQuestionsList();
+        try {
+            this.loadQuestionsList();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return rootView;
 
     }
@@ -220,6 +236,7 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
     }
 
     private void handleQuestionListError(VolleyError error){
+        cardAdapter.removeItem(null);
         swipeLayout.setRefreshing(false);
         String message = null;
         switch(error.networkResponse.statusCode){
@@ -266,6 +283,7 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
         }
         progressBar.setVisibility(View.GONE);
         setCachedQuestionsList(questionsList);
+        cardAdapter.removeItem(null);
         cardAdapter.notifyDataSetChanged();
         swipeLayout.setRefreshing(false);
     }

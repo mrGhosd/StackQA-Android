@@ -8,6 +8,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.models.AuthManager;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Constructor;
@@ -45,6 +46,13 @@ public class ApiRequest {
         AuthManager manager = AuthManager.getInstance();
         if (manager.getToken() != null) {
             url += "?access_token=" + manager.getToken();
+            try {
+                if (parameters.getInt("page") > 0) {
+                    url += "&page=" + parameters.getInt("page");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         JsonObjectRequest objectRequest = new JsonObjectRequest(requestType, url, parameters,
             new Response.Listener<JSONObject>() {

@@ -6,6 +6,7 @@ import com.vsokoltsov.stackqa.messages.QuestionMessage;
 import com.vsokoltsov.stackqa.network.ApiRequest;
 import com.vsokoltsov.stackqa.network.RequestCallbacks;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.greenrobot.event.EventBus;
@@ -23,9 +24,15 @@ public class QuestionFactory implements RequestCallbacks {
     private QuestionFactory() {
     }
 
-    public void getCollection(){
+    public void getCollection(int page){
         String url = AppController.APP_HOST + "/api/v1/questions";
-        ApiRequest.getInstance(this).get(url, "list", null);
+        JSONObject listParams = new JSONObject();
+        try {
+            listParams.put("page", page);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        ApiRequest.getInstance(this).get(url, "list", listParams);
     }
 
     public void get(int id){
