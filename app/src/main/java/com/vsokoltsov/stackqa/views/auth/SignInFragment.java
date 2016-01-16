@@ -1,6 +1,8 @@
 package com.vsokoltsov.stackqa.views.auth;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,7 +16,9 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.messages.FailureRequestMessage;
+import com.vsokoltsov.stackqa.messages.UserMessage;
 import com.vsokoltsov.stackqa.models.AuthManager;
+import com.vsokoltsov.stackqa.views.questions.list.QuestionsListActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +33,7 @@ public class SignInFragment extends Fragment {
     private TextView errorAuth;
     private EditText emailField;
     private EditText passwordField;
+    private ProgressDialog dialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,6 +79,11 @@ public class SignInFragment extends Fragment {
         String passwordString = passwordField.getText().toString();
         if (!emailString.isEmpty() && !passwordString.isEmpty()) {
             try {
+                dialog = new ProgressDialog(getActivity());
+                dialog.setMessage("Authorization");
+                dialog.setCancelable(false);
+                dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                dialog.show();
                 AuthManager.getInstance().signIn(emailString, passwordString);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -91,6 +101,7 @@ public class SignInFragment extends Fragment {
         }
     }
 
+    @Override
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
@@ -100,6 +111,13 @@ public class SignInFragment extends Fragment {
     public void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
+    }
+
+    public void onEvent(UserMessage event){
+        dialog.hide();
+        Intent detailIntent = new Intent(getActivity(), QuestionsListActivity.class);
+        getActivity().startActivity(detailIntent);
+        getActivity().overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
     }
 
     public void onEvent(FailureRequestMessage event) throws JSONException {

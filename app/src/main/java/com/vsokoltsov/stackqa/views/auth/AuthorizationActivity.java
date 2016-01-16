@@ -114,22 +114,7 @@ public class AuthorizationActivity extends ActionBarActivity
         return true;
     }
 
-
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
     // This method will be called when a MessageEvent is posted
-    public void onEvent(UserMessage event){
-        this.onNavigationDrawerItemSelected(2);
-    }
 
     public String getUserPassword() {
         return userPassword;
