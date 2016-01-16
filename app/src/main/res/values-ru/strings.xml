@@ -23,7 +23,17 @@
     <string name="password_confirmation_field_error">Подтверждение пароля не может быть пустым</string>
 
     <!--Вопросы-->
+    <string name="question_form_title_create">Создать вопрос</string>
+    <string name="question_form_title_edit">Редактировать вопрос</string>
     <string name="question_title">Заголовок</string>
     <string name="question_category">Категория</string>
     <string name="question_text">Текст</string>
+
+    <!--Ответы-->
+    <string name="answer_form_title_edit">Редактировать ответ</string>
+    <string name="answer_save_button">Сохранить</string>
+    <string name="answer_cancel_button">Отменить</string>
+    <string name="answer_popup_edit">Редактировать</string>
+    <string name="answer_popup_delete">Удалить</string>
+    <string name="answer_popup_complain">Пожаловаться</string>
 </resources>

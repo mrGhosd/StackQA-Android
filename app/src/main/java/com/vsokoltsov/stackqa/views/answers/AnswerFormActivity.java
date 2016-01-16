@@ -52,7 +52,7 @@ public class AnswerFormActivity extends ActionBarActivity implements View.OnClic
         if(extras != null) {
             answer = (Answer) extras.getParcelable("answer");
         }
-
+        setTitle(getResources().getString(R.string.answer_form_title_edit));
         answerText.setText(answer.getText());
     }
 

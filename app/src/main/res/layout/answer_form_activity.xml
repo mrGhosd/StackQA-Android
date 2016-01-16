@@ -36,14 +36,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="Save"
+            android:text="@string/answer_save_button"
             android:layout_weight="1" />
         <Button
             android:id="@+id/cancelButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="Cancel"
+            android:text="@string/answer_cancel_button"
             android:layout_weight="1" />
     </LinearLayout>
 

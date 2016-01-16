@@ -64,6 +64,16 @@ public class QuestionsFormFragment extends Fragment {
         if(bundle != null){
             question = bundle.getParcelable("question");
         }
+
+        String questionFormTitle;
+        if (question == null) {
+            questionFormTitle = getResources().getString(R.string.question_form_title_create);
+        }
+        else {
+            questionFormTitle = getResources().getString(R.string.question_form_title_edit);
+        }
+
+        getActivity().setTitle(questionFormTitle);
     }
 
     @Override
