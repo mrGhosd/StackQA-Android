@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.vsokoltsov.stackqa.R;
@@ -61,6 +62,7 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
     private static List<Question> cachedQuestionsList = new ArrayList<Question>();
     private Question updatedQuestion;
     private int pageNumber = 1;
+    private TextView emptyList;
 
 
     private Callbacks listCallbacks = questionsCallbacks;
@@ -189,6 +191,7 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
         swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_layout);
         rv = (RecyclerView) rootView.findViewById(R.id.questionsList);
         rv.setHasFixedSize(true);
+        emptyList = (TextView) rootView.findViewById(R.id.empty_view);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(llm);
         swipeLayout.setOnRefreshListener(this);
@@ -281,11 +284,24 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
         if (manager.getCurrentUser() == null) {
             startSignUpService();
         }
+
         progressBar.setVisibility(View.GONE);
         setCachedQuestionsList(questionsList);
         cardAdapter.removeItem(null);
         cardAdapter.notifyDataSetChanged();
         swipeLayout.setRefreshing(false);
+        setVisibiltyOfList();
+    }
+
+    private void setVisibiltyOfList() {
+        if (questionsList.size() == 0) {
+            emptyList.setVisibility(View.VISIBLE);
+            rv.setVisibility(View.INVISIBLE);
+        }
+        else {
+            rv.setVisibility(View.VISIBLE);
+            emptyList.setVisibility(View.GONE);
+        }
     }
 
     public void startSignUpService() {

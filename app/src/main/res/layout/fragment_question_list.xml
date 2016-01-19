@@ -8,6 +8,14 @@
     tools:context=".views.questions.list.QuestionsListFragment"
     android:alpha="1">
 
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="@string/questions_list_empty" />
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_height="match_parent"
         android:layout_width="match_parent"
@@ -17,5 +25,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/questionsList" />
+
     </android.support.v4.widget.SwipeRefreshLayout>
 </android.support.v4.widget.DrawerLayout>

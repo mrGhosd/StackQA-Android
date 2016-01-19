@@ -60,7 +60,7 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         }
                     }
                     if (!loading && (totalItemCount - visibleItemCount)
-                            <= (firstVisibleItem + VISIBLE_THRESHOLD)) {
+                            <= (firstVisibleItem + VISIBLE_THRESHOLD) && (totalItemCount != visibleItemCount)) {
                         // End has been reached
 
                         addQuestion(null);

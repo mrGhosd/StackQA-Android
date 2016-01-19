@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.AnswersListRecycleViewAdapter;
@@ -45,6 +46,7 @@ public class AnswerListFragment extends Fragment {
     private RecyclerView rv;
     private LinearLayoutManager llm;
     private AnswersListRecycleViewAdapter answerAdapter;
+    private TextView emptyView;
 
     public void setAnswerList(JSONArray answers){
         for(int i = 0; i < answers.length(); i++){
@@ -102,7 +104,6 @@ public class AnswerListFragment extends Fragment {
         rv = (RecyclerView) fragmentView.findViewById(R.id.answersList);
         rv.setHasFixedSize(true);
         answerAdapter = new AnswersListRecycleViewAdapter(answerList, getActivity());
-
         int orientation;
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             orientation = LinearLayout.HORIZONTAL;
@@ -122,8 +123,11 @@ public class AnswerListFragment extends Fragment {
         else {
             llm.setOrientation(orientation);
         }
+
         return fragmentView;
     }
+
+
 
     public void setNewAnswerItem(Answer answer) {
         ScrollView sc = (ScrollView) getActivity().findViewById(R.id.questionViewMainLayout);

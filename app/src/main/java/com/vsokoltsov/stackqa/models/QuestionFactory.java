@@ -27,12 +27,14 @@ public class QuestionFactory implements RequestCallbacks {
     public void getCollection(int page){
         String url = AppController.APP_HOST + "/api/v1/questions";
         JSONObject listParams = new JSONObject();
+        JSONObject params = new JSONObject();
         try {
             listParams.put("page", page);
+            params.put("params", listParams);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        ApiRequest.getInstance(this).get(url, "list", listParams);
+        ApiRequest.getInstance(this).get(url, "list", params);
     }
 
     public void get(int id){

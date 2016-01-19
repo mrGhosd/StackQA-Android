@@ -36,4 +36,7 @@
     <string name="answer_popup_edit">Редактировать</string>
     <string name="answer_popup_delete">Удалить</string>
     <string name="answer_popup_complain">Пожаловаться</string>
+
+    <string name="questions_list_empty">Список вопросов пуст</string>
+    <string name="answers_list_empty">Список ответов пуст</string>
 </resources>
