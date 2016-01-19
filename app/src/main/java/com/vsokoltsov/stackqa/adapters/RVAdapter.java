@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.vsokoltsov.stackqa.R;
@@ -16,14 +18,16 @@ import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.util.MaterialProgressBar;
 import com.vsokoltsov.stackqa.views.questions.detail.QuestionDetail;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by vsokoltsov on 02.01.16.
  */
-public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
     public List<Question> questions;
     private Activity activity;
+    private List<Question> orig;
 
     private final int VISIBLE_THRESHOLD = 5;
 
@@ -139,6 +143,8 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return questions.get(position);
     }
 
+
+
     public static class QuestionsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         CardView cv;
 
@@ -186,5 +192,34 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             progressBar = (MaterialProgressBar) v.findViewById(R.id.footer_progress_bar);
             progressBar.setDrawingCacheBackgroundColor(Color.parseColor("#FFC107"));
         }
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                final FilterResults oReturn = new FilterResults();
+                final List<Question> results = new ArrayList<Question>();
+                if (orig == null)
+                    orig = questions;
+                if (constraint != null) {
+                    if (orig != null & orig.size() > 0) {
+                        for (final Question g : orig) {
+                            if (g.getTitle().toLowerCase().contains(constraint.toString()))
+                                results.add(g);
+                        }
+                    }
+                    oReturn.values = results;
+                }
+                return oReturn;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                questions = (ArrayList<Question>) results.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 }

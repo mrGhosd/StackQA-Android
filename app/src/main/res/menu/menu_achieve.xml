@@ -5,6 +5,7 @@
         app:actionViewClass="android.widget.SearchView"
         android:icon="@drawable/searchi"
         android:showAsAction="collapseActionView|ifRoom"
+        android:actionViewClass="android.support.v7.widget.SearchView"
         android:title="Search it!">
     </item>
     <item

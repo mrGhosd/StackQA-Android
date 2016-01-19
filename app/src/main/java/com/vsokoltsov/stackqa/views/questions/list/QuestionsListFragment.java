@@ -2,18 +2,26 @@ package com.vsokoltsov.stackqa.views.questions.list;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -39,6 +47,7 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 
+
 /**
  * A fragment representing a list of Items.
  * <p/>
@@ -47,7 +56,8 @@ import de.greenrobot.event.EventBus;
  * <p/>
  * interface.
  */
-public class QuestionsListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, RequestCallbacks {
+public class QuestionsListFragment extends Fragment implements android.support.v7.widget.SearchView.OnQueryTextListener,
+        SwipeRefreshLayout.OnRefreshListener, RequestCallbacks, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
     private static MaterialProgressBar progressBar;
     private SwipeRefreshLayout swipeLayout;
     private ProgressBar mProgress;
@@ -63,6 +73,8 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
     private Question updatedQuestion;
     private int pageNumber = 1;
     private TextView emptyList;
+    private SearchView mSearchView;
+    private Menu mainMenu;
 
 
     private Callbacks listCallbacks = questionsCallbacks;
@@ -140,6 +152,7 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         getActivity().setTitle(getResources().getString(R.string.questions));
         Bundle bundle = getArguments();
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
@@ -313,4 +326,85 @@ public class QuestionsListFragment extends Fragment implements SwipeRefreshLayou
     private ProgressBar getProgressBar(){
         return (ProgressBar) getActivity().findViewById(R.id.progress_bar);
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu,inflater);
+        MenuItem searchItem = menu.findItem(R.id.search_quesitions);
+        searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
+                | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        mSearchView.setOnQueryTextListener(this);
+        mSearchView.setOnCloseListener(this);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        cardAdapter.getFilter().filter(newText);
+        return true;
+    }
+
+    @Override
+    public boolean onClose() {
+        return true;
+    }
+
+    private void resetSearchInput() {
+        questionsList = getCachedQuestionsList();
+        cardAdapter.notifyDataSetChanged();
+    }
+
+    private List<Question> filter(List<Question> models, String query) {
+        query = query.toLowerCase();
+
+        final List<Question> filteredModelList = new ArrayList<>();
+        for (Question model : models) {
+            final String text = model.getTitle().toLowerCase();
+            if (text.contains(query)) {
+                filteredModelList.add(model);
+            }
+        }
+        return filteredModelList;
+    }
+
+    private void setupSearchView(MenuItem searchItem) {
+        boolean isTablet = getResources().getBoolean(R.bool.isTablet);
+//        if (isTablet) {
+            searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
+                    | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+            SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+            if (searchManager != null) {
+                List searchables = searchManager.getSearchablesInGlobalSearch();
+
+                SearchableInfo info = searchManager.getSearchableInfo(getActivity().getComponentName());
+                for (int i = 0; i < searchables.size(); i++) {
+                    if (searchables.get(i) != null) {
+                        info = (SearchableInfo) searchables.get(i);
+                    }
+                }
+            }
+            android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            QuestionsListFragment frg = (QuestionsListFragment) fragmentManager.findFragmentById(R.id.container);
+            final ListView questionsList = frg.getList();
+            final RecyclerView questionListView = rv;
+            mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    return true;
+                }
+            });
+//        }
+    }
+
+
 }

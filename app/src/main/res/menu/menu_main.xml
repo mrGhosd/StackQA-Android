@@ -5,6 +5,6 @@
         android:id="@+id/search_question"
         android:title="@string/sign_in"
         android:icon="@drawable/searchi"
-        android:showAsAction="collapseActionView|ifRoom"
+        android:showAsAction="always"
         android:actionViewClass="android.support.v7.widget.SearchView" />
 </menu>
