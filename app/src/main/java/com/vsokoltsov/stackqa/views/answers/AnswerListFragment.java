@@ -72,6 +72,10 @@ public class AnswerListFragment extends Fragment {
         return rv;
     }
 
+    public int getAnswersListSize() {
+        return this.answerList.size();
+    }
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -157,9 +161,16 @@ public class AnswerListFragment extends Fragment {
 
         int index = answerAdapter.answers.size();
         answerAdapter.answers.add(index, answer);
+
+        if (index != 0) {
+            rv.setAlpha((float) 1.0);
+            progressBar.setVisibility(View.GONE);
+        }
+        else {
+            answersListWrapper.setVisibility(View.VISIBLE);
+            emptyListView.setVisibility(View.GONE);
+        }
         answerAdapter.notifyDataSetChanged();
-        rv.setAlpha((float) 1.0);
-        progressBar.setVisibility(View.GONE);
         sc.scrollTo(0, 0);
     }
 }

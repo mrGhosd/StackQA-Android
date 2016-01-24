@@ -141,8 +141,10 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
             answerParams.put("question_id", selectedQuestion.getID());
             JSONObject params = new JSONObject();
             params.put("answer", answerParams);
-            answersListFragment.getProgressBar().setVisibility(View.VISIBLE);
-            answersListFragment.getRv().setAlpha((float) 0.5);
+            if (answersListFragment.getAnswersListSize() != 0) {
+                answersListFragment.getProgressBar().setVisibility(View.VISIBLE);
+                answersListFragment.getRv().setAlpha((float) 0.5);
+            }
             AnswerFactory.getInstance().create(selectedQuestion.getID(), params);
         }
     }
