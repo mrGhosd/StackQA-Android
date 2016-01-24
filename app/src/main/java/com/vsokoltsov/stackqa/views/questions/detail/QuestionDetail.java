@@ -17,7 +17,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.messages.AnswerMessage;
@@ -57,7 +56,6 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     private AnswerListFragment answersListFragment;
     private JSONObject editedAnswer;
     private LinearLayout answerTextLayout;
-    private TextView emptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +64,6 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         setTitle(getResources().getString(R.string.question));
         progressBar = (MaterialProgressBar) findViewById(R.id.progress_bar);
         Toolbar mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
-        emptyView = (TextView) findViewById(R.id.empty_view);
         setSupportActionBar(mActionBarToolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -144,6 +141,8 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
             answerParams.put("question_id", selectedQuestion.getID());
             JSONObject params = new JSONObject();
             params.put("answer", answerParams);
+            answersListFragment.getProgressBar().setVisibility(View.VISIBLE);
+            answersListFragment.getRv().setAlpha((float) 0.5);
             AnswerFactory.getInstance().create(selectedQuestion.getID(), params);
         }
     }
@@ -215,13 +214,8 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         loadMainQuestionFragment(arguments, fragmentTransaction);
-
-
         try {
-            if (answersList.length() > 0) {
-                loadQuestionAnswersFragment(arguments, fragmentTransaction, answersList);
-            }
-            setEmptyAnswersList();
+            loadQuestionAnswersFragment(arguments, fragmentTransaction, answersList);
         } catch(Exception e){
             e.printStackTrace();
         }
@@ -240,15 +234,6 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
             fragmentTransaction.add(R.id.detail_fragment, fragment);
         }
 
-    }
-
-    private void setEmptyAnswersList() {
-        if (answersList.length() == 0) {
-            emptyView.setVisibility(View.VISIBLE);
-        }
-        else {
-            emptyView.setVisibility(View.GONE);
-        }
     }
 
     private void loadQuestionDetailInfo(Bundle arguments, FragmentTransaction fragmentTransaction,
@@ -377,7 +362,6 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         answerText.setText("");
         Answer answer = new Answer(object);
         answersListFragment.setNewAnswerItem(answer);
-
     }
 
     private void parseFailureAnswerCreation(JSONObject object) {

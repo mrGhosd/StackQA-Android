@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.AnswersListRecycleViewAdapter;
 import com.vsokoltsov.stackqa.models.Answer;
+import com.vsokoltsov.stackqa.util.MaterialProgressBar;
 import com.vsokoltsov.stackqa.util.SimpleDividerItemDecoration;
 import com.vsokoltsov.stackqa.views.questions.detail.QuestionDetail;
 
@@ -39,7 +41,7 @@ import java.util.List;
 public class AnswerListFragment extends Fragment {
     private Activity activity;
     private QuestionDetail mainActivity;
-    private static List<Answer> answerList = new ArrayList<Answer>();
+    private List<Answer> answerList = new ArrayList<Answer>();
 
     public ListView list;
     private View fragmentView;
@@ -47,6 +49,9 @@ public class AnswerListFragment extends Fragment {
     private LinearLayoutManager llm;
     private AnswersListRecycleViewAdapter answerAdapter;
     private TextView emptyView;
+    private CardView answersListWrapper;
+    private TextView emptyListView;
+    public MaterialProgressBar progressBar;
 
     public void setAnswerList(JSONArray answers){
         for(int i = 0; i < answers.length(); i++){
@@ -57,6 +62,14 @@ public class AnswerListFragment extends Fragment {
                 e.printStackTrace();
             }
         }
+    }
+
+    public MaterialProgressBar getProgressBar() {
+        return progressBar;
+    }
+
+    public RecyclerView getRv() {
+        return rv;
     }
 
     /**
@@ -101,6 +114,9 @@ public class AnswerListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         fragmentView =  inflater.inflate(R.layout.fragment_answer_list, container, false);
+        answersListWrapper = (CardView) fragmentView.findViewById(R.id.answersListWrapper);
+        emptyListView = (TextView) fragmentView.findViewById(R.id.empty_view);
+        progressBar = (MaterialProgressBar) fragmentView.findViewById(R.id.progress_bar);
         rv = (RecyclerView) fragmentView.findViewById(R.id.answersList);
         rv.setHasFixedSize(true);
         answerAdapter = new AnswersListRecycleViewAdapter(answerList, getActivity());
@@ -123,7 +139,14 @@ public class AnswerListFragment extends Fragment {
         else {
             llm.setOrientation(orientation);
         }
-
+        if (answerList.size() == 0) {
+            answersListWrapper.setVisibility(View.GONE);
+            emptyListView.setVisibility(View.VISIBLE);
+        }
+        else {
+            answersListWrapper.setVisibility(View.VISIBLE);
+            emptyListView.setVisibility(View.GONE);
+        }
         return fragmentView;
     }
 
@@ -135,6 +158,8 @@ public class AnswerListFragment extends Fragment {
         int index = answerAdapter.answers.size();
         answerAdapter.answers.add(index, answer);
         answerAdapter.notifyDataSetChanged();
+        rv.setAlpha((float) 1.0);
+        progressBar.setVisibility(View.GONE);
         sc.scrollTo(0, 0);
     }
 }

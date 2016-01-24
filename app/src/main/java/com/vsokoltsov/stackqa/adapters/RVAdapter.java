@@ -206,7 +206,7 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
                 if (constraint != null) {
                     if (orig != null & orig.size() > 0) {
                         for (final Question g : orig) {
-                            if (g.getTitle().toLowerCase().contains(constraint.toString()))
+                            if (g.getTitle().toLowerCase().contains(constraint.toString().toLowerCase()))
                                 results.add(g);
                         }
                     }

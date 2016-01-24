@@ -30,14 +30,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <TextView
-                    android:id="@+id/empty_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:visibility="gone"
-                    android:text="@string/answers_list_empty" />
-
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
