@@ -51,7 +51,6 @@ public class ApiRequest {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
-//                        EventBus.getDefault().post(new SuccessRequestMessage(operationID, response));
                         callbacks.successCallback(operationID, response);
                     } catch (Exception e){
                         e.printStackTrace();
@@ -62,7 +61,6 @@ public class ApiRequest {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     callbacks.failureCallback(operationID, error);
-//                    EventBus.getDefault().post(new FailureRequestMessage(operationID, error));
                 }
             });
         objectRequest.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 0,
