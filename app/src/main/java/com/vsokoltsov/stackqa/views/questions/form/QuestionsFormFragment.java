@@ -28,6 +28,7 @@ import com.vsokoltsov.stackqa.util.InstantAutoCompleteView;
 import com.vsokoltsov.stackqa.util.MaterialProgressBar;
 import com.vsokoltsov.stackqa.views.questions.detail.QuestionDetail;
 import com.vsokoltsov.stackqa.views.questions.list.QuestionsListActivity;
+import com.vsokoltsov.stackqa.views.questions.list.QuestionsListFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -95,6 +96,10 @@ public class QuestionsFormFragment extends Fragment {
         // TODO Add your menu entries here
         super.onCreateOptionsMenu(menu, inflater);
         formMenu = menu;
+        MenuItem createQuestion = menu.findItem(R.id.add_question);
+        if (createQuestion != null) {
+            formMenu.removeItem(R.id.add_question);
+        }
         inflater.inflate(R.menu.menu_question_form, formMenu);
         setFragmentButtons(formMenu);
 
@@ -130,9 +135,21 @@ public class QuestionsFormFragment extends Fragment {
         cancelItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                Intent questionsIntent = new Intent(getActivity(), QuestionsListActivity.class);
-                startActivity(questionsIntent);
-                getActivity().overridePendingTransition(R.anim.push_out_left, R.anim.pull_in_right);
+                boolean isTablet = getResources().getBoolean(R.bool.isTablet);
+                if (isTablet) {
+                    formMenu.removeItem(R.id.saveForm);
+                    formMenu.removeItem(R.id.cancelForm);
+                    android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    QuestionsListFragment fragment = new QuestionsListFragment();
+                    android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.container, fragment);
+                    fragmentTransaction.commit();
+                }
+                else {
+                    Intent questionsIntent = new Intent(getActivity(), QuestionsListActivity.class);
+                    startActivity(questionsIntent);
+                    getActivity().overridePendingTransition(R.anim.push_out_left, R.anim.pull_in_right);
+                }
                 return false;
             }
         });
