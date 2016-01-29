@@ -72,19 +72,24 @@
                                 android:lines="10"
                                 android:minLines="1"
                                 android:gravity="top|left"
-                                android:maxLines="10"
+                                android:maxLines="5"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000"
                                 android:id="@+id/answerUserText"
-                                android:layout_weight="1"/>
+                                android:layout_weight="5"
+                                android:background="#fff"
+                                />
                             <ImageButton
-                                android:layout_width="45dp"
-                                android:layout_height="20dp"
+                                android:id="@+id/sendAnswer"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:background="@drawable/sendicon"
+                                android:backgroundTint="@color/toolbar_default"
+                                android:src="@drawable/send24"
+                                android:background="@drawable/roundcorner"
                                 android:padding="10dp"
-                                android:layout_gravity="bottom"/>
+                                android:layout_gravity="bottom" />
                         </LinearLayout>
                     </android.support.v7.widget.CardView>
                 </LinearLayout>

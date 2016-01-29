@@ -409,8 +409,8 @@ public class QuestionsListFragment extends Fragment implements android.support.v
                     return true;
                 }
             });
-//        }
-    }
+        }
+//    }
 
 
 }
