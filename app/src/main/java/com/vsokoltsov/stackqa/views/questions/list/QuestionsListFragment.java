@@ -162,8 +162,12 @@ public class QuestionsListFragment extends Fragment implements android.support.v
 
     }
 
+    private void setVisibilityToProgressBar(int view) {
+        if (progressBar != null) progressBar.setVisibility(view);
+    }
+
     private void loadQuestionsList() throws JSONException {
-        progressBar.setVisibility(View.VISIBLE);
+        setVisibilityToProgressBar(View.VISIBLE);
         questionsList = getCachedQuestionsList();
         cardAdapter = new RVAdapter(questionsList, getActivity(), rv, new OnLoadMoreListener() {
             @Override
@@ -176,7 +180,7 @@ public class QuestionsListFragment extends Fragment implements android.support.v
         if(questionsList.size() <= 0) {
             QuestionFactory.getInstance().getCollection(pageNumber);
         } else {
-            progressBar.setVisibility(View.GONE);
+            setVisibilityToProgressBar(View.GONE);
             cardAdapter.notifyDataSetChanged();
         }
     }
@@ -269,7 +273,7 @@ public class QuestionsListFragment extends Fragment implements android.support.v
                     }
                 });
 
-        progressBar.setVisibility(View.GONE);
+        setVisibilityToProgressBar(View.GONE);
         builder.create();
         builder.show();
     }
@@ -298,7 +302,7 @@ public class QuestionsListFragment extends Fragment implements android.support.v
             startSignUpService();
         }
 
-        progressBar.setVisibility(View.GONE);
+        setVisibilityToProgressBar(View.GONE);
         setCachedQuestionsList(questionsList);
         cardAdapter.removeItem(null);
         cardAdapter.notifyDataSetChanged();
@@ -331,11 +335,13 @@ public class QuestionsListFragment extends Fragment implements android.support.v
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu,inflater);
         MenuItem searchItem = menu.findItem(R.id.search_quesitions);
-        searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
-                | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        mSearchView.setOnQueryTextListener(this);
-        mSearchView.setOnCloseListener(this);
+        if (searchItem != null) {
+            searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
+                    | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+            mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+            mSearchView.setOnQueryTextListener(this);
+            mSearchView.setOnCloseListener(this);
+        }
     }
 
     @Override

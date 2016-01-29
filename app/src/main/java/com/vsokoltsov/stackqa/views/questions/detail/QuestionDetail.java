@@ -2,7 +2,6 @@ package com.vsokoltsov.stackqa.views.questions.detail;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
@@ -170,15 +169,27 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     }
 
     private void baseConfigurationForTablet() {
-        QuestionFactory.getInstance().get(selectedQuestion.getID());
-        Bundle arguments = new Bundle();
-        arguments.putParcelableArrayList("questions", (ArrayList<? extends Parcelable>) questionsList);
-        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        QuestionsListFragment fragment = new QuestionsListFragment();
-        fragment.setArguments(arguments);
-        fragmentTransaction.add(R.id.question_list, fragment);
-        fragmentTransaction.commit();
+//        QuestionFactory.getInstance().get(selectedQuestion.getID());
+//        Bundle arguments = new Bundle();
+//        arguments.putParcelableArrayList("questions", (ArrayList<? extends Parcelable>) questionsList);
+//        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+//        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        QuestionsListFragment fragment = new QuestionsListFragment();
+//        fragment.setArguments(arguments);
+//        fragmentTransaction.add(R.id.question_list, fragment);
+//        fragmentTransaction.commit();
+
+        setViewLayout((ScrollView) findViewById(R.id.questionViewMainLayout));
+        EditText answerText = (EditText) findViewById(R.id.answerUserText);
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        setSuccesButtonHandler(answerText);
+
+        if(answersList == null) {
+            loadQuestionData();
+        }
+        else {
+            setDataToDetailView();
+        }
     }
 
     public void setLayoutHeight(int height){
