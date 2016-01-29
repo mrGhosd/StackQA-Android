@@ -273,7 +273,17 @@ public class NavigationFragment extends Fragment {
     }
 
     private void actionsforSignedUserWithTablet(int position) {
+        Bundle arguments = new Bundle();
+        android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        switch(position){
+            case 1:
+                QuestionsListFragment questionList = new QuestionsListFragment();
+                fragmentTransaction.replace(R.id.container, questionList);
+                break;
+        }
 
+        fragmentTransaction.commit();
     }
 
     private void actionsforUnsignedUserWithTablet(int position) {
