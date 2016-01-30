@@ -62,6 +62,9 @@ public class AnswerListFragment extends Fragment {
                 e.printStackTrace();
             }
         }
+        if (answerAdapter != null) {
+            answerAdapter.notifyDataSetChanged();
+        }
     }
 
     public MaterialProgressBar getProgressBar() {

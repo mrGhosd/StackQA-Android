@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.vsokoltsov.stackqa.R;
+import com.vsokoltsov.stackqa.adapters.AnswersListRecycleViewAdapter;
 import com.vsokoltsov.stackqa.adapters.RVAdapter;
 import com.vsokoltsov.stackqa.messages.AnswerMessage;
 import com.vsokoltsov.stackqa.messages.QuestionMessage;
@@ -29,6 +30,7 @@ import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.models.QuestionFactory;
 import com.vsokoltsov.stackqa.util.MaterialProgressBar;
 import com.vsokoltsov.stackqa.views.answers.AnswerForm;
+import com.vsokoltsov.stackqa.views.answers.AnswerFormActivity;
 import com.vsokoltsov.stackqa.views.answers.AnswerListFragment;
 import com.vsokoltsov.stackqa.views.questions.form.QuestionsFormActivity;
 import com.vsokoltsov.stackqa.views.questions.list.QuestionsListActivity;
@@ -43,7 +45,9 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-public class QuestionDetail extends ActionBarActivity implements QuestionsListFragment.Callbacks, RVAdapter.QuestionsViewHolder.QuestionViewHolderCallbacks {
+public class QuestionDetail extends ActionBarActivity implements QuestionsListFragment.Callbacks,
+        RVAdapter.QuestionsViewHolder.QuestionViewHolderCallbacks,
+        AnswersListRecycleViewAdapter.AnswerViewHolder.AnswerViewHolderCallbacks {
     public MaterialProgressBar progressBar;
     public static Question selectedQuestion;
     private static JSONArray answersList;
@@ -58,6 +62,10 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     private JSONObject editedAnswer;
     private LinearLayout answerTextLayout;
     private boolean isTablet;
+
+    private EditText answerItemText;
+    private LinearLayout answerViewMain;
+    private LinearLayout formLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,18 +118,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         }
 
         if (editedAnswer != null) {
-            for (int i = 0; i < answersList.length(); i++) {
-                JSONObject answer = null;
-                try {
-                    answer = (JSONObject) answersList.get(i);
-                    if(answer.getInt("id") == editedAnswer.getInt("id")) {
-                        answer.put("text", editedAnswer.get("text"));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
+            replaceUpdatedAnswer(editedAnswer);
         }
 
         if (isTablet) {
@@ -129,6 +126,21 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         }
         else {
             baseConfigForPhone(savedInstanceState);
+        }
+    }
+
+    private void replaceUpdatedAnswer(JSONObject editedAnswer) {
+        for (int i = 0; i < answersList.length(); i++) {
+            JSONObject answer = null;
+            try {
+                answer = (JSONObject) answersList.get(i);
+                if(answer.getInt("id") == editedAnswer.getInt("id")) {
+                    answer.put("text", editedAnswer.get("text"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
@@ -174,6 +186,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
 
     private void baseConfigurationForTablet() {
         QuestionFactory.getInstance().get(selectedQuestion.getID());
+        setSupportProgressBarIndeterminateVisibility(true);
         Bundle arguments = new Bundle();
         arguments.putParcelableArrayList("questions", (ArrayList<? extends Parcelable>) questionsList);
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
@@ -368,6 +381,9 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
                 case "create":
                     parseSuccessAnswerCreation(event.response);
                     break;
+                case "update":
+                    parseUpdatedAnswer(event.response);
+                    break;
             }
         } else {
             switch (event.operationName){
@@ -414,5 +430,64 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         replaceFragment = true;
         setVisibilityToProgressBar(View.VISIBLE);
         QuestionFactory.getInstance().get(question.getID());
+    }
+
+    @Override
+    public void onOptionsClicked(final Answer answer, View itemView, MenuItem menuItem) {
+        formLayout = (LinearLayout) itemView.findViewById(R.id.answerFormItem);
+        answerViewMain = (LinearLayout) itemView.findViewById(R.id.answerViewMain);
+        switch ((String) menuItem.getTitle()) {
+            case "Edit":
+                boolean isTablet = getResources().getBoolean(R.bool.isTablet);
+
+                if (isTablet) {
+                    if (formLayout.getVisibility() != View.VISIBLE) {
+                        answerViewMain.setVisibility(View.GONE);
+                        formLayout.setVisibility(View.VISIBLE);
+                        answerText = (EditText) itemView.findViewById(R.id.answerTextItem);
+                        answerText.setText(answer.getText());
+                        ImageButton saveButton = (ImageButton) itemView.findViewById(R.id.saveAnswerForm);
+                        ImageButton cancelButton = (ImageButton) itemView.findViewById(R.id.cancelAnswerForm);
+                        saveButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                JSONObject answerParams = new JSONObject();
+                                try {
+                                    answerParams.put("text", answerText.getText().toString());
+                                    answerParams.put("user_id", AuthManager.getInstance().getCurrentUser().getId());
+                                    answerParams.put("question_id", answer.getQuestionID());
+                                    JSONObject params = new JSONObject();
+                                    params.put("answer", answerParams);
+                                    AnswerFactory.getInstance().update(answer.getQuestionID(), answer.getID(),answerParams);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                        cancelButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                formLayout.setVisibility(View.GONE);
+                                answerViewMain.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    }
+                }
+                else {
+                    Intent detailIntent = new Intent(this, AnswerFormActivity.class);
+                    detailIntent.putExtra("answer", answer);
+                    startActivity(detailIntent);
+                    overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                }
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    private void parseUpdatedAnswer(JSONObject answer) {
+        replaceUpdatedAnswer(answer);
+        answersListFragment.setAnswerList(answersList);
     }
 }

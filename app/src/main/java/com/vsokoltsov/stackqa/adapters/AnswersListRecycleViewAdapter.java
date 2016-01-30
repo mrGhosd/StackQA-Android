@@ -2,7 +2,6 @@ package com.vsokoltsov.stackqa.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
@@ -12,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,7 +23,6 @@ import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.models.Answer;
 import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.util.PopupWithMenuIcons;
-import com.vsokoltsov.stackqa.views.answers.AnswerFormActivity;
 
 import java.util.List;
 
@@ -32,7 +31,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Created by vsokoltsov on 10.01.16.
  */
-public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersListRecycleViewAdapter.AnswerViewHolder> {
+public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersListRecycleViewAdapter.AnswerViewHolder>{
     public List<Answer> answers;
     private Activity activity;
 
@@ -55,6 +54,7 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
     public void onBindViewHolder(AnswerViewHolder holder, int position) {
         holder.answer = answers.get(position);
         holder.setUserInfo(answers.get(position));
+        holder.callbacks = (AnswerViewHolder.AnswerViewHolderCallbacks) activity;
         holder.text.setText(answers.get(position).getText());
         holder.rate.setText(String.valueOf(answers.get(position).getRate()));
         holder.createdAt.setText(answers.get(position).getCreatedAt());
@@ -71,7 +71,7 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
         return answers.get(position);
     }
 
-    public static class AnswerViewHolder extends RecyclerView.ViewHolder implements PopupMenu.OnMenuItemClickListener {
+    public static class AnswerViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
         LinearLayout ll;
         private Resources res;
@@ -83,8 +83,12 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
         private ImageButton popupMenu;
         private Answer answer;
         private AnswersListRecycleViewAdapter mAdapter;
+        private LinearLayout formLayout;
+        private LinearLayout answerViewMain;
+        private EditText answerText;
+        private AnswerViewHolderCallbacks callbacks;
 
-        AnswerViewHolder(View itemView, final AnswersListRecycleViewAdapter adapter) {
+        AnswerViewHolder(final View itemView, final AnswersListRecycleViewAdapter adapter) {
             super(itemView);
             mAdapter = adapter;
             res = mAdapter.activity.getResources();
@@ -93,7 +97,7 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
             createdAt = (TextView) itemView.findViewById(R.id.answerCreatedAt);
             commentsCount = (TextView) itemView.findViewById(R.id.answerCommentsCount);
             rate = (TextView) itemView.findViewById(R.id.answerRateCount);
-            LinearLayout popupMenuWrapper = (LinearLayout) itemView.findViewById(R.id.popupMenuWrapper);
+            final LinearLayout popupMenuWrapper = (LinearLayout) itemView.findViewById(R.id.popupMenuWrapper);
             popupMenu = (ImageButton) itemView.findViewById(R.id.popupMenu);
 
             if (AuthManager.getInstance().getCurrentUser() == null) {
@@ -116,25 +120,19 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
                             editItem.setVisible(false);
                             deleteItem.setVisible(false);
                         }
+                        formLayout = (LinearLayout) itemView.findViewById(R.id.answerFormItem);
+                        answerViewMain = (LinearLayout) itemView.findViewById(R.id.answerViewMain);
                         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem item) {
-                                switch ((String) item.getTitle()) {
-                                    case "Edit":
-                                        Intent detailIntent = new Intent(mAdapter.activity, AnswerFormActivity.class);
-                                        detailIntent.putExtra("answer", answer);
-                                        mAdapter.activity.startActivity(detailIntent);
-                                        mAdapter.activity.overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-                                        break;
-                                    default:
-                                        break;
-                                }
+                                callbacks.onOptionsClicked(answer, itemView, item);
                                 return false;
                             }
                         });
                         popup.show();
                     }
                 });
+
             }
         }
 
@@ -156,11 +154,10 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
             });
         }
 
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            return false;
+        public interface AnswerViewHolderCallbacks {
+            void onOptionsClicked(Answer answer, View itemView, MenuItem menuItem);
         }
-    }
 
+    }
 
 }
