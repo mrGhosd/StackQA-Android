@@ -20,6 +20,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.vsokoltsov.stackqa.R;
+import com.vsokoltsov.stackqa.adapters.RVAdapter;
 import com.vsokoltsov.stackqa.messages.UserMessage;
 import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.Question;
@@ -35,7 +36,7 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 public class QuestionsListActivity extends ActionBarActivity implements QuestionsListFragment.Callbacks,
-        NavigationFragment.NavigationDrawerCallbacks {
+        NavigationFragment.NavigationDrawerCallbacks, RVAdapter.QuestionsViewHolder.QuestionViewHolderCallbacks {
     private DrawerLayout drawerLayout;
     private NavigationFragment mNavigationDrawerFragment;
     private SearchView mSearchView;
@@ -257,5 +258,14 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
                 }
             });
         }
+    }
+
+    @Override
+    public void onItemClicked(Question question) {
+        Intent detailIntent = new Intent(this, QuestionDetail.class);
+        detailIntent.putExtra("question", question);
+
+        startActivity(detailIntent);
+        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
     }
 }

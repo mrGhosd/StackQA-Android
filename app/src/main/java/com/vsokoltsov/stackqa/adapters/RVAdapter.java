@@ -1,7 +1,6 @@
 package com.vsokoltsov.stackqa.adapters;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.util.MaterialProgressBar;
-import com.vsokoltsov.stackqa.views.questions.detail.QuestionDetail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +100,7 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == ITEM_VIEW_TYPE_BASIC) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.questions_list_row, parent, false);
-            QuestionsViewHolder qvh = new QuestionsViewHolder(v);
+            QuestionsViewHolder qvh = new QuestionsViewHolder(v, this);
             return qvh;
         }
         else if (viewType == ITEM_VIEW_TYPE_FOOTER) {
@@ -144,7 +142,6 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
     }
 
 
-
     public static class QuestionsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         CardView cv;
 
@@ -157,10 +154,13 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
         private TextView answersCount;
         private TextView commentsCount;
         private TextView views;
+        private QuestionViewHolderCallbacks callbacks;
 
-        QuestionsViewHolder(View itemView) {
+        QuestionsViewHolder(View itemView, RVAdapter newAdapter) {
             super(itemView);
+            adapter = newAdapter;
             cv = (CardView) itemView.findViewById(R.id.cardView);
+            callbacks = (QuestionViewHolderCallbacks) adapter.activity;
             cv.setOnClickListener(this);
             title =  (TextView) itemView.findViewById(R.id.title);
             rate = (TextView) itemView.findViewById(R.id.rate);
@@ -174,14 +174,14 @@ public class RVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
 
         @Override
         public void onClick(View v) {
-            Question question = this.adapter.questions.get(getPosition());
-            Intent detailIntent = new Intent(views.getContext(), QuestionDetail.class);
-            detailIntent.putExtra("question", question);
-
-            v.getContext().startActivity(detailIntent);
-            this.adapter.activity.overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-//            Question question = questions.get()
+            callbacks.onItemClicked(this.adapter.questions.get(getAdapterPosition()));
         }
+
+        public interface QuestionViewHolderCallbacks {
+            void onItemClicked(Question question);
+        }
+
+
     }
 
     public static class ProgressViewHolder extends RecyclerView.ViewHolder {

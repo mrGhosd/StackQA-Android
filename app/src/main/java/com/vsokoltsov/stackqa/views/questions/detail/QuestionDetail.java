@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.vsokoltsov.stackqa.R;
+import com.vsokoltsov.stackqa.adapters.RVAdapter;
 import com.vsokoltsov.stackqa.messages.AnswerMessage;
 import com.vsokoltsov.stackqa.messages.QuestionMessage;
 import com.vsokoltsov.stackqa.models.Answer;
@@ -42,8 +43,8 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-public class QuestionDetail extends ActionBarActivity implements QuestionsListFragment.Callbacks {
-    public  static MaterialProgressBar progressBar;
+public class QuestionDetail extends ActionBarActivity implements QuestionsListFragment.Callbacks, RVAdapter.QuestionsViewHolder.QuestionViewHolderCallbacks {
+    public MaterialProgressBar progressBar;
     public static Question selectedQuestion;
     private static JSONArray answersList;
     private ScrollView layout;
@@ -56,12 +57,14 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     private AnswerListFragment answersListFragment;
     private JSONObject editedAnswer;
     private LinearLayout answerTextLayout;
+    private boolean isTablet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_detail);
         setTitle(getResources().getString(R.string.question));
+        isTablet = getResources().getBoolean(R.bool.isTablet);
         progressBar = (MaterialProgressBar) findViewById(R.id.progress_bar);
         Toolbar mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(mActionBarToolbar);
@@ -88,7 +91,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
                 }
             });
         }
-        boolean isTablet = getResources().getBoolean(R.bool.isTablet);
+
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
             if (selectedQuestion == null) selectedQuestion = (Question) extras.getParcelable("question");
@@ -323,7 +326,10 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
 
     @Override
     public void onItemSelected(Question question) {
+        selectedQuestion = question;
+        answersList = null;
         replaceFragment = true;
+        setVisibilityToProgressBar(View.VISIBLE);
         QuestionFactory.getInstance().get(question.getID());
     }
 
@@ -397,4 +403,16 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         }
     }
 
+    private void setVisibilityToProgressBar(int view) {
+        if (progressBar != null) progressBar.setVisibility(view);
+    }
+
+    @Override
+    public void onItemClicked(Question question) {
+        selectedQuestion = null;
+        answersList = null;
+        replaceFragment = true;
+        setVisibilityToProgressBar(View.VISIBLE);
+        QuestionFactory.getInstance().get(question.getID());
+    }
 }

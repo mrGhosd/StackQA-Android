@@ -1,7 +1,6 @@
 package com.vsokoltsov.stackqa.views.questions.detail;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,11 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.models.Question;
-import com.vsokoltsov.stackqa.R;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -114,33 +113,42 @@ public class QuestionDetailFragment extends Fragment{
     public void setCategoryInfo(View fragmentView){
         final ImageView categoryImage = (ImageView) fragmentView.findViewById(R.id.categoryImageView);
         final TextView categoryTitle = (TextView) fragmentView.findViewById(R.id.categoryTitle);
-
+        categoryTitle.setText(detailQuestion.getCategory().getTitle());
         String url = AppController.APP_HOST + detailQuestion.getCategory().getImageUrl();
-        ImageRequest ir = new ImageRequest(url, new Response.Listener<Bitmap>() {
+
+        ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+        imageLoader.get(url, new ImageLoader.ImageListener() {
             @Override
-            public void onResponse(Bitmap response) {
-                categoryImage.setImageBitmap(response);
-                categoryTitle.setText(detailQuestion.getCategory().getTitle());
+            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                categoryImage.setImageBitmap(response.getBitmap());
             }
-        }, 0, 0, null, null);
-        AppController.getInstance().addToRequestQueue(ir);
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
     }
 
     public void setUserInfo(View fragmentView){
         final ImageView userImage = (ImageView) fragmentView.findViewById(R.id.userAvatarView);
         final TextView userName = (TextView) fragmentView.findViewById(R.id.userName);
-
+        userName.setText(detailQuestion.getUser().getCorrectNaming());
         String url = AppController.APP_HOST + detailQuestion.getUser().getAvatarUrl();
-        ImageRequest ir = new ImageRequest(url, new Response.Listener<Bitmap>() {
+        ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+        imageLoader.get(url, new ImageLoader.ImageListener() {
             @Override
-            public void onResponse(Bitmap response) {
-                userImage.setImageBitmap(response);
-                userName.setText(detailQuestion.getUser().getCorrectNaming());
+            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                userImage.setImageBitmap(response.getBitmap());
                 userImage.getLayoutParams().height = 60;
                 userImage.getLayoutParams().width = 60;
             }
-        }, 0, 0, null, null);
-        AppController.getInstance().addToRequestQueue(ir);
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
     }
 
 }
