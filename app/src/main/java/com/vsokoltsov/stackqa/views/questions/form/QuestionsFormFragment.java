@@ -137,13 +137,20 @@ public class QuestionsFormFragment extends Fragment {
             public boolean onMenuItemClick(MenuItem menuItem) {
                 boolean isTablet = getResources().getBoolean(R.bool.isTablet);
                 if (isTablet) {
-                    formMenu.removeItem(R.id.saveForm);
-                    formMenu.removeItem(R.id.cancelForm);
-                    android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    QuestionsListFragment fragment = new QuestionsListFragment();
-                    android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.container, fragment);
-                    fragmentTransaction.commit();
+                    if (question != null) {
+                        Intent questionsIntent = new Intent(getActivity(), QuestionDetail.class);
+                        startActivity(questionsIntent);
+                        getActivity().overridePendingTransition(R.anim.push_out_left, R.anim.pull_in_right);
+                    }
+                    else {
+                        formMenu.removeItem(R.id.saveForm);
+                        formMenu.removeItem(R.id.cancelForm);
+                        android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        QuestionsListFragment fragment = new QuestionsListFragment();
+                        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.container, fragment);
+                        fragmentTransaction.commit();
+                    }
                 }
                 else {
                     Intent questionsIntent = new Intent(getActivity(), QuestionsListActivity.class);

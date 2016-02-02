@@ -308,6 +308,10 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
             case R.id.editQuestion:
                 Intent detailIntent = new Intent(this, QuestionsFormActivity.class);
                 detailIntent.putExtra("question", selectedQuestion);
+                if (isTablet) {
+                    detailIntent.putParcelableArrayListExtra("questions",
+                            (ArrayList<? extends Parcelable>) questionsList);
+                }
                 startActivity(detailIntent);
                 overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
                 return true;
@@ -438,8 +442,6 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         answerViewMain = (LinearLayout) itemView.findViewById(R.id.answerViewMain);
         switch ((String) menuItem.getTitle()) {
             case "Edit":
-                boolean isTablet = getResources().getBoolean(R.bool.isTablet);
-
                 if (isTablet) {
                     if (formLayout.getVisibility() != View.VISIBLE) {
                         answerViewMain.setVisibility(View.GONE);

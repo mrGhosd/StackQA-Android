@@ -135,7 +135,6 @@ public class QuestionsListFragment extends Fragment implements android.support.v
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.activity = activity;
-        listCallbacks = (Callbacks) activity;
     }
 
     private static Callbacks questionsCallbacks = new Callbacks() {

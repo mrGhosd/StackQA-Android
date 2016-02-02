@@ -11,6 +11,8 @@ import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.views.navigation.NavigationFragment;
 
+import java.util.List;
+
 /**
  * Created by vsokoltsov on 03.01.16.
  */
@@ -20,15 +22,19 @@ public class QuestionsFormActivity extends ActionBarActivity implements Navigati
     private QuestionsFormFragment questionsFormFragment;
     private Menu formMenu;
     private Question question;
+    private List<Question> questions;
+    private boolean isTablet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.question_form_activity);
+        isTablet = getResources().getBoolean(R.bool.isTablet);
 
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
             question = (Question) extras.getParcelable("question");
+            questions = extras.getParcelableArrayList("questions");
         }
 
         Toolbar mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
@@ -37,7 +43,12 @@ public class QuestionsFormActivity extends ActionBarActivity implements Navigati
         drawerLayout = (DrawerLayout) findViewById(R.id.form_drawer);
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         mNavigationDrawerFragment = (NavigationFragment) fragmentManager.findFragmentById(R.id.navigation_drawer);
-        mNavigationDrawerFragment.setUp(R.id.navigation_drawer, drawerLayout);
+        if (isTablet) {
+            mNavigationDrawerFragment.setDrawerLayout(null);
+        }
+        else {
+            mNavigationDrawerFragment.setUp(R.id.navigation_drawer, drawerLayout);
+        }
 
         Fragment frg = fragmentManager.findFragmentById(R.id.form_fragment);
         if (frg == null) {
