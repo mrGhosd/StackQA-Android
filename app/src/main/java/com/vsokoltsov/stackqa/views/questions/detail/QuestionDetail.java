@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -45,9 +46,10 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
+
 public class QuestionDetail extends ActionBarActivity implements QuestionsListFragment.Callbacks,
         RVAdapter.QuestionsViewHolder.QuestionViewHolderCallbacks,
-        AnswersListRecycleViewAdapter.AnswerViewHolder.AnswerViewHolderCallbacks {
+        AnswersListRecycleViewAdapter.AnswerViewHolder.AnswerViewHolderCallbacks, SwipeRefreshLayout.OnRefreshListener {
     public MaterialProgressBar progressBar;
     public static Question selectedQuestion;
     private static JSONArray answersList;
@@ -66,6 +68,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     private EditText answerItemText;
     private LinearLayout answerViewMain;
     private LinearLayout formLayout;
+    private SwipeRefreshLayout swipeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +81,8 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         setSupportActionBar(mActionBarToolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
+        swipeLayout.setOnRefreshListener(this);
         sendAnswer = (ImageButton) findViewById(R.id.sendAnswer);
         answerText = (EditText) findViewById(R.id.answerUserText);
         answerTextLayout = (LinearLayout) findViewById(R.id.answerTextLayout);
@@ -174,13 +179,11 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
             e.printStackTrace();
         }
 
-        if (savedInstanceState == null) {
-            if(answersList == null) {
-                loadQuestionData();
-            }
-            else {
-                setDataToDetailView();
-            }
+        if(answersList == null) {
+            loadQuestionData();
+        }
+        else {
+            setDataToDetailView();
         }
     }
 
@@ -252,6 +255,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         fragmentTransaction.commit();
         setActivityButtons();
         progressBar.setVisibility(View.GONE);
+        swipeLayout.setRefreshing(false);
     }
 
     public void loadMainQuestionFragment(Bundle arguments, FragmentTransaction fragmentTransaction){
@@ -440,56 +444,58 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     public void onOptionsClicked(final Answer answer, View itemView, MenuItem menuItem) {
         formLayout = (LinearLayout) itemView.findViewById(R.id.answerFormItem);
         answerViewMain = (LinearLayout) itemView.findViewById(R.id.answerViewMain);
-        switch ((String) menuItem.getTitle()) {
-            case "Edit":
-                if (isTablet) {
-                    if (formLayout.getVisibility() != View.VISIBLE) {
-                        answerViewMain.setVisibility(View.GONE);
-                        formLayout.setVisibility(View.VISIBLE);
-                        answerText = (EditText) itemView.findViewById(R.id.answerTextItem);
-                        answerText.setText(answer.getText());
-                        ImageButton saveButton = (ImageButton) itemView.findViewById(R.id.saveAnswerForm);
-                        ImageButton cancelButton = (ImageButton) itemView.findViewById(R.id.cancelAnswerForm);
-                        saveButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                JSONObject answerParams = new JSONObject();
-                                try {
-                                    answerParams.put("text", answerText.getText().toString());
-                                    answerParams.put("user_id", AuthManager.getInstance().getCurrentUser().getId());
-                                    answerParams.put("question_id", answer.getQuestionID());
-                                    JSONObject params = new JSONObject();
-                                    params.put("answer", answerParams);
-                                    AnswerFactory.getInstance().update(answer.getQuestionID(), answer.getID(),answerParams);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
+        String menuItemTitle = (String) menuItem.getTitle();
+        String editButtonTitle = getResources().getString(R.string.answer_popup_edit);
+        if (menuItemTitle.equals(editButtonTitle)) {
+            if (isTablet) {
+                if (formLayout.getVisibility() != View.VISIBLE) {
+                    answerViewMain.setVisibility(View.GONE);
+                    formLayout.setVisibility(View.VISIBLE);
+                    answerText = (EditText) itemView.findViewById(R.id.answerTextItem);
+                    answerText.setText(answer.getText());
+                    ImageButton saveButton = (ImageButton) itemView.findViewById(R.id.saveAnswerForm);
+                    ImageButton cancelButton = (ImageButton) itemView.findViewById(R.id.cancelAnswerForm);
+                    saveButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            JSONObject answerParams = new JSONObject();
+                            try {
+                                answerParams.put("text", answerText.getText().toString());
+                                answerParams.put("user_id", AuthManager.getInstance().getCurrentUser().getId());
+                                answerParams.put("question_id", answer.getQuestionID());
+                                JSONObject params = new JSONObject();
+                                params.put("answer", answerParams);
+                                AnswerFactory.getInstance().update(answer.getQuestionID(), answer.getID(), answerParams);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        });
-                        cancelButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                formLayout.setVisibility(View.GONE);
-                                answerViewMain.setVisibility(View.VISIBLE);
-                            }
-                        });
-                    }
+                        }
+                    });
+                    cancelButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            formLayout.setVisibility(View.GONE);
+                            answerViewMain.setVisibility(View.VISIBLE);
+                        }
+                    });
                 }
-                else {
-                    Intent detailIntent = new Intent(this, AnswerFormActivity.class);
-                    detailIntent.putExtra("answer", answer);
-                    startActivity(detailIntent);
-                    overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-                }
-                break;
-            default:
-                break;
-        }
+            } else {
+                Intent detailIntent = new Intent(this, AnswerFormActivity.class);
+                detailIntent.putExtra("answer", answer);
+                startActivity(detailIntent);
+                overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+            }
 
+        }
     }
 
     private void parseUpdatedAnswer(JSONObject answer) {
         replaceUpdatedAnswer(answer);
         answersListFragment.setAnswerList(answersList);
+    }
+
+    @Override
+    public void onRefresh() {
+        loadQuestionData();
     }
 }

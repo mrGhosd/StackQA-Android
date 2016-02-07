@@ -126,7 +126,7 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
                             @Override
                             public boolean onMenuItemClick(MenuItem item) {
                                 callbacks.onOptionsClicked(answer, itemView, item);
-                                return false;
+                                return true;
                             }
                         });
                         popup.show();
