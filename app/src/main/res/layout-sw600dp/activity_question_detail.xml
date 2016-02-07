@@ -32,26 +32,31 @@
                     android:orientation="vertical"
                     android:layout_weight="1">
 
-                    <ScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="fill_parent"
-                        android:id="@+id/questionViewMainLayout"
-                        android:fillViewport="true">
-                        <LinearLayout
+                    <android.support.v4.widget.SwipeRefreshLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/swipe_layout">
+                        <ScrollView
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-                            <FrameLayout
-                                android:id="@+id/detail_fragment"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
-
-                            <FrameLayout
+                            android:layout_height="fill_parent"
+                            android:id="@+id/questionViewMainLayout"
+                            android:fillViewport="true">
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/question_info" />
-                        </LinearLayout>
-                    </ScrollView>
+                                android:orientation="vertical">
+                                <FrameLayout
+                                    android:id="@+id/detail_fragment"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content" />
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/question_info" />
+                            </LinearLayout>
+                        </ScrollView>
+                    </android.support.v4.widget.SwipeRefreshLayout>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="fill_parent"
