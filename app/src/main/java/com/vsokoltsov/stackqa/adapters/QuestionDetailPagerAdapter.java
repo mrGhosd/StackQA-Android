@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.vsokoltsov.stackqa.models.Answer;
+import com.vsokoltsov.stackqa.models.Comment;
 import com.vsokoltsov.stackqa.views.answers.AnswerListFragment;
 import com.vsokoltsov.stackqa.views.comments.CommentsListFragment;
 
@@ -17,17 +18,20 @@ public class QuestionDetailPagerAdapter extends FragmentStatePagerAdapter {
     CharSequence Titles[]; // This will Store the Titles of the Tabs which are Going to be passed when ViewPagerAdapter is created
     int NumbOfTabs; // Store the number of tabs, this will also be passed when the ViewPagerAdapter is created
     ArrayList<Answer> answersList;
+    ArrayList<Comment> commentsList;
 
 
     // Build a Constructor and assign the passed Values to appropriate values in the class
     public QuestionDetailPagerAdapter(FragmentManager fm,
                                       CharSequence mTitles[],
                                       int mNumbOfTabsumb,
-                                      ArrayList<Answer> answers) {
+                                      ArrayList<Answer> answers,
+                                      ArrayList<Comment> comments) {
         super(fm);
         this.Titles = mTitles;
         this.NumbOfTabs = mNumbOfTabsumb;
         this.answersList = answers;
+        this.commentsList = comments;
     }
 
     //This method return the fragment for the every position in the View Pager

@@ -12,8 +12,8 @@ import android.widget.LinearLayout;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.QuestionDetailPagerAdapter;
 import com.vsokoltsov.stackqa.adapters.QuestionDetailViewPager;
-import com.vsokoltsov.stackqa.adapters.ViewPagerAdapter;
 import com.vsokoltsov.stackqa.models.Answer;
+import com.vsokoltsov.stackqa.models.Comment;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.util.SlidingTabLayout;
 
@@ -35,6 +35,7 @@ public class QuestionDetailInfoFragment extends Fragment {
     int Numboftabs =2;
     LinearLayout ll;
     private ArrayList<Answer> answersList = new ArrayList<Answer>();
+    private ArrayList<Comment> commentsList = new ArrayList<Comment>();
 
     public void onCreate(Bundle savedInstanceState) {
 
@@ -54,12 +55,13 @@ public class QuestionDetailInfoFragment extends Fragment {
         if(extras != null) {
             try {
                 setAnswerListData(new JSONArray(extras.getString("answers")));
+                setCommentListData(new JSONArray(extras.getString("comments")));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
         adapter =  new QuestionDetailPagerAdapter(getActivity().getSupportFragmentManager(),
-                Titles, Numboftabs, answersList);
+                Titles, Numboftabs, answersList, commentsList);
 
         // Assigning ViewPager View and setting the adapter
         pager = (QuestionDetailViewPager) ll.findViewById(R.id.questionDetailPager);
@@ -94,6 +96,13 @@ public class QuestionDetailInfoFragment extends Fragment {
         for (int i = 0; i < answers.length(); i++) {
             Answer answer = new Answer(answers.getJSONObject(i));
             answersList.add(answer);
+        }
+    }
+
+    private void setCommentListData(JSONArray comments) throws JSONException {
+        for (int i = 0; i < comments.length(); i++) {
+            Comment comment = new Comment(comments.getJSONObject(i));
+            commentsList.add(comment);
         }
     }
 }
