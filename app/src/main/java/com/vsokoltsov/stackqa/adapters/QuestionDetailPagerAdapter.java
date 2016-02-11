@@ -3,6 +3,7 @@ package com.vsokoltsov.stackqa.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.view.ViewGroup;
 
 import com.vsokoltsov.stackqa.models.Answer;
 import com.vsokoltsov.stackqa.models.Comment;
@@ -19,6 +20,7 @@ public class QuestionDetailPagerAdapter extends FragmentStatePagerAdapter {
     int NumbOfTabs; // Store the number of tabs, this will also be passed when the ViewPagerAdapter is created
     ArrayList<Answer> answersList;
     ArrayList<Comment> commentsList;
+    private int mCurrentPosition = -1;
 
 
     // Build a Constructor and assign the passed Values to appropriate values in the class
@@ -68,6 +70,19 @@ public class QuestionDetailPagerAdapter extends FragmentStatePagerAdapter {
 
     public void setAnswersData(ArrayList<Answer> answers) {
         this.answersList = answers;
+    }
+
+    @Override
+    public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        super.setPrimaryItem(container, position, object);
+        if (position != mCurrentPosition) {
+            Fragment fragment = (Fragment) object;
+            QuestionDetailViewPager pager = (QuestionDetailViewPager) container;
+            if (fragment != null && fragment.getView() != null) {
+                mCurrentPosition = position;
+                pager.measureCurrentView(fragment.getView());
+            }
+        }
     }
 
 
