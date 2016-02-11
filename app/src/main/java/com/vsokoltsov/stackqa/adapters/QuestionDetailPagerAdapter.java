@@ -65,4 +65,6 @@ public class QuestionDetailPagerAdapter extends FragmentStatePagerAdapter {
     public void setAnswersData(ArrayList<Answer> answers) {
         this.answersList = answers;
     }
+
+
 }

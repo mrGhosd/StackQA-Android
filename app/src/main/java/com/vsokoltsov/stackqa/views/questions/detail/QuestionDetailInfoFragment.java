@@ -1,5 +1,6 @@
 package com.vsokoltsov.stackqa.views.questions.detail;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -10,6 +11,8 @@ import android.widget.LinearLayout;
 
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.QuestionDetailPagerAdapter;
+import com.vsokoltsov.stackqa.adapters.QuestionDetailViewPager;
+import com.vsokoltsov.stackqa.adapters.ViewPagerAdapter;
 import com.vsokoltsov.stackqa.models.Answer;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.util.SlidingTabLayout;
@@ -25,7 +28,7 @@ import java.util.ArrayList;
 public class QuestionDetailInfoFragment extends Fragment {
     public Question detailQuestion;
     private View fragmentView;
-    ViewPager pager;
+    QuestionDetailViewPager pager;
     QuestionDetailPagerAdapter adapter;
     SlidingTabLayout tabs;
     CharSequence Titles[]={"Answers","Comments"};
@@ -55,6 +58,35 @@ public class QuestionDetailInfoFragment extends Fragment {
                 e.printStackTrace();
             }
         }
+        adapter =  new QuestionDetailPagerAdapter(getActivity().getSupportFragmentManager(),
+                Titles, Numboftabs, answersList);
+
+        // Assigning ViewPager View and setting the adapter
+        pager = (QuestionDetailViewPager) ll.findViewById(R.id.questionDetailPager);
+        pager.setAdapter(adapter);
+        pager.setLayoutMode(View.MEASURED_SIZE_MASK);
+
+        // Assiging the Sliding Tab Layout View
+        tabs = (SlidingTabLayout) ll.findViewById(R.id.tabs);
+        tabs.setBackground(new ColorDrawable(R.color.highlighted_text_material_light));
+        tabs.setDistributeEvenly(true); // To make the Tabs Fixed set this true, This makes the tabs Space Evenly in Available width
+        tabs.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+            }
+        });
+
+        // Setting Custom Color for the Scroll bar indicator of the Tab View
+        tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+            @Override
+            public int getIndicatorColor(int position) {
+                return getResources().getColor(R.color.white);
+            }
+        });
+
+        // Setting the ViewPager For the SlidingTabsLayout
+        tabs.setViewPager(pager);
         return ll;
     }
 

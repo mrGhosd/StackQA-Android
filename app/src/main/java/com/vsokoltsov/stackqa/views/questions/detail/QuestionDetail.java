@@ -53,6 +53,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     public MaterialProgressBar progressBar;
     public static Question selectedQuestion;
     private static JSONArray answersList;
+    private static JSONArray commentsList;
     private ScrollView layout;
     private static List<Question> questionsList = new ArrayList<Question>();
     private boolean replaceFragment = false;
@@ -238,6 +239,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     public void successQuestionLoadCallback(JSONObject response) throws JSONException {
         selectedQuestion = new Question(response);
         answersList = response.getJSONArray("answers");
+        commentsList = response.getJSONArray("comments");
         setDataToDetailView();
     }
 
@@ -248,7 +250,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         loadMainQuestionFragment(arguments, fragmentTransaction);
         try {
-            loadQuestionAnswersFragment(arguments, fragmentTransaction, answersList);
+            loadQuestionDetailInfo(arguments, fragmentTransaction, answersList, commentsList);
         } catch(Exception e){
             e.printStackTrace();
         }
