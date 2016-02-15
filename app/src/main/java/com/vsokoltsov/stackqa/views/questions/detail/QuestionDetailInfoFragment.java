@@ -123,7 +123,11 @@ public class QuestionDetailInfoFragment extends Fragment {
     }
 
     public void setNewAnswerObject(Answer newAnswer) {
-        adapter.answersList.add(0, newAnswer);
-        adapter.notifyDataSetChanged();
+        adapter.answersFragment.setNewAnswer(newAnswer);
+    }
+
+    public void setNewCommentObject(Comment comment) {
+        adapter.commentsFragment.setNewComment(comment);
+
     }
 }

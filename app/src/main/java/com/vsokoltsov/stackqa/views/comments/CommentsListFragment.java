@@ -32,9 +32,9 @@ public class CommentsListFragment extends Fragment {
     private View fragmentView;
     private ListView list;
     private List<Comment> commentsList = new ArrayList<Comment>();
-    private CommentsListRecycleViewAdapter commentAdapter;
-    private CardView commentsListWrapper;
-    private TextView emptyListView;
+    public CommentsListRecycleViewAdapter commentAdapter;
+    public  CardView commentsListWrapper;
+    public TextView emptyListView;
     public MaterialProgressBar progressBar;
     private RecyclerView rv;
     private LinearLayoutManager llm;
@@ -63,6 +63,16 @@ public class CommentsListFragment extends Fragment {
         CommentsListFragment f = new CommentsListFragment();
         f.commentsList = comments;
         return f;
+    }
+
+    public void setNewComment(Comment comment) {
+        int index = commentAdapter.comments.size();
+        if (index == 0) {
+            commentsListWrapper.setVisibility(View.VISIBLE);
+            emptyListView.setVisibility(View.GONE);
+        }
+        commentsList.add(0, comment);
+        commentAdapter.notifyDataSetChanged();
     }
 
     @Override

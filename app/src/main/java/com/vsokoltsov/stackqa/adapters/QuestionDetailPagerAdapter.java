@@ -21,6 +21,8 @@ public class QuestionDetailPagerAdapter extends FragmentStatePagerAdapter {
     int NumbOfTabs; // Store the number of tabs, this will also be passed when the ViewPagerAdapter is created
     public ArrayList<Answer> answersList;
     public ArrayList<Comment> commentsList;
+    public AnswerListFragment answersFragment;
+    public CommentsListFragment commentsFragment;
     private int mCurrentPosition = -1;
 
 
@@ -43,13 +45,13 @@ public class QuestionDetailPagerAdapter extends FragmentStatePagerAdapter {
 
         if(position == 0) // if the position is 0 we are returning the First tab
         {
-            AnswerListFragment tab1 = AnswerListFragment.newInstance(answersList);
-            return tab1;
+            answersFragment = AnswerListFragment.newInstance(answersList);
+            return answersFragment;
         }
         else              // As we are having 2 tabs if the position is now 0 it must be 1 so we are returning second tab
         {
-            CommentsListFragment tab2 = new CommentsListFragment();
-            return tab2;
+            commentsFragment = CommentsListFragment.newInstance(commentsList);;
+            return commentsFragment;
         }
 
 

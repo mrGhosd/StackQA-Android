@@ -82,7 +82,7 @@ public class CommentsListRecycleViewAdapter extends RecyclerView.Adapter<Comment
             super(itemView);
             mAdapter = adapter;
 //            res = mAdapter.activity.getResources();
-//            ll = (LinearLayout) itemView.findViewById(R.id.answerRowItem);
+            ll = (LinearLayout) itemView.findViewById(R.id.commentRowItem);
             text = (TextView) itemView.findViewById(R.id.commentText);
             createdAt = (TextView) itemView.findViewById(R.id.commentCreatedAt);
 //            commentsCount = (TextView) itemView.findViewById(R.id.answerCommentsCount);

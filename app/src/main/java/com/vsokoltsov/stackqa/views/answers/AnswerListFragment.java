@@ -101,6 +101,16 @@ public class AnswerListFragment extends Fragment {
         this.activity = activity;
     }
 
+    public void setNewAnswer(Answer answer) {
+        int index = answerAdapter.answers.size();
+        if (index == 0) {
+            answersListWrapper.setVisibility(View.VISIBLE);
+            emptyListView.setVisibility(View.GONE);
+        }
+        answerList.add(0, answer);
+        answerAdapter.notifyDataSetChanged();
+    }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

@@ -23,10 +23,13 @@ import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.AnswersListRecycleViewAdapter;
 import com.vsokoltsov.stackqa.adapters.RVAdapter;
 import com.vsokoltsov.stackqa.messages.AnswerMessage;
+import com.vsokoltsov.stackqa.messages.CommentMessage;
 import com.vsokoltsov.stackqa.messages.QuestionMessage;
 import com.vsokoltsov.stackqa.models.Answer;
 import com.vsokoltsov.stackqa.models.AnswerFactory;
 import com.vsokoltsov.stackqa.models.AuthManager;
+import com.vsokoltsov.stackqa.models.Comment;
+import com.vsokoltsov.stackqa.models.CommentFactory;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.models.QuestionFactory;
 import com.vsokoltsov.stackqa.util.MaterialProgressBar;
@@ -170,6 +173,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
             }
             else {
                 params.put("comment", answerParams);
+                CommentFactory.getInstance().createForQuestion(selectedQuestion.getID(), params);
             }
         }
     }
@@ -408,10 +412,35 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
 
     }
 
+    public void onEvent(CommentMessage event) throws JSONException {
+        if (event.response instanceof JSONObject) {
+            switch (event.operationName){
+                case "create":
+                    parseSuccessCommentCreation(event.response);
+                    break;
+                case "update":
+//                    parseUpdatedAnswer(event.response);
+                    break;
+            }
+        } else {
+            switch (event.operationName){
+                case "create":
+                    break;
+            }
+        }
+
+    }
+
     private void parseSuccessAnswerCreation(JSONObject object) {
         answerText.setText("");
         Answer answer = new Answer(object);
         questionDetailInforFragment.setNewAnswerObject(answer);
+    }
+
+    private void parseSuccessCommentCreation(JSONObject object) {
+        answerText.setText("");
+        Comment comment = new Comment(object);
+        questionDetailInforFragment.setNewCommentObject(comment);
     }
 
     private void parseFailureAnswerCreation(JSONObject object) {
