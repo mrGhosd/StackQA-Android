@@ -36,8 +36,8 @@ public class QuestionDetailInfoFragment extends Fragment {
     List<String> titles = new ArrayList<String>();
     int Numboftabs =2;
     LinearLayout ll;
-    private ArrayList<Answer> answersList = new ArrayList<Answer>();
-    private ArrayList<Comment> commentsList = new ArrayList<Comment>();
+    public ArrayList<Answer> answersList = new ArrayList<Answer>();
+    public ArrayList<Comment> commentsList = new ArrayList<Comment>();
     private QuestionDetail activity;
     private Resources res;
 
@@ -120,5 +120,10 @@ public class QuestionDetailInfoFragment extends Fragment {
             Comment comment = new Comment(comments.getJSONObject(i));
             commentsList.add(comment);
         }
+    }
+
+    public void setNewAnswerObject(Answer newAnswer) {
+        adapter.answersList.add(0, newAnswer);
+        adapter.notifyDataSetChanged();
     }
 }

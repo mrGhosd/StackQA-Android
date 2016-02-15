@@ -19,8 +19,8 @@ import java.util.List;
 public class QuestionDetailPagerAdapter extends FragmentStatePagerAdapter {
     List<String> Titles; // This will Store the Titles of the Tabs which are Going to be passed when ViewPagerAdapter is created
     int NumbOfTabs; // Store the number of tabs, this will also be passed when the ViewPagerAdapter is created
-    ArrayList<Answer> answersList;
-    ArrayList<Comment> commentsList;
+    public ArrayList<Answer> answersList;
+    public ArrayList<Comment> commentsList;
     private int mCurrentPosition = -1;
 
 
@@ -86,5 +86,8 @@ public class QuestionDetailPagerAdapter extends FragmentStatePagerAdapter {
         }
     }
 
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
 
 }

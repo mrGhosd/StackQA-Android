@@ -67,6 +67,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     private JSONObject editedAnswer;
     private LinearLayout answerTextLayout;
     private boolean isTablet;
+    private QuestionDetailInfoFragment questionDetailInforFragment;
 
     private EditText answerItemText;
     private LinearLayout answerViewMain;
@@ -163,12 +164,13 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
             answerParams.put("user_id", authManager.getCurrentUser().getId());
             answerParams.put("question_id", selectedQuestion.getID());
             JSONObject params = new JSONObject();
-            params.put("answer", answerParams);
-            if (answersListFragment.getAnswersListSize() != 0) {
-                answersListFragment.getProgressBar().setVisibility(View.VISIBLE);
-                answersListFragment.getRv().setAlpha((float) 0.5);
+            if (this.isAnswerTab) {
+                params.put("answer", answerParams);
+                AnswerFactory.getInstance().create(selectedQuestion.getID(), params);
             }
-            AnswerFactory.getInstance().create(selectedQuestion.getID(), params);
+            else {
+                params.put("comment", answerParams);
+            }
         }
     }
 
@@ -278,13 +280,13 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
                                         JSONArray answersList, JSONArray commentsList) {
         arguments.putString("answers", answersList.toString());
         arguments.putString("comments", commentsList.toString());
-        QuestionDetailInfoFragment fragment = new QuestionDetailInfoFragment();
-        fragment.setArguments(arguments);
+        questionDetailInforFragment = new QuestionDetailInfoFragment();
+        questionDetailInforFragment.setArguments(arguments);
         if (replaceFragment) {
-            fragmentTransaction.replace(R.id.question_info, fragment);
+            fragmentTransaction.replace(R.id.question_info, questionDetailInforFragment);
         }
         else {
-            fragmentTransaction.add(R.id.question_info, fragment);
+            fragmentTransaction.add(R.id.question_info, questionDetailInforFragment);
         }
     }
 
@@ -409,7 +411,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     private void parseSuccessAnswerCreation(JSONObject object) {
         answerText.setText("");
         Answer answer = new Answer(object);
-        answersListFragment.setNewAnswerItem(answer);
+        questionDetailInforFragment.setNewAnswerObject(answer);
     }
 
     private void parseFailureAnswerCreation(JSONObject object) {
