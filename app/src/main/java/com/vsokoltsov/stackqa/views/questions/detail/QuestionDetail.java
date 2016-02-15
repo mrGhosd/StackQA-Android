@@ -52,6 +52,8 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         AnswersListRecycleViewAdapter.AnswerViewHolder.AnswerViewHolderCallbacks, SwipeRefreshLayout.OnRefreshListener {
     public MaterialProgressBar progressBar;
     public static Question selectedQuestion;
+    public boolean isAnswerTab;
+
     private static JSONArray answersList;
     private static JSONArray commentsList;
     private ScrollView layout;

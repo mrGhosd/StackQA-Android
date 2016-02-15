@@ -11,12 +11,13 @@ import com.vsokoltsov.stackqa.views.answers.AnswerListFragment;
 import com.vsokoltsov.stackqa.views.comments.CommentsListFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by vsokoltsov on 07.01.16.
  */
 public class QuestionDetailPagerAdapter extends FragmentStatePagerAdapter {
-    CharSequence Titles[]; // This will Store the Titles of the Tabs which are Going to be passed when ViewPagerAdapter is created
+    List<String> Titles; // This will Store the Titles of the Tabs which are Going to be passed when ViewPagerAdapter is created
     int NumbOfTabs; // Store the number of tabs, this will also be passed when the ViewPagerAdapter is created
     ArrayList<Answer> answersList;
     ArrayList<Comment> commentsList;
@@ -25,7 +26,7 @@ public class QuestionDetailPagerAdapter extends FragmentStatePagerAdapter {
 
     // Build a Constructor and assign the passed Values to appropriate values in the class
     public QuestionDetailPagerAdapter(FragmentManager fm,
-                                      CharSequence mTitles[],
+                                      List<String> mTitles,
                                       int mNumbOfTabsumb,
                                       ArrayList<Answer> answers,
                                       ArrayList<Comment> comments) {
@@ -58,7 +59,7 @@ public class QuestionDetailPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return Titles[position];
+        return Titles.get(position);
     }
 
     // This method return the Number of tabs for the tabs Strip

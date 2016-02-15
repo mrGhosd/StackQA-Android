@@ -1,5 +1,6 @@
 package com.vsokoltsov.stackqa.views.questions.detail;
 
+import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by vsokoltsov on 07.01.16.
@@ -31,11 +33,13 @@ public class QuestionDetailInfoFragment extends Fragment {
     QuestionDetailViewPager pager;
     QuestionDetailPagerAdapter adapter;
     SlidingTabLayout tabs;
-    CharSequence Titles[]={"Answers","Comments"};
+    List<String> titles = new ArrayList<String>();
     int Numboftabs =2;
     LinearLayout ll;
     private ArrayList<Answer> answersList = new ArrayList<Answer>();
     private ArrayList<Comment> commentsList = new ArrayList<Comment>();
+    private QuestionDetail activity;
+    private Resources res;
 
     public void onCreate(Bundle savedInstanceState) {
 
@@ -47,6 +51,11 @@ public class QuestionDetailInfoFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         super.onCreateView(inflater, container, savedInstanceState);
+        res = getResources();
+        titles.add(res.getString(R.string.question_detail_answer_tab));
+        titles.add(res.getString(R.string.question_detail_comment_tab));
+        activity = (QuestionDetail) getActivity();
+        activity.isAnswerTab = true;
 //        fragmentView =  inflater.inflate(R.layout.question_detail_info_fragment, container, false);
         ll = (LinearLayout) inflater.inflate(R.layout.question_detail_info_fragment, container, false);
         // Creating The Toolbar and setting it as the Toolbar for the activity
@@ -61,7 +70,7 @@ public class QuestionDetailInfoFragment extends Fragment {
             }
         }
         adapter =  new QuestionDetailPagerAdapter(getActivity().getSupportFragmentManager(),
-                Titles, Numboftabs, answersList, commentsList);
+                titles, Numboftabs, answersList, commentsList);
 
         // Assigning ViewPager View and setting the adapter
         pager = (QuestionDetailViewPager) ll.findViewById(R.id.questionDetailPager);
@@ -76,6 +85,13 @@ public class QuestionDetailInfoFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
+                String pageTitle = String.valueOf(adapter.getPageTitle(position));
+                if (pageTitle == res.getString(R.string.question_detail_answer_tab)) {
+                    activity.isAnswerTab = true;
+                }
+                else {
+                    activity.isAnswerTab = false;
+                }
             }
         });
 
