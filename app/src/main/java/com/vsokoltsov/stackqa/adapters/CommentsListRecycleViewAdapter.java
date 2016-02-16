@@ -1,10 +1,14 @@
 package com.vsokoltsov.stackqa.adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -16,7 +20,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.controllers.AppController;
+import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.Comment;
+import com.vsokoltsov.stackqa.util.PopupWithMenuIcons;
 
 import java.util.List;
 
@@ -51,6 +57,7 @@ public class CommentsListRecycleViewAdapter extends RecyclerView.Adapter<Comment
         holder.setUserInfo(comments.get(position));
         holder.text.setText(comments.get(position).getText());
         holder.createdAt.setText(comments.get(position).getCreatedAt());
+        holder.callbacks = (CommentViewHolder.CommentViewHolderCallbacks) activity;
 
     }
 
@@ -70,12 +77,13 @@ public class CommentsListRecycleViewAdapter extends RecyclerView.Adapter<Comment
 
         private TextView text;
         private TextView createdAt;
-        private TextView rate;
         private ImageButton popupMenu;
+        private LinearLayout popupMenuWrapper;
         private Comment comment;
+        public CommentViewHolderCallbacks callbacks;
         private CommentsListRecycleViewAdapter mAdapter;
         private LinearLayout formLayout;
-        private LinearLayout answerViewMain;
+        private LinearLayout commentViewMain;
         private EditText answerText;
 
         CommentViewHolder(final View itemView, final CommentsListRecycleViewAdapter adapter) {
@@ -85,45 +93,42 @@ public class CommentsListRecycleViewAdapter extends RecyclerView.Adapter<Comment
             ll = (LinearLayout) itemView.findViewById(R.id.commentRowItem);
             text = (TextView) itemView.findViewById(R.id.commentText);
             createdAt = (TextView) itemView.findViewById(R.id.commentCreatedAt);
-//            commentsCount = (TextView) itemView.findViewById(R.id.answerCommentsCount);
-//            rate = (TextView) itemView.findViewById(R.id.answerRateCount);
-//            final LinearLayout popupMenuWrapper = (LinearLayout) itemView.findViewById(R.id.popupMenuWrapper);
-//            popupMenu = (ImageButton) itemView.findViewById(R.id.popupMenu);
-//
-//            if (AuthManager.getInstance().getCurrentUser() == null) {
-//                popupMenuWrapper.setVisibility(View.GONE);
-//            }
-//            else {
-//                popupMenuWrapper.setVisibility(View.VISIBLE);
-//                popupMenu.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        Context context = view.getContext();
-//                        PopupWithMenuIcons popup = new PopupWithMenuIcons(context, view);
-//                        // This activity implements OnMenuItemClickListener
-//                        MenuInflater inflater = popup.getMenuInflater();
-//                        popup.inflate(R.menu.menu_answer_list);
-//                        MenuItem editItem = popup.getMenu().getItem(0);
-//                        MenuItem deleteItem = popup.getMenu().getItem(1);
-//                        MenuItem complainItem = popup.getMenu().getItem(2);
-//                        if (AuthManager.getInstance().getCurrentUser().getId() != answer.getUser().getId()) {
-//                            editItem.setVisible(false);
-//                            deleteItem.setVisible(false);
-//                        }
-//                        formLayout = (LinearLayout) itemView.findViewById(R.id.answerFormItem);
-//                        answerViewMain = (LinearLayout) itemView.findViewById(R.id.answerViewMain);
-//                        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//                            @Override
-//                            public boolean onMenuItemClick(MenuItem item) {
-//                                callbacks.onOptionsClicked(answer, itemView, item);
-//                                return true;
-//                            }
-//                        });
-//                        popup.show();
-//                    }
-//                });
-//
-//            }
+            popupMenu = (ImageButton) itemView.findViewById(R.id.popupMenu);
+            popupMenuWrapper = (LinearLayout) itemView.findViewById(R.id.popupMenuWrapper);
+            if (AuthManager.getInstance().getCurrentUser() == null) {
+                popupMenuWrapper.setVisibility(View.GONE);
+            }
+            else {
+                popupMenuWrapper.setVisibility(View.VISIBLE);
+                popupMenu.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Context context = view.getContext();
+                        PopupWithMenuIcons popup = new PopupWithMenuIcons(context, view);
+                        // This activity implements OnMenuItemClickListener
+                        MenuInflater inflater = popup.getMenuInflater();
+                        popup.inflate(R.menu.menu_answer_list);
+                        MenuItem editItem = popup.getMenu().getItem(0);
+                        MenuItem deleteItem = popup.getMenu().getItem(1);
+                        MenuItem complainItem = popup.getMenu().getItem(2);
+                        if (AuthManager.getInstance().getCurrentUser().getId() != comment.getUser().getId()) {
+                            editItem.setVisible(false);
+                            deleteItem.setVisible(false);
+                        }
+
+                        commentViewMain = (LinearLayout) itemView.findViewById(R.id.commentViewMain);
+                        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                callbacks.onOptionsClicked(comment, itemView, item);
+                                return true;
+                            }
+                        });
+                        popup.show();
+                    }
+                });
+
+            }
         }
 
         public void setUserInfo(final Comment comment){
@@ -142,6 +147,10 @@ public class CommentsListRecycleViewAdapter extends RecyclerView.Adapter<Comment
 
                 }
             });
+        }
+
+        public interface CommentViewHolderCallbacks {
+            void onOptionsClicked(Comment comment, View itemView, MenuItem menuItem);
         }
     }
 }

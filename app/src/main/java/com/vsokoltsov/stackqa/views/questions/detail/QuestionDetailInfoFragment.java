@@ -20,6 +20,7 @@ import com.vsokoltsov.stackqa.util.SlidingTabLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,5 +130,22 @@ public class QuestionDetailInfoFragment extends Fragment {
     public void setNewCommentObject(Comment comment) {
         adapter.commentsFragment.setNewComment(comment);
 
+    }
+
+    public void replaceUpdatedComment(JSONObject editedComment) {
+        List<Comment> comments = adapter.commentsFragment.commentsList;
+        for (int i = 0; i < comments.size(); i++) {
+            Comment comment = null;
+            try {
+                comment =  comments.get(i);
+                if(comment.getId() == editedComment.getInt("id")) {
+                    comment.setText((String) editedComment.get("text"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+        adapter.commentsFragment.commentAdapter.notifyDataSetChanged();
     }
 }

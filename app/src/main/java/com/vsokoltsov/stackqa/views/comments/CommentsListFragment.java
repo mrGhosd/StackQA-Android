@@ -31,7 +31,7 @@ import java.util.List;
 public class CommentsListFragment extends Fragment {
     private View fragmentView;
     private ListView list;
-    private List<Comment> commentsList = new ArrayList<Comment>();
+    public List<Comment> commentsList = new ArrayList<Comment>();
     public CommentsListRecycleViewAdapter commentAdapter;
     public  CardView commentsListWrapper;
     public TextView emptyListView;
@@ -133,5 +133,4 @@ public class CommentsListFragment extends Fragment {
 //        adapter.notifyDataSetChanged();
         return fragmentView;
     }
-
 }

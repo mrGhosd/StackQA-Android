@@ -9,6 +9,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <include layout="@layout/comment_form_item" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,13 +30,26 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/commentText"
                     android:minWidth="160dp"
                     android:gravity="left" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/popupMenuWrapper">
+                <ImageButton
+                    android:id="@+id/popupMenu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/abc_ic_menu_moreoverflow_mtrl_alpha"
+                    android:background="@null"
+                    android:tint="#000"/>
             </LinearLayout>
         </LinearLayout>
         <LinearLayout

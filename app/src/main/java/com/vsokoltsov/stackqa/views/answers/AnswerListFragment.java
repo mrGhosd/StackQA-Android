@@ -41,7 +41,7 @@ import java.util.List;
 public class AnswerListFragment extends Fragment {
     private Activity activity;
     private QuestionDetail mainActivity;
-    private List<Answer> answerList = new ArrayList<Answer>();
+    public List<Answer> answerList = new ArrayList<Answer>();
 
     public ListView list;
     private View fragmentView;

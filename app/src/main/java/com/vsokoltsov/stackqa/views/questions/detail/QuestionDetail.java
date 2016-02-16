@@ -1,5 +1,6 @@
 package com.vsokoltsov.stackqa.views.questions.detail;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -21,6 +23,7 @@ import android.widget.ScrollView;
 
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.adapters.AnswersListRecycleViewAdapter;
+import com.vsokoltsov.stackqa.adapters.CommentsListRecycleViewAdapter;
 import com.vsokoltsov.stackqa.adapters.RVAdapter;
 import com.vsokoltsov.stackqa.messages.AnswerMessage;
 import com.vsokoltsov.stackqa.messages.CommentMessage;
@@ -52,7 +55,8 @@ import de.greenrobot.event.EventBus;
 
 public class QuestionDetail extends ActionBarActivity implements QuestionsListFragment.Callbacks,
         RVAdapter.QuestionsViewHolder.QuestionViewHolderCallbacks,
-        AnswersListRecycleViewAdapter.AnswerViewHolder.AnswerViewHolderCallbacks, SwipeRefreshLayout.OnRefreshListener {
+        AnswersListRecycleViewAdapter.AnswerViewHolder.AnswerViewHolderCallbacks,
+        SwipeRefreshLayout.OnRefreshListener, CommentsListRecycleViewAdapter.CommentViewHolder.CommentViewHolderCallbacks {
     public MaterialProgressBar progressBar;
     public static Question selectedQuestion;
     public boolean isAnswerTab;
@@ -76,6 +80,8 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     private LinearLayout answerViewMain;
     private LinearLayout formLayout;
     private SwipeRefreshLayout swipeLayout;
+
+    private EditText commentItemText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -419,7 +425,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
                     parseSuccessCommentCreation(event.response);
                     break;
                 case "update":
-//                    parseUpdatedAnswer(event.response);
+                    parseSuccessCommentUpdate(event.response);
                     break;
             }
         } else {
@@ -441,6 +447,25 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         answerText.setText("");
         Comment comment = new Comment(object);
         questionDetailInforFragment.setNewCommentObject(comment);
+    }
+
+    private void parseSuccessCommentUpdate(JSONObject object) {
+        questionDetailInforFragment.replaceUpdatedComment(object);
+    }
+
+    private void replaceUpdatedComment(JSONObject editedComment) {
+        for (int i = 0; i < answersList.length(); i++) {
+            JSONObject answer = null;
+            try {
+                answer = (JSONObject) answersList.get(i);
+                if(answer.getInt("id") == editedAnswer.getInt("id")) {
+                    answer.put("text", editedAnswer.get("text"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     private void parseFailureAnswerCreation(JSONObject object) {
@@ -532,5 +557,50 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     @Override
     public void onRefresh() {
         loadQuestionData();
+    }
+
+    @Override
+    public void onOptionsClicked(final Comment comment, View itemView, MenuItem menuItem) {
+        final LinearLayout formLayout = (LinearLayout) itemView.findViewById(R.id.commentFormItem);
+        final LinearLayout itemLayout = (LinearLayout) itemView.findViewById(R.id.commentViewMain);
+        commentItemText = (EditText) formLayout.findViewById(R.id.commentTextItem);
+        String menuItemTitle = (String) menuItem.getTitle();
+        String editButtonTitle = getResources().getString(R.string.answer_popup_edit);
+        if (menuItemTitle.equals(editButtonTitle)) {
+            itemLayout.setVisibility(View.GONE);
+            formLayout.setVisibility(View.VISIBLE);
+        }
+        commentItemText.setText(comment.getText());
+        ImageButton saveButton = (ImageButton) itemView.findViewById(R.id.saveCommentForm);
+        ImageButton cancelButton = (ImageButton) itemView.findViewById(R.id.cancelCommentForm);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                JSONObject answerParams = new JSONObject();
+                try {
+                    answerParams.put("text", commentItemText.getText().toString());
+                    answerParams.put("user_id", AuthManager.getInstance().getCurrentUser().getId());
+                    answerParams.put("question_id", selectedQuestion.getID());
+                    JSONObject params = new JSONObject();
+                    params.put("comment", answerParams);
+                    CommentFactory.getInstance().updateForQuestion(selectedQuestion.getID(),
+                            comment.getId(), params);
+                    formLayout.setVisibility(View.GONE);
+                    itemLayout.setVisibility(View.VISIBLE);
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                formLayout.setVisibility(View.GONE);
+                itemLayout.setVisibility(View.VISIBLE);
+            }
+        });
     }
 }
