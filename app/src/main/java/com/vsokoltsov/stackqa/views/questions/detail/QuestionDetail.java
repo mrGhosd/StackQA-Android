@@ -39,6 +39,7 @@ import com.vsokoltsov.stackqa.util.MaterialProgressBar;
 import com.vsokoltsov.stackqa.views.answers.AnswerForm;
 import com.vsokoltsov.stackqa.views.answers.AnswerFormActivity;
 import com.vsokoltsov.stackqa.views.answers.AnswerListFragment;
+import com.vsokoltsov.stackqa.views.comments.CommentsListActivity;
 import com.vsokoltsov.stackqa.views.questions.form.QuestionsFormActivity;
 import com.vsokoltsov.stackqa.views.questions.list.QuestionsListActivity;
 import com.vsokoltsov.stackqa.views.questions.list.QuestionsListFragment;
@@ -547,6 +548,14 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
             }
 
         }
+    }
+
+    @Override
+    public void onCommentsClicked(Answer answer) {
+        Intent detailIntent = new Intent(this, CommentsListActivity.class);
+        detailIntent.putExtra("answer", answer);
+        startActivity(detailIntent);
+        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
     }
 
     private void parseUpdatedAnswer(JSONObject answer) {

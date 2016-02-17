@@ -59,7 +59,6 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
         holder.rate.setText(String.valueOf(answers.get(position).getRate()));
         holder.createdAt.setText(answers.get(position).getCreatedAt());
         holder.commentsCount.setText(String.valueOf(answers.get(position).getCommentsCount()));
-
     }
 
     @Override
@@ -87,6 +86,7 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
         private LinearLayout answerViewMain;
         private EditText answerText;
         private AnswerViewHolderCallbacks callbacks;
+        private LinearLayout answerCommentWrapper;
 
         AnswerViewHolder(final View itemView, final AnswersListRecycleViewAdapter adapter) {
             super(itemView);
@@ -99,6 +99,7 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
             rate = (TextView) itemView.findViewById(R.id.answerRateCount);
             final LinearLayout popupMenuWrapper = (LinearLayout) itemView.findViewById(R.id.popupMenuWrapper);
             popupMenu = (ImageButton) itemView.findViewById(R.id.popupMenu);
+            answerCommentWrapper = (LinearLayout) itemView.findViewById(R.id.answerCommentWrapper);
 
             if (AuthManager.getInstance().getCurrentUser() == null) {
                 popupMenuWrapper.setVisibility(View.GONE);
@@ -133,6 +134,13 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
                     }
                 });
 
+                answerCommentWrapper.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        callbacks.onCommentsClicked(answer);
+                    }
+                });
+
             }
         }
 
@@ -156,6 +164,7 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
 
         public interface AnswerViewHolderCallbacks {
             void onOptionsClicked(Answer answer, View itemView, MenuItem menuItem);
+            void onCommentsClicked(Answer answer);
         }
 
     }

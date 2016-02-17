@@ -3,6 +3,7 @@ package com.vsokoltsov.stackqa.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,6 +11,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -23,6 +25,7 @@ public class Answer implements Parcelable {
     private Date createdAt;
     private int commentsCount;
     private int rate;
+    private List<Comment> comments;
 
     public Answer(){}
 
@@ -106,12 +109,6 @@ public class Answer implements Parcelable {
             answer.id = in.readInt();
             answer.questionID = in.readInt();
             answer.createdAt = (Date) in.readSerializable();
-
-//            try {
-//                answer.setCreatedAt(in.readString());
-//            } catch (ParseException e){
-//                e.printStackTrace();
-//            }
             return answer;
         }
         public Answer[] newArray(int size) {
@@ -125,5 +122,21 @@ public class Answer implements Parcelable {
         dest.writeInt(id);
         dest.writeInt(questionID);
         dest.writeSerializable(createdAt);
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(JSONArray commentsList)  {
+        for (int i = 0; i < commentsList.length(); i++) {
+            try {
+                Comment comment = new Comment(commentsList.getJSONObject(i));
+                comments.add(comment);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
