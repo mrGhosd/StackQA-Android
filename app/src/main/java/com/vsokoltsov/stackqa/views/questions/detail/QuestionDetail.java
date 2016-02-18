@@ -565,6 +565,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
 
     @Override
     public void onRefresh() {
+        replaceFragment = true;
         loadQuestionData();
     }
 
