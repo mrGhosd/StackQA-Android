@@ -1,5 +1,6 @@
 package com.vsokoltsov.stackqa.views.comments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -7,6 +8,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -24,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
@@ -40,6 +43,7 @@ public class CommentsListActivity extends ActionBarActivity
     private EditText commentText;
     private Answer answer;
     private CommentsListFragment commentsFragment;
+    private EditText commentItemText;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,6 +136,9 @@ public class CommentsListActivity extends ActionBarActivity
                 case "create":
                     successCommentCreationCallback(event.response);
                     break;
+                case "update":
+                    successCommentUpdateCallback(event.response);
+                    break;
             }
         } else {
             switch (event.operationName){
@@ -148,8 +155,65 @@ public class CommentsListActivity extends ActionBarActivity
         commentsFragment.setNewComment(comment);
     }
 
-    @Override
-    public void onOptionsClicked(Comment comment, View itemView, MenuItem menuItem) {
+    private void successCommentUpdateCallback(JSONObject editedComment) {
+        List<Comment> comments = commentList;
+        for (int i = 0; i < comments.size(); i++) {
+            Comment comment = null;
+            try {
+                comment =  comments.get(i);
+                if(comment.getId() == editedComment.getInt("id")) {
+                    comment.setText((String) editedComment.get("text"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
+        }
+        commentsFragment.commentAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onOptionsClicked(final Comment comment, View itemView, MenuItem menuItem) {
+        final LinearLayout formLayout = (LinearLayout) itemView.findViewById(R.id.commentFormItem);
+        final LinearLayout itemLayout = (LinearLayout) itemView.findViewById(R.id.commentViewMain);
+        commentItemText = (EditText) formLayout.findViewById(R.id.commentTextItem);
+        String menuItemTitle = (String) menuItem.getTitle();
+        String editButtonTitle = getResources().getString(R.string.answer_popup_edit);
+        if (menuItemTitle.equals(editButtonTitle)) {
+            itemLayout.setVisibility(View.GONE);
+            formLayout.setVisibility(View.VISIBLE);
+        }
+        commentItemText.setText(comment.getText());
+        ImageButton saveButton = (ImageButton) itemView.findViewById(R.id.saveCommentForm);
+        ImageButton cancelButton = (ImageButton) itemView.findViewById(R.id.cancelCommentForm);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                JSONObject commentParams = new JSONObject();
+                try {
+                    commentParams.put("text", commentItemText.getText().toString());
+                    commentParams.put("question_id", answer.getQuestionID());
+                    commentParams.put("answer_id", answer.getID());
+                    JSONObject params = new JSONObject();
+                    params.put("comment", commentParams);
+                    CommentFactory.getInstance().updateForAnswer(answer.getQuestionID(),
+                            answer.getID(), comment.getId(), params);
+                    formLayout.setVisibility(View.GONE);
+                    itemLayout.setVisibility(View.VISIBLE);
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                formLayout.setVisibility(View.GONE);
+                itemLayout.setVisibility(View.VISIBLE);
+            }
+        });
     }
 }
