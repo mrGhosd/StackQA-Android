@@ -8,12 +8,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.vsokoltsov.stackqa.R;
+import com.vsokoltsov.stackqa.models.Answer;
+import com.vsokoltsov.stackqa.models.Comment;
 import com.vsokoltsov.stackqa.views.questions.detail.QuestionDetail;
+
+import java.util.ArrayList;
 
 /**
  * Created by vsokoltsov on 18.02.16.
  */
 public class CommentsListActivity extends ActionBarActivity {
+    private CommentsListFragment fragment;
+    private ArrayList<Comment> commentList;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.comments_list_activity);
@@ -21,6 +28,16 @@ public class CommentsListActivity extends ActionBarActivity {
         setSupportActionBar(mActionBarToolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Bundle extras = getIntent().getExtras();
+        if(extras != null) {
+            Answer answer = extras.getParcelable("answer");
+            commentList = answer.getComments();
+        }
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        CommentsListFragment commentsFragment = CommentsListFragment.newInstance(commentList);
+        fragmentTransaction.add(R.id.comments_list, commentsFragment);
+        fragmentTransaction.commit();
     }
 
     @Override

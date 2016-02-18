@@ -24,6 +24,7 @@ import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.Comment;
 import com.vsokoltsov.stackqa.util.PopupWithMenuIcons;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -33,11 +34,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class CommentsListRecycleViewAdapter extends RecyclerView.Adapter<CommentsListRecycleViewAdapter.CommentViewHolder> {
 
-    public List<Comment> comments;
+    public List<Comment> comments = new ArrayList<Comment>();
     private Activity activity;
 
     public CommentsListRecycleViewAdapter(List<Comment> comments, Activity activity){
-        this.comments = comments;
+        if (comments != null) {
+            this.comments = comments;
+        }
         this.activity = activity;
     }
 
@@ -58,7 +61,6 @@ public class CommentsListRecycleViewAdapter extends RecyclerView.Adapter<Comment
         holder.text.setText(comments.get(position).getText());
         holder.createdAt.setText(comments.get(position).getCreatedAt());
         holder.callbacks = (CommentViewHolder.CommentViewHolderCallbacks) activity;
-
     }
 
     @Override
@@ -89,7 +91,6 @@ public class CommentsListRecycleViewAdapter extends RecyclerView.Adapter<Comment
         CommentViewHolder(final View itemView, final CommentsListRecycleViewAdapter adapter) {
             super(itemView);
             mAdapter = adapter;
-//            res = mAdapter.activity.getResources();
             ll = (LinearLayout) itemView.findViewById(R.id.commentRowItem);
             text = (TextView) itemView.findViewById(R.id.commentText);
             createdAt = (TextView) itemView.findViewById(R.id.commentCreatedAt);

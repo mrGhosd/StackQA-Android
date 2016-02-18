@@ -10,8 +10,8 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -25,7 +25,7 @@ public class Answer implements Parcelable {
     private Date createdAt;
     private int commentsCount;
     private int rate;
-    private List<Comment> comments;
+    private ArrayList<Comment> comments;
 
     public Answer(){}
 
@@ -124,7 +124,7 @@ public class Answer implements Parcelable {
         dest.writeSerializable(createdAt);
     }
 
-    public List<Comment> getComments() {
+    public ArrayList<Comment> getComments() {
         return comments;
     }
 

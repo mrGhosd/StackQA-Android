@@ -119,7 +119,7 @@ public class CommentsListFragment extends Fragment {
         else {
             llm.setOrientation(orientation);
         }
-        if (commentsList.size() == 0) {
+        if (commentsList != null && commentsList.size() == 0) {
             commentsListWrapper.setVisibility(View.GONE);
             emptyListView.setVisibility(View.VISIBLE);
         }
