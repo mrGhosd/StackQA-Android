@@ -33,6 +33,11 @@ public class CommentFactory implements RequestCallbacks {
         ApiRequest.getInstance(this).put(url, "update", params);
     }
 
+    public void createForAnswer(int questionId, int answerId, JSONObject params) {
+        String url = AppController.APP_HOST + "/api/v1/questions/" + questionId + "/answers/" + answerId + "/comments";
+        ApiRequest.getInstance(this).post(url, "create", params);
+    }
+
     @Override
     public void successCallback(String requestName, JSONObject object) throws JSONException {
         EventBus.getDefault().post(new CommentMessage(requestName, object));

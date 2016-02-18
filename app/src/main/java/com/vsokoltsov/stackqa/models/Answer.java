@@ -25,7 +25,7 @@ public class Answer implements Parcelable {
     private Date createdAt;
     private int commentsCount;
     private int rate;
-    private ArrayList<Comment> comments;
+    private ArrayList<Comment> comments = new ArrayList<Comment>();
 
     public Answer(){}
 
@@ -38,6 +38,7 @@ public class Answer implements Parcelable {
             if (object.has("created_at")) setCreatedAt(object.getString("created_at"));
             if (object.has("comments_count")) setCommentsCount(object.getInt("comments_count"));
             if (object.has("rate")) setRate(object.getInt("rate"));
+            if (object.has("comments")) setComments(object.getJSONArray("comments"));
         } catch(JSONException e){
             e.printStackTrace();
         } catch(ParseException e){
@@ -109,6 +110,7 @@ public class Answer implements Parcelable {
             answer.id = in.readInt();
             answer.questionID = in.readInt();
             answer.createdAt = (Date) in.readSerializable();
+            in.readTypedList(answer.comments, Comment.CREATOR);
             return answer;
         }
         public Answer[] newArray(int size) {
@@ -122,6 +124,7 @@ public class Answer implements Parcelable {
         dest.writeInt(id);
         dest.writeInt(questionID);
         dest.writeSerializable(createdAt);
+        dest.writeTypedList(comments);
     }
 
     public ArrayList<Comment> getComments() {

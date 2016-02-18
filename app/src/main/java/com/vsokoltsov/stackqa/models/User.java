@@ -1,5 +1,8 @@
 package com.vsokoltsov.stackqa.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.android.volley.toolbox.ImageLoader;
 import com.vsokoltsov.stackqa.controllers.AppController;
 
@@ -12,7 +15,7 @@ import java.net.MalformedURLException;
 /**
  * Created by vsokoltsov on 14.09.15.
  */
-public class User {
+public class User implements Parcelable{
     private String avatarUrl;
     private String surname;
     private String name;
@@ -34,6 +37,10 @@ public class User {
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public User() {
+
     }
 
     public void setAvatarUrl(String url) throws MalformedURLException, IOException {
@@ -83,5 +90,35 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+
+    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+        public User createFromParcel(Parcel in) {
+            User answer = new User();
+            answer.surname = in.readString();
+            answer.id = in.readInt();
+            answer.name = in.readString();
+            answer.email = in.readString();
+            answer.avatarUrl = in.readString();
+            return answer;
+        }
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(surname);
+        dest.writeInt(id);
+        dest.writeString(name);
+        dest.writeString(email);
+        dest.writeString(avatarUrl);
     }
 }

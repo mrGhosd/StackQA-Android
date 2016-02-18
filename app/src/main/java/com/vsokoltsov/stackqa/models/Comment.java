@@ -1,5 +1,8 @@
 package com.vsokoltsov.stackqa.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,13 +15,13 @@ import java.util.Locale;
 /**
  * Created by vsokoltsov on 07.01.16.
  */
-public class Comment {
+public class Comment implements Parcelable {
     private int id;
     private String text;
     private User user;
     private Date createdAt;
 
-    public Comment(JSONObject object){
+    public Comment(JSONObject object) {
         try {
             if (object.has("id")) setId(object.getInt("id"));
             if (object.has("text")) setText(object.getString("text"));
@@ -29,6 +32,10 @@ public class Comment {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    public Comment() {
+
     }
 
     public int getId() {
@@ -65,5 +72,32 @@ public class Comment {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
         Date date = format.parse(createdAt);
         this.createdAt = date;
+    }
+
+    public static final Parcelable.Creator<Comment> CREATOR = new Parcelable.Creator<Comment>() {
+        public Comment createFromParcel(Parcel in) {
+            Comment comment = new Comment();
+            comment.text = in.readString();
+            comment.id = in.readInt();
+            comment.createdAt = (Date) in.readSerializable();
+            comment.user = in.readParcelable(User.class.getClassLoader());
+            return comment;
+        }
+        public Comment[] newArray(int size) {
+            return new Comment[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(text);
+        dest.writeInt(id);
+        dest.writeSerializable(createdAt);
+        dest.writeParcelable(user, flags);
     }
 }

@@ -71,8 +71,13 @@ public class CommentsListFragment extends Fragment {
             commentsListWrapper.setVisibility(View.VISIBLE);
             emptyListView.setVisibility(View.GONE);
         }
-        commentsList.add(0, comment);
-        commentAdapter.notifyDataSetChanged();
+        try {
+            commentsList.add(0, comment);
+            commentAdapter.notifyDataSetChanged();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
