@@ -83,6 +83,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     private SwipeRefreshLayout swipeLayout;
 
     private EditText commentItemText;
+    private QuestionDetailFragment questionDetailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -276,13 +277,13 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
     }
 
     public void loadMainQuestionFragment(Bundle arguments, FragmentTransaction fragmentTransaction){
-        QuestionDetailFragment fragment = new QuestionDetailFragment();
-        fragment.setArguments(arguments);
+        questionDetailFragment = new QuestionDetailFragment();
+        questionDetailFragment.setArguments(arguments);
         if (replaceFragment) {
-            fragmentTransaction.replace(R.id.detail_fragment, fragment);
+            fragmentTransaction.replace(R.id.detail_fragment, questionDetailFragment);
         }
         else {
-            fragmentTransaction.add(R.id.detail_fragment, fragment);
+            fragmentTransaction.add(R.id.detail_fragment, questionDetailFragment);
         }
 
     }
@@ -383,12 +384,19 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         super.onStop();
     }
 
+    private void successRateCallback(JSONObject params) throws JSONException {
+        questionDetailFragment.setQuestionRate(params);
+    }
+
     // This method will be called when a MessageEvent is posted
     public void onEvent(QuestionMessage event) throws JSONException {
         if (event.response instanceof JSONObject) {
             switch (event.operationName){
                 case "detail":
                     successQuestionLoadCallback(event.response);
+                    break;
+                case "rate":
+                    successRateCallback(event.response);
                     break;
             }
         } else {

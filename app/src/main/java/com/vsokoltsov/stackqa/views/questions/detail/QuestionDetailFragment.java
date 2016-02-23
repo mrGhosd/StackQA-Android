@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +16,11 @@ import com.android.volley.toolbox.ImageLoader;
 import com.vsokoltsov.stackqa.R;
 import com.vsokoltsov.stackqa.controllers.AppController;
 import com.vsokoltsov.stackqa.models.Question;
+import com.vsokoltsov.stackqa.models.QuestionFactory;
+import com.vsokoltsov.stackqa.models.Vote;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +36,9 @@ public class QuestionDetailFragment extends Fragment{
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     public Question detailQuestion;
     private View fragmentView;
+    private ImageButton plusRate;
+    private ImageButton minusRate;
+    private TextView rateView;
 
 
     public QuestionDetailFragment() {
@@ -54,11 +63,42 @@ public class QuestionDetailFragment extends Fragment{
         if(detailQuestion != null){
             try {
                 TextView textView = (TextView) fragmentView.findViewById(R.id.questionText);
-                TextView rateView = (TextView) fragmentView.findViewById(R.id.questionRate);
+                rateView = (TextView) fragmentView.findViewById(R.id.questionRate);
                 TextView createdAtView = (TextView) fragmentView.findViewById(R.id.questionCreatedAt);
                 TextView titleView = (TextView) fragmentView.findViewById(R.id.questionTitle);
                 TextView tagsView = (TextView) fragmentView.findViewById(R.id.questionTags);
-
+                plusRate = (ImageButton) fragmentView.findViewById(R.id.rateUp);
+                minusRate = (ImageButton) fragmentView.findViewById(R.id.rateDown);
+                plusRate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        JSONObject rate = new JSONObject();
+                        try {
+                            rate.put("rate", "plus");
+                            if (detailQuestion.getCurrentUserVote() != null && detailQuestion.getCurrentUserVote().getVoteValue().equals("minus")) {
+                                minusRate.setImageResource(R.drawable.arrow_down_empty);
+                            }
+                            QuestionFactory.getInstance().rate(detailQuestion.getID(), rate);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                minusRate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        JSONObject rate = new JSONObject();
+                        try {
+                            rate.put("rate", "minus");
+                            if (detailQuestion.getCurrentUserVote() != null && detailQuestion.getCurrentUserVote().getVoteValue().equals("plus")) {
+                                plusRate.setImageResource(R.drawable.arrow_up_empty);
+                            }
+                            QuestionFactory.getInstance().rate(detailQuestion.getID(), rate);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
 
                 titleView.setText(detailQuestion.getTitle());
                 textView.setText(detailQuestion.getText());
@@ -72,6 +112,7 @@ public class QuestionDetailFragment extends Fragment{
                     tagsView.setText(detailQuestion.getTags());
                 }
 
+                setVoteInfo();
                 setCategoryInfo(fragmentView);
                 setUserInfo(fragmentView);
             } catch (Exception e){
@@ -79,6 +120,16 @@ public class QuestionDetailFragment extends Fragment{
             }
         }
         return fragmentView;
+    }
+
+    private void setVoteInfo() {
+        if (detailQuestion.getCurrentUserVote() != null) {
+            if (detailQuestion.getCurrentUserVote().getVoteValue().equals("plus")) {
+                plusRate.setImageResource(R.drawable.arrow_up);
+            } else if (detailQuestion.getCurrentUserVote().getVoteValue().equals("minus")) {
+                minusRate.setImageResource(R.drawable.arrow_down);
+            }
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -128,6 +179,34 @@ public class QuestionDetailFragment extends Fragment{
 
             }
         });
+    }
+
+    public void setQuestionRate(JSONObject rate) throws JSONException {
+        int rateValue = rate.getInt("rate");
+        String action = rate.getString("action");
+        if (detailQuestion.getCurrentUserVote() != null) {
+            if (action.equals("plus") && detailQuestion.getCurrentUserVote().getVoteValue().equals("minus")) {
+                minusRate.setImageResource(R.drawable.arrow_down_empty);
+            }
+            else if(action.equals("minus") && detailQuestion.getCurrentUserVote().getVoteValue().equals("plus")) {
+                plusRate.setImageResource(R.drawable.arrow_up_empty);
+            }
+            detailQuestion.setCurrentUserVote();
+        }
+        else {
+            if (action.equals("plus")) {
+                plusRate.setImageResource(R.drawable.arrow_up);
+            }
+            else {
+                minusRate.setImageResource(R.drawable.arrow_down);
+            }
+            Vote vote = new Vote();
+            vote.setVoteValue(action);
+            vote.setRate(rateValue);
+            detailQuestion.setCurrentUserVote(vote);
+        }
+
+        rateView.setText(String.valueOf(rateValue));
     }
 
     public void setUserInfo(View fragmentView){

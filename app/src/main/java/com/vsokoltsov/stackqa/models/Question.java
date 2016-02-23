@@ -35,6 +35,7 @@ public class Question implements Parcelable, RequestCallbacks{
     private int views;
     private String text;
     private String tags;
+    private Vote currentUserVote;
 
     public Question(){
 
@@ -46,6 +47,9 @@ public class Question implements Parcelable, RequestCallbacks{
             if (object.has("text")) setText(object.getString("text"));
             if (object.has("user")) setUser(object.getJSONObject("user"));
             if (object.has("tag_list")) setTags(object.getString("tag_list"));
+            if (object.has("current_user_voted") && !object.isNull("current_user_voted")) {
+                setCurrentUserVote(object.getJSONObject("current_user_voted"));
+            }
             setRate(object.getInt("rate"));
             setCategory(object.getJSONObject("category"));
             setCreatedAt(object.getString("created_at"));
@@ -170,11 +174,7 @@ public class Question implements Parcelable, RequestCallbacks{
             question.answersCount = in.readInt();
             question.commentsCount = in.readInt();
             question.views = in.readInt();
-            try {
-                question.setCreatedAt(in.readString());
-            } catch (ParseException e){
-                e.printStackTrace();
-            }
+            question.createdAt = (Date) in.readSerializable();
             return question;
         }
         public Question[] newArray(int size) {
@@ -190,7 +190,7 @@ public class Question implements Parcelable, RequestCallbacks{
         dest.writeInt(answersCount);
         dest.writeInt(commentsCount);
         dest.writeInt(views);
-        if (createdAt != null) dest.writeString(createdAt.toString());
+        dest.writeSerializable(createdAt);
     }
 
     public void getCollection(){
@@ -211,5 +211,23 @@ public class Question implements Parcelable, RequestCallbacks{
     @Override
     public void failureCallback(String requestName, VolleyError error) {
         EventBus.getDefault().post(new QuestionMessage(requestName, error));
+    }
+
+    public Vote getCurrentUserVote() {
+        return currentUserVote;
+    }
+
+    public void setCurrentUserVote(JSONObject vote) {
+        if (vote != null) {
+            this.currentUserVote = new Vote(vote);
+        }
+    }
+
+    public void setCurrentUserVote(Vote vote) {
+        this.currentUserVote = vote;
+    }
+
+    public void setCurrentUserVote() {
+        this.currentUserVote = null;
     }
 }

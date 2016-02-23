@@ -189,23 +189,23 @@ public class CommentsListActivity extends ActionBarActivity
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                JSONObject commentParams = new JSONObject();
-                try {
-                    commentParams.put("text", commentItemText.getText().toString());
-                    commentParams.put("question_id", answer.getQuestionID());
-                    commentParams.put("answer_id", answer.getID());
-                    JSONObject params = new JSONObject();
-                    params.put("comment", commentParams);
-                    CommentFactory.getInstance().updateForAnswer(answer.getQuestionID(),
-                            answer.getID(), comment.getId(), params);
-                    formLayout.setVisibility(View.GONE);
-                    itemLayout.setVisibility(View.VISIBLE);
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            JSONObject commentParams = new JSONObject();
+            try {
+                commentParams.put("text", commentItemText.getText().toString());
+                commentParams.put("question_id", answer.getQuestionID());
+                commentParams.put("answer_id", answer.getID());
+                JSONObject params = new JSONObject();
+                params.put("comment", commentParams);
+                CommentFactory.getInstance().updateForAnswer(answer.getQuestionID(),
+                        answer.getID(), comment.getId(), params);
+                formLayout.setVisibility(View.GONE);
+                itemLayout.setVisibility(View.VISIBLE);
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             }
         });
         cancelButton.setOnClickListener(new View.OnClickListener() {

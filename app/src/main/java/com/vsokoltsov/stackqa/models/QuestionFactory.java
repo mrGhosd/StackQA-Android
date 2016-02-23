@@ -52,6 +52,11 @@ public class QuestionFactory implements RequestCallbacks {
         ApiRequest.getInstance(this).put(url, "update", params);
     }
 
+    public void rate(int questionId, JSONObject params) {
+        String url = AppController.APP_HOST + "/api/v1/questions/" + questionId + "/rate";
+        ApiRequest.getInstance(this).post(url, "rate", params);
+    }
+
     @Override
     public void successCallback(String requestName, JSONObject object) {
         EventBus.getDefault().post(new QuestionMessage(requestName, object));
