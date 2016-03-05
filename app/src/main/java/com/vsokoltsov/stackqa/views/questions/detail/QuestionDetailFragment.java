@@ -39,6 +39,7 @@ public class QuestionDetailFragment extends Fragment{
     private ImageButton plusRate;
     private ImageButton minusRate;
     private TextView rateView;
+    private ImageView isClosed;
 
 
     public QuestionDetailFragment() {
@@ -69,6 +70,7 @@ public class QuestionDetailFragment extends Fragment{
                 TextView tagsView = (TextView) fragmentView.findViewById(R.id.questionTags);
                 plusRate = (ImageButton) fragmentView.findViewById(R.id.rateUp);
                 minusRate = (ImageButton) fragmentView.findViewById(R.id.rateDown);
+                isClosed = (ImageView) fragmentView.findViewById(R.id.closedQuestion);
                 plusRate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -115,6 +117,9 @@ public class QuestionDetailFragment extends Fragment{
                 setVoteInfo();
                 setCategoryInfo(fragmentView);
                 setUserInfo(fragmentView);
+                if (detailQuestion.isClosed()) {
+                    isClosed.setVisibility(View.VISIBLE);
+                }
             } catch (Exception e){
                 e.printStackTrace();
             }
@@ -230,4 +235,8 @@ public class QuestionDetailFragment extends Fragment{
         });
     }
 
+    public void markQuestionAsClosed(Question question) {
+        detailQuestion = question;
+        isClosed.setVisibility(View.VISIBLE);
+    }
 }

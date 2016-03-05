@@ -33,6 +33,11 @@ public class AnswerFactory implements RequestCallbacks {
         ApiRequest.getInstance(this).put(url, "update", params);
     }
 
+    public void markAsHelpfull(int questionId, int answerId) {
+        String url = AppController.APP_HOST + "/api/v1/questions/" + questionId + "/answers/" + answerId + "/helpfull";
+        ApiRequest.getInstance(this).post(url, "helpfull", null);
+    }
+
     @Override
     public void successCallback(String requestName, JSONObject object) throws JSONException {
         EventBus.getDefault().post(new AnswerMessage(requestName, object));

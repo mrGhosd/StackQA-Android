@@ -34,6 +34,7 @@
     <string name="answer_save_button">Сохранить</string>
     <string name="answer_cancel_button">Отменить</string>
     <string name="answer_popup_edit">Редактировать</string>
+    <string name="answer_popup_helpfull">Ответ помог</string>
     <string name="answer_popup_delete">Удалить</string>
     <string name="answer_popup_complain">Пожаловаться</string>
 

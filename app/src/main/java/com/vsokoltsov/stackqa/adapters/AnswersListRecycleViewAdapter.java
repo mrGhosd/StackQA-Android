@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -52,13 +53,20 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
 
     @Override
     public void onBindViewHolder(AnswerViewHolder holder, int position) {
-        holder.answer = answers.get(position);
-        holder.setUserInfo(answers.get(position));
-        holder.callbacks = (AnswerViewHolder.AnswerViewHolderCallbacks) activity;
-        holder.text.setText(answers.get(position).getText());
-        holder.rate.setText(String.valueOf(answers.get(position).getRate()));
-        holder.createdAt.setText(answers.get(position).getCreatedAt());
-        holder.commentsCount.setText(String.valueOf(answers.get(position).getCommentsCount()));
+        Answer answer = answers.get(position);
+        holder.answer = answer;
+        holder.callbacks = (AnswerViewHolderCallbacks) activity;
+        holder.text.setText(answer.getText());
+        holder.rate.setText(String.valueOf(answer.getRate()));
+        holder.createdAt.setText(answer.getCreatedAt());
+        holder.commentsCount.setText(String.valueOf(answer.getCommentsCount()));
+        if (answer.isHelpfull()) {
+            holder.isHelpfullAnswer.setVisibility(View.VISIBLE);
+        }
+        else {
+            holder.isHelpfullAnswer.setVisibility(View.GONE);
+        }
+        holder.setUserInfo(answer);
     }
 
     @Override
@@ -70,7 +78,7 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
         return answers.get(position);
     }
 
-    public static class AnswerViewHolder extends RecyclerView.ViewHolder {
+    public class AnswerViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
         LinearLayout ll;
         private Resources res;
@@ -87,6 +95,7 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
         private EditText answerText;
         private AnswerViewHolderCallbacks callbacks;
         private LinearLayout answerCommentWrapper;
+        private ImageView isHelpfullAnswer;
 
         AnswerViewHolder(final View itemView, final AnswersListRecycleViewAdapter adapter) {
             super(itemView);
@@ -100,6 +109,7 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
             final LinearLayout popupMenuWrapper = (LinearLayout) itemView.findViewById(R.id.popupMenuWrapper);
             popupMenu = (ImageButton) itemView.findViewById(R.id.popupMenu);
             answerCommentWrapper = (LinearLayout) itemView.findViewById(R.id.answerCommentWrapper);
+            isHelpfullAnswer = (ImageView) itemView.findViewById(R.id.checkedMark);
 
             if (AuthManager.getInstance().getCurrentUser() == null) {
                 popupMenuWrapper.setVisibility(View.GONE);
@@ -114,13 +124,20 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
                         // This activity implements OnMenuItemClickListener
                         MenuInflater inflater = popup.getMenuInflater();
                         popup.inflate(R.menu.menu_answer_list);
-                        MenuItem editItem = popup.getMenu().getItem(0);
-                        MenuItem deleteItem = popup.getMenu().getItem(1);
-                        MenuItem complainItem = popup.getMenu().getItem(2);
-                        if (AuthManager.getInstance().getCurrentUser().getId() != answer.getUser().getId()) {
+                        MenuItem helpfullItem = popup.getMenu().getItem(0);
+                        MenuItem editItem = popup.getMenu().getItem(1);
+                        MenuItem deleteItem = popup.getMenu().getItem(2);
+                        MenuItem complainItem = popup.getMenu().getItem(3);
+                        boolean isCurrentUserAuthor = AuthManager.getInstance().getCurrentUser().getId() != answer.getUser().getId();
+                        if (isCurrentUserAuthor) {
                             editItem.setVisible(false);
                             deleteItem.setVisible(false);
                         }
+
+                        if (isCurrentUserAuthor) {
+                            helpfullItem.setVisible(false);
+                        }
+
                         formLayout = (LinearLayout) itemView.findViewById(R.id.answerFormItem);
                         answerViewMain = (LinearLayout) itemView.findViewById(R.id.answerViewMain);
                         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -161,12 +178,6 @@ public class AnswersListRecycleViewAdapter extends RecyclerView.Adapter<AnswersL
                 }
             });
         }
-
-        public interface AnswerViewHolderCallbacks {
-            void onOptionsClicked(Answer answer, View itemView, MenuItem menuItem);
-            void onCommentsClicked(Answer answer);
-        }
-
     }
 
 }

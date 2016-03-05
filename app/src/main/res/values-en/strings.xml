@@ -34,6 +34,7 @@
     <string name="answer_save_button">Save</string>
     <string name="answer_cancel_button">Cancel</string>
     <string name="answer_popup_edit">Edit</string>
+    <string name="answer_popup_helpfull">Mark as helpfull</string>
     <string name="answer_popup_delete">Delete</string>
     <string name="answer_popup_complain">Complain</string>
     <string name="questions_list_empty">There is no questions</string>

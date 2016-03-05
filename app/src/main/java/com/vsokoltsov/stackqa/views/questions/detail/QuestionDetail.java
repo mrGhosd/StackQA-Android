@@ -22,7 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.vsokoltsov.stackqa.R;
-import com.vsokoltsov.stackqa.adapters.AnswersListRecycleViewAdapter;
+import com.vsokoltsov.stackqa.adapters.AnswerViewHolderCallbacks;
 import com.vsokoltsov.stackqa.adapters.CommentsListRecycleViewAdapter;
 import com.vsokoltsov.stackqa.adapters.RVAdapter;
 import com.vsokoltsov.stackqa.messages.AnswerMessage;
@@ -56,7 +56,7 @@ import de.greenrobot.event.EventBus;
 
 public class QuestionDetail extends ActionBarActivity implements QuestionsListFragment.Callbacks,
         RVAdapter.QuestionsViewHolder.QuestionViewHolderCallbacks,
-        AnswersListRecycleViewAdapter.AnswerViewHolder.AnswerViewHolderCallbacks,
+        AnswerViewHolderCallbacks,
         SwipeRefreshLayout.OnRefreshListener, CommentsListRecycleViewAdapter.CommentViewHolder.CommentViewHolderCallbacks {
     public MaterialProgressBar progressBar;
     public static Question selectedQuestion;
@@ -84,6 +84,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
 
     private EditText commentItemText;
     private QuestionDetailFragment questionDetailFragment;
+    private Answer helpfullAnswer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -417,6 +418,9 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
                 case "update":
                     parseUpdatedAnswer(event.response);
                     break;
+                case "helpfull":
+                    parseSuccessAnswerHelpfull();
+                    break;
             }
         } else {
             switch (event.operationName){
@@ -444,6 +448,13 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
             }
         }
 
+    }
+
+    private void parseSuccessAnswerHelpfull() {
+        selectedQuestion.setIsClosed(true);
+        helpfullAnswer.setIsHelpfull(true);
+        questionDetailInforFragment.replaceUpdateAnswer(helpfullAnswer);
+        questionDetailFragment.markQuestionAsClosed(selectedQuestion);
     }
 
     private void parseSuccessAnswerCreation(JSONObject object) {
@@ -515,6 +526,8 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         answerViewMain = (LinearLayout) itemView.findViewById(R.id.answerViewMain);
         String menuItemTitle = (String) menuItem.getTitle();
         String editButtonTitle = getResources().getString(R.string.answer_popup_edit);
+        String helpfullButtonTitle = getResources().getString(R.string.answer_popup_helpfull);
+
         if (menuItemTitle.equals(editButtonTitle)) {
             if (isTablet) {
                 if (formLayout.getVisibility() != View.VISIBLE) {
@@ -555,6 +568,11 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
                 overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
             }
 
+        }
+
+        if (menuItemTitle.equals(helpfullButtonTitle)) {
+            helpfullAnswer = answer;
+            AnswerFactory.getInstance().markAsHelpfull(selectedQuestion.getID(), answer.getID());
         }
     }
 

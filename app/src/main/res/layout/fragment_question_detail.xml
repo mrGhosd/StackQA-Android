@@ -53,6 +53,14 @@
                         android:layout_marginLeft="10dp"
                         android:background="@null"
                         android:id="@+id/rateDown" />
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/checked_mark"
+                        android:layout_marginLeft="10dp"
+                        android:background="@null"
+                        android:id="@+id/closedQuestion"
+                        android:visibility="gone"/>
                 </LinearLayout>
 
                     <LinearLayout

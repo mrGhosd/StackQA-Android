@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.vsokoltsov.stackqa.views.answers.AnswerList">
     <item
+        android:id="@+id/action_helpfull"
+        android:title="@string/answer_popup_helpfull"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:icon="@drawable/helpfullpopupicon"/>
+    <item
         android:id="@+id/action_edit"
         android:title="@string/answer_popup_edit"
         android:orderInCategory="100"

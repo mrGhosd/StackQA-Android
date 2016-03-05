@@ -25,6 +25,7 @@ public class Answer implements Parcelable {
     private Date createdAt;
     private int commentsCount;
     private int rate;
+    private boolean isHelpfull;
     private ArrayList<Comment> comments = new ArrayList<Comment>();
 
     public Answer(){}
@@ -39,6 +40,7 @@ public class Answer implements Parcelable {
             if (object.has("comments_count")) setCommentsCount(object.getInt("comments_count"));
             if (object.has("rate")) setRate(object.getInt("rate"));
             if (object.has("comments")) setComments(object.getJSONArray("comments"));
+            if (object.has("is_helpfull")) setIsHelpfull(object.getBoolean("is_helpfull"));
         } catch(JSONException e){
             e.printStackTrace();
         } catch(ParseException e){
@@ -141,5 +143,13 @@ public class Answer implements Parcelable {
                 e.printStackTrace();
             }
         }
+    }
+
+    public boolean isHelpfull() {
+        return isHelpfull;
+    }
+
+    public void setIsHelpfull(boolean isHelpfull) {
+        this.isHelpfull = isHelpfull;
     }
 }

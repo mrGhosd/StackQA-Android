@@ -148,4 +148,14 @@ public class QuestionDetailInfoFragment extends Fragment {
         }
         adapter.commentsFragment.commentAdapter.notifyDataSetChanged();
     }
+
+    public void replaceUpdateAnswer(Answer answer) {
+        List<Answer> answers = adapter.answersFragment.answerList;
+        for (int i = 0; i < answers.size(); i++) {
+            if (answer.getID() == answers.get(i).getID()) {
+                answers.set(i, answer);
+            }
+        }
+        adapter.answersFragment.answerAdapter.notifyDataSetChanged();
+    }
 }

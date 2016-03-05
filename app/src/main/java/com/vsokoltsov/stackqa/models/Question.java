@@ -36,6 +36,7 @@ public class Question implements Parcelable, RequestCallbacks{
     private String text;
     private String tags;
     private Vote currentUserVote;
+    private boolean isClosed;
 
     public Question(){
 
@@ -56,6 +57,7 @@ public class Question implements Parcelable, RequestCallbacks{
             setAnswersCount(object.getInt("answers_count"));
             setCommentsCount(object.getInt("comments_count"));
             setViews(object.getInt("views"));
+            if (object.has("is_closed")) setIsClosed(object.getBoolean("is_closed"));
 
         } catch (JSONException e){
             e.printStackTrace();
@@ -229,5 +231,13 @@ public class Question implements Parcelable, RequestCallbacks{
 
     public void setCurrentUserVote() {
         this.currentUserVote = null;
+    }
+
+    public boolean isClosed() {
+        return isClosed;
+    }
+
+    public void setIsClosed(boolean isClosed) {
+        this.isClosed = isClosed;
     }
 }

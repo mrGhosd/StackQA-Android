@@ -47,7 +47,7 @@ public class AnswerListFragment extends Fragment {
     private View fragmentView;
     private RecyclerView rv;
     private LinearLayoutManager llm;
-    private AnswersListRecycleViewAdapter answerAdapter;
+    public AnswersListRecycleViewAdapter answerAdapter;
     private TextView emptyView;
     private CardView answersListWrapper;
     private TextView emptyListView;
