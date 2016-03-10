@@ -2,6 +2,7 @@ package com.vsokoltsov.stackqa.views.questions.detail;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentTransaction;
@@ -671,5 +672,11 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
             hideKeyboard();
         }
         return false;
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        replaceFragment = true;
     }
 }
