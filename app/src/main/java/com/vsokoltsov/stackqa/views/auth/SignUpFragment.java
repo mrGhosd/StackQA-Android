@@ -173,6 +173,7 @@ public class SignUpFragment extends Fragment{
             passwordConfirmationString = (String) passwordConfirmationErrorsArray.get(0);
             passwordConfirmationField.setError(passwordConfirmationString);
         }
+        dialog.cancel();
     }
 
     @Override

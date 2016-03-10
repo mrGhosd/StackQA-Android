@@ -144,6 +144,7 @@ public class SignInFragment extends Fragment {
             emailString = "There is no such user. Check your email or password.";
             emailField.setError(emailString);
         }
+        dialog.cancel();
     }
 }
 

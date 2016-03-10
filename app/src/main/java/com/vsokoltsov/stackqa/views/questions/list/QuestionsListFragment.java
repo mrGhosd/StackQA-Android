@@ -57,7 +57,7 @@ import de.greenrobot.event.EventBus;
  * interface.
  */
 public class QuestionsListFragment extends Fragment implements android.support.v7.widget.SearchView.OnQueryTextListener,
-        SwipeRefreshLayout.OnRefreshListener, RequestCallbacks, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
+        SwipeRefreshLayout.OnRefreshListener, RequestCallbacks, SearchView.OnQueryTextListener, SearchView.OnCloseListener{
     private static MaterialProgressBar progressBar;
     private SwipeRefreshLayout swipeLayout;
     private ProgressBar mProgress;

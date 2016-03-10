@@ -26,9 +26,9 @@ import com.vsokoltsov.stackqa.models.AuthManager;
 import com.vsokoltsov.stackqa.models.Question;
 import com.vsokoltsov.stackqa.views.auth.AuthorizationActivity;
 import com.vsokoltsov.stackqa.views.navigation.NavigationFragment;
+import com.vsokoltsov.stackqa.views.questions.detail.QuestionDetail;
 import com.vsokoltsov.stackqa.views.questions.form.QuestionsFormActivity;
 import com.vsokoltsov.stackqa.views.questions.form.QuestionsFormFragment;
-import com.vsokoltsov.stackqa.views.questions.detail.QuestionDetail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -268,4 +268,5 @@ public class QuestionsListActivity extends ActionBarActivity implements Question
         startActivity(detailIntent);
         overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
     }
+
 }

@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -57,7 +58,8 @@ import de.greenrobot.event.EventBus;
 public class QuestionDetail extends ActionBarActivity implements QuestionsListFragment.Callbacks,
         RVAdapter.QuestionsViewHolder.QuestionViewHolderCallbacks,
         AnswerViewHolderCallbacks,
-        SwipeRefreshLayout.OnRefreshListener, CommentsListRecycleViewAdapter.CommentViewHolder.CommentViewHolderCallbacks {
+        SwipeRefreshLayout.OnRefreshListener, CommentsListRecycleViewAdapter.CommentViewHolder.CommentViewHolderCallbacks,
+        View.OnTouchListener {
     public MaterialProgressBar progressBar;
     public static Question selectedQuestion;
     public boolean isAnswerTab;
@@ -91,6 +93,9 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_detail);
         setTitle(getResources().getString(R.string.question));
+        View layout = (View) findViewById(R.id.detailQuestion);
+        layout.getRootView().setOnTouchListener(this);
+
         isTablet = getResources().getBoolean(R.bool.isTablet);
         progressBar = (MaterialProgressBar) findViewById(R.id.progress_bar);
         Toolbar mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
@@ -246,6 +251,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
 
     public void setViewLayout(ScrollView layout){
         this.layout = layout;
+        layout.setOnTouchListener(this);
     }
 
     public void loadQuestionData(){
@@ -321,6 +327,7 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        hideKeyboard();
         switch (item.getItemId()) {
             case android.R.id.home:
                 selectedQuestion = null;
@@ -341,6 +348,25 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            hideKeyboardEvent(view);
+        }
+    }
+
+    private void hideKeyboard(View view) {
+        if (view != null) {
+            hideKeyboardEvent(view);
+        }
+    }
+
+    private void hideKeyboardEvent(View view) {
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        answerText.clearFocus();
     }
 
     private void showAnswerForm(){
@@ -638,5 +664,12 @@ public class QuestionDetail extends ActionBarActivity implements QuestionsListFr
                 itemLayout.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        if (!(view instanceof EditText)) {
+            hideKeyboard();
+        }
+        return false;
     }
 }
